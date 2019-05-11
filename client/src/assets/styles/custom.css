@@ -1,0 +1,261 @@
+.mobilePadding {
+    padding-bottom: 40px;
+  }
+
+  .random-salary-text {
+    padding: 10px;
+    font-size: 15px;
+  }
+
+  @media only screen and (max-width: 1000px) {
+    .mobilePadding {
+      padding-bottom: 40px;
+    }
+  }
+  #icon-box span {
+    display: block;
+    position: absolute;
+    height: 75px;
+    width: 75px;
+    color: #FFF;
+    text-shadow:  rgb(17, 128, 32) 1px 1px,  rgb(17, 128, 32) 2px 2px,  rgb(17, 128, 32) 3px 3px,  rgb(17, 128, 32) 4px 4px,  rgb(17, 128, 32) 5px 5px,  rgb(17, 128, 32) 6px 6px,  rgb(17, 128, 32) 7px 7px,  rgb(17, 128, 32) 8px 8px,  rgb(17, 128, 32) 9px 9px,  rgb(17, 128, 32) 10px 10px,  rgb(17, 128, 32) 11px 11px,  rgb(17, 128, 32) 12px 12px,  rgb(17, 128, 32) 13px 13px,  rgb(17, 128, 32) 14px 14px,  rgb(17, 128, 32) 15px 15px,  rgb(17, 128, 32) 16px 16px,  rgb(17, 128, 32) 17px 17px,  rgb(17, 128, 32) 18px 18px,  rgb(17, 128, 32) 19px 19px,  rgb(17, 128, 32) 20px 20px,  rgb(17, 128, 32) 21px 21px,  rgb(17, 128, 32) 22px 22px,  rgb(17, 128, 32) 23px 23px,  rgb(17, 128, 32) 24px 24px,  rgb(17, 128, 32) 25px 25px,  rgb(17, 128, 32) 26px 26px,  rgb(17, 128, 32) 27px 27px,  rgb(17, 128, 32) 28px 28px,  rgb(17, 128, 32) 29px 29px,  rgb(17, 128, 32) 30px 30px,  rgb(17, 128, 32) 31px 31px,  rgb(17, 128, 32) 32px 32px,  rgb(17, 128, 32) 33px 33px,  rgb(17, 128, 32) 34px 34px,  rgb(17, 128, 32) 35px 35px,  rgb(17, 128, 32) 36px 36px,  rgb(17, 128, 32) 37px 37px,  rgb(17, 128, 32) 38px 38px,  rgb(17, 128, 32) 39px 39px,  rgb(17, 128, 32) 40px 40px,  rgb(17, 128, 32) 41px 41px,  rgb(17, 128, 32) 42px 42px,  rgb(17, 128, 32) 43px 43px,  rgb(17, 128, 32) 44px 44px,  rgb(17, 128, 32) 45px 45px,  rgb(17, 128, 32) 46px 46px,  rgb(17, 128, 32) 47px 47px,  rgb(17, 128, 32) 48px 48px,  rgb(17, 128, 32) 49px 49px,  rgb(17, 128, 32) 50px 50px,  rgb(17, 128, 32) 51px 51px,  rgb(17, 128, 32) 52px 52px,  rgb(17, 128, 32) 53px 53px,  rgb(17, 128, 32) 54px 54px,  rgb(17, 128, 32) 55px 55px,  rgb(17, 128, 32) 56px 56px,  rgb(17, 128, 32) 57px 57px,  rgb(17, 128, 32) 58px 58px,  rgb(17, 128, 32) 59px 59px,  rgb(17, 128, 32) 60px 60px,  rgb(17, 128, 32) 61px 61px,  rgb(17, 128, 32) 62px 62px,  rgb(17, 128, 32) 63px 63px,  rgb(17, 128, 32) 64px 64px,  rgb(17, 128, 32) 65px 65px,  rgb(17, 128, 32) 66px 66px,  rgb(17, 128, 32) 67px 67px,  rgb(17, 128, 32) 68px 68px,  rgb(17, 128, 32) 69px 69px,  rgb(17, 128, 32) 70px 70px,  rgb(17, 128, 32) 71px 71px,  rgb(17, 128, 32) 72px 72px,  rgb(17, 128, 32) 73px 73px,  rgb(17, 128, 32) 74px 74px,  rgb(17, 128, 32) 75px 75px,  rgb(17, 128, 32) 76px 76px,  rgb(17, 128, 32) 77px 77px,  rgb(17, 128, 32) 78px 78px,  rgb(17, 128, 32) 79px 79px,  rgb(17, 128, 32) 80px 80px,  rgb(17, 128, 32) 81px 81px,  rgb(17, 128, 32) 82px 82px,  rgb(17, 128, 32) 83px 83px,  rgb(17, 128, 32) 84px 84px,  rgb(17, 128, 32) 85px 85px,  rgb(17, 128, 32) 86px 86px,  rgb(17, 128, 32) 87px 87px,  rgb(17, 128, 32) 88px 88px,  rgb(17, 128, 32) 89px 89px,  rgb(17, 128, 32) 90px 90px,  rgb(17, 128, 32) 91px 91px,  rgb(17, 128, 32) 92px 92px,  rgb(17, 128, 32) 93px 93px,  rgb(17, 128, 32) 94px 94px,  rgb(17, 128, 32) 95px 95px,  rgb(17, 128, 32) 96px 96px,  rgb(17, 128, 32) 97px 97px,  rgb(17, 128, 32) 98px 98px,  rgb(17, 128, 32) 99px 99px,  rgb(17, 128, 32) 100px 100px,  rgb(17, 128, 32) 101px 101px,  rgb(17, 128, 32) 102px 102px,  rgb(17, 128, 32) 103px 103px,  rgb(17, 128, 32) 104px 104px,  rgb(17, 128, 32) 105px 105px,  rgb(17, 128, 32) 106px 106px,  rgb(17, 128, 32) 107px 107px,  rgb(17, 128, 32) 108px 108px,  rgb(17, 128, 32) 109px 109px,  rgb(17, 128, 32) 110px 110px,  rgb(17, 128, 32) 111px 111px,  rgb(17, 128, 32) 112px 112px,  rgb(17, 128, 32) 113px 113px,  rgb(17, 128, 32) 114px 114px,  rgb(17, 128, 32) 115px 115px,  rgb(17, 128, 32) 116px 116px,  rgb(17, 128, 32) 117px 117px,  rgb(17, 128, 32) 118px 118px,  rgb(17, 128, 32) 119px 119px,  rgb(17, 128, 32) 120px 120px,  rgb(17, 128, 32) 121px 121px,  rgb(17, 128, 32) 122px 122px,  rgb(17, 128, 32) 123px 123px,  rgb(17, 128, 32) 124px 124px,  rgb(17, 128, 32) 125px 125px,  rgb(17, 128, 32) 126px 126px,  rgb(17, 128, 32) 127px 127px,  rgb(17, 128, 32) 128px 128px,  rgb(17, 128, 32) 129px 129px,  rgb(17, 128, 32) 130px 130px,  rgb(17, 128, 32) 131px 131px,  rgb(17, 128, 32) 132px 132px,  rgb(17, 128, 32) 133px 133px,  rgb(17, 128, 32) 134px 134px,  rgb(17, 128, 32) 135px 135px,  rgb(17, 128, 32) 136px 136px,  rgb(17, 128, 32) 137px 137px,  rgb(17, 128, 32) 138px 138px,  rgb(17, 128, 32) 139px 139px,  rgb(17, 128, 32) 140px 140px,  rgb(17, 128, 32) 141px 141px,  rgb(17, 128, 32) 142px 142px,  rgb(17, 128, 32) 143px 143px,  rgb(17, 128, 32) 144px 144px,  rgb(17, 128, 32) 145px 145px,  rgb(17, 128, 32) 146px 146px,  rgb(17, 128, 32) 147px 147px,  rgb(17, 128, 32) 148px 148px,  rgb(17, 128, 32) 149px 149px,  rgb(17, 128, 32) 150px 150px;
+  }
+  #icon-box span:hover {
+    color: #d4bfc7;
+  }
+  #icon-box span:active {
+    color: #FFF;
+  }
+
+  #icon-box {
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    width: 75px;
+    height: 75px;
+    font-size: 50px;
+    line-height: 150px;
+    background-color: #ea4c88;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    border-radius: 15px;
+  }
+
+  
+  .fa-lg-modification {
+    vertical-align: 70% !important;
+    line-height: normal !important;
+  }
+  /*Tooltips*/
+
+/* Base styles for the element that has a tooltip */
+[data-tooltip],
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Base styles for the entire tooltip */
+[data-tooltip]:before,
+[data-tooltip]:after,
+.tooltip:before,
+.tooltip:after {
+  position: absolute;
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -webkit-transition: 
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out,
+    -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  -moz-transition:    
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out,
+    -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  transition:         
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out,
+    transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform:    translate3d(0, 0, 0);
+  transform:         translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+/* Show the entire tooltip on hover and focus */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after,
+[data-tooltip]:focus:before,
+[data-tooltip]:focus:after,
+.tooltip:hover:before,
+.tooltip:hover:after,
+.tooltip:focus:before,
+.tooltip:focus:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+/* Base styles for the tooltip's directional arrow */
+.tooltip:before,
+[data-tooltip]:before {
+  z-index: 1001;
+  border: 6px solid transparent;
+  background: transparent;
+  content: "";
+}
+
+/* Base styles for the tooltip's content area */
+.tooltip:after,
+[data-tooltip]:after {
+  z-index: 1000;
+  padding: 8px;
+  width: 160px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+  content: attr(data-tooltip);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+
+/* Directions */
+
+/* Top (default) */
+[data-tooltip]:before,
+[data-tooltip]:after,
+.tooltip:before,
+.tooltip:after,
+.tooltip-top:before,
+.tooltip-top:after {
+  bottom: 100%;
+  left: 50%;
+}
+
+[data-tooltip]:before,
+.tooltip:before,
+.tooltip-top:before {
+  margin-left: -6px;
+  margin-bottom: -12px;
+  border-top-color: #000;
+  border-top-color: hsla(0, 0%, 20%, 0.9);
+}
+
+/* Horizontally align top/bottom tooltips */
+[data-tooltip]:after,
+.tooltip:after,
+.tooltip-top:after {
+  margin-left: -80px;
+  font-size: 12px;
+}
+
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after,
+[data-tooltip]:focus:before,
+[data-tooltip]:focus:after,
+.tooltip:hover:before,
+.tooltip:hover:after,
+.tooltip:focus:before,
+.tooltip:focus:after,
+.tooltip-top:hover:before,
+.tooltip-top:hover:after,
+.tooltip-top:focus:before,
+.tooltip-top:focus:after {
+  -webkit-transform: translateY(-12px);
+  -moz-transform:    translateY(-12px);
+  transform:         translateY(-12px); 
+}
+
+/* Left */
+.tooltip-left:before,
+.tooltip-left:after {
+  right: 100%;
+  bottom: 50%;
+  left: auto;
+}
+
+.tooltip-left:before {
+  margin-left: 0;
+  margin-right: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-left-color: #000;
+  border-left-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.tooltip-left:hover:before,
+.tooltip-left:hover:after,
+.tooltip-left:focus:before,
+.tooltip-left:focus:after {
+  -webkit-transform: translateX(-12px);
+  -moz-transform:    translateX(-12px);
+  transform:         translateX(-12px); 
+}
+
+/* Bottom */
+.tooltip-bottom:before,
+.tooltip-bottom:after {
+  top: 100%;
+  bottom: auto;
+  left: 50%;
+}
+
+.tooltip-bottom:before {
+  margin-top: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-bottom-color: #000;
+  border-bottom-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.tooltip-bottom:hover:before,
+.tooltip-bottom:hover:after,
+.tooltip-bottom:focus:before,
+.tooltip-bottom:focus:after {
+  -webkit-transform: translateY(12px);
+  -moz-transform:    translateY(12px);
+  transform:         translateY(12px); 
+}
+
+/* Right */
+.tooltip-right:before,
+.tooltip-right:after {
+  bottom: 50%;
+  left: 100%;
+}
+
+.tooltip-right:before {
+  margin-bottom: 0;
+  margin-left: -12px;
+  border-top-color: transparent;
+  border-right-color: #000;
+  border-right-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.tooltip-right:hover:before,
+.tooltip-right:hover:after,
+.tooltip-right:focus:before,
+.tooltip-right:focus:after {
+  -webkit-transform: translateX(12px);
+  -moz-transform:    translateX(12px);
+  transform:         translateX(12px); 
+}
+
+/* Move directional arrows down a bit for left/right tooltips */
+.tooltip-left:before,
+.tooltip-right:before {
+  top: 3px;
+}
+
+/* Vertically center tooltip content for left/right tooltips */
+.tooltip-left:after,
+.tooltip-right:after {
+  margin-left: 0;
+  margin-bottom: -16px;
+  font-size: 11px; /* Self added to make the information icon tooltip unique */
+  width: 300px; /* Self added to make the information icon tooltip unique */
+}
