@@ -21,3 +21,7 @@ export const checkFollowedBack = async userData => {
   const res = await axios.post(`/api/twitter/get-followed-back`, userData);
   return res;
 };
+export const checkTotalGained = async userid => {
+  const res = await axios.get(`/api/twitter/check-total-gained/${userid}`);
+  return res;
+};

@@ -1,4 +1,4 @@
-import React from "react"; 
+import React from "react";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 import MainFooter from "../common/AppFooter";
@@ -69,7 +69,7 @@ class DashBoard extends React.Component {
       <div>
         <div
           style={{
-            backgroundImage:  !isMobile && "url(" + bgimage + ")",
+            backgroundImage: !isMobile && "url(" + bgimage + ")",
             backgroundSize: !isMobile && "cover",
             backgroundRepeat: !isMobile && "repeat",
             backgroundPosition: !isMobile && "top center",
@@ -78,46 +78,50 @@ class DashBoard extends React.Component {
             position: "relative"
           }}
         >
-        {/* drop thelayout by 30% if not mobile */}
+          {/* drop thelayout by 30% if not mobile */}
           <div
-            style={{ top: isMobile ? "0%" : "30%", position: "absolute" }}
+            style={{ top: isMobile ? "0%" : "30%", position: "relative" }}
             className="container"
           >
-          {/* display Welcome text here if not mobile */}
-            {!isMobile && <div className="mb-3 welcome-block">
-              <p style={welcome_user}>
-                Welcome {this.props.auth.userData.username}
-              </p>
-            </div>}
+            {/* display Welcome text here if not mobile */}
+            {!isMobile && (
+              <div className="mb-3 welcome-block">
+                <p style={welcome_user}>
+                  Welcome {this.props.auth.userData.username}
+                </p>
+              </div>
+            )}
 
-            <div className="row" 
-            style={{
-              backgroundImage: isMobile && "url(" + bgimage + ")",
-              backgroundSize:  isMobile && "cover",
-              backgroundRepeat: isMobile &&  "repeat",
-              backgroundPosition: isMobile &&  "top center"
-            }}>
-            {isMobile && 
-                <div
-                  className="col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding"
-                >
-                {/* display mobile text here if mobile */}
-                   <div className="mb-3 welcome-block" style={{paddingTop: "10vh"}}>
-              <p style={welcome_user}>
-                Welcome {this.props.auth.userData.username}
-              </p>
-               </div>
+            <div
+              className="row"
+              style={{
+                backgroundImage: isMobile && "url(" + bgimage + ")",
+                backgroundSize: isMobile && "cover",
+                backgroundRepeat: isMobile && "repeat",
+                backgroundPosition: isMobile && "top center"
+              }}
+            >
+              {isMobile && (
+                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 mobilePadding">
+                  {/* display mobile text here if mobile */}
+                  <div
+                    className="mb-3 welcome-block"
+                    style={{ paddingTop: "100px" }}
+                  >
+                    <p style={welcome_user}>
+                      Welcome {this.props.auth.userData.username}
+                    </p>
+                  </div>
                 </div>
-              }
+              )}
               {
-                <div
-                  className="col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding"
-                  onClick={function() {
-                    console.log("hre");
-                  }}
-                >
+                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
                   <div style={icon_index} id="icon-box">
-                    <span>
+                    <span
+                      onClick={function() {
+                        console.log("hre");
+                      }}
+                    >
                       <i className="fa fa-users fa fa-lg-modification" />
                     </span>
                   </div>
@@ -136,14 +140,13 @@ class DashBoard extends React.Component {
                 </div>
               }
               {
-                <div
-                  className="col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding"
-                  onClick={function() {
-                    console.log("hre");
-                  }}
-                >
+                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
                   <div style={icon_index} id="icon-box">
-                    <span>
+                    <span
+                      onClick={function() {
+                        console.log("hre");
+                      }}
+                    >
                       <i className="fa fa-images fa fa-lg-modification" />
                     </span>
                   </div>
@@ -162,14 +165,13 @@ class DashBoard extends React.Component {
                 </div>
               }
               {
-                <div
-                  className="col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding"
-                  onClick={function() {
-                    console.log("hre");
-                  }}
-                >
+                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
                   <div style={icon_index} id="icon-box">
-                    <span>
+                    <span
+                      onClick={function() {
+                        console.log("hre");
+                      }}
+                    >
                       <i className="fa fa-user-circle fa fa-lg-modification" />
                     </span>
                   </div>
@@ -188,14 +190,13 @@ class DashBoard extends React.Component {
                 </div>
               }
               {
-                <div
-                  className="col-xs-12 col-sm-6 col-md-6 col-lg-3 mobilePadding"
-                  onClick={function() {
-                    console.log("hre");
-                  }}
-                >
+                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
                   <div style={icon_index} id="icon-box">
-                    <span>
+                    <span
+                      onClick={function() {
+                        console.log("hre");
+                      }}
+                    >
                       <i className="fa fa-sign-out-alt fa fa-lg-modification" />
                     </span>
                   </div>

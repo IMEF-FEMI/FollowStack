@@ -13,3 +13,8 @@ export const checkUser = async id => {
   const res = await axios.get(`/api/users/check-user/${id}`);
   return res;
 };
+
+export const getUserProfile = async userData =>{
+  const res = await axios.post(`/api/users/get-profile`, userData);
+  return res;
+}

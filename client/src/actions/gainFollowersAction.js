@@ -10,6 +10,7 @@ import {
   SET_IS_FOLLOWING,
   SET_LINEAR_PROGRESS_BAR_COMPLETED,
   SET_IS_UNFOLLOWING,
+  SET_TOTAL_GAINED,
   GET_ERRORS,
   CLEAR_ERRORS
 } from "./types";
@@ -18,7 +19,8 @@ import {
   gainFollowers,
   beginUnFollow,
   checkFollowing,
-  checkFollowedBack
+  checkFollowedBack,
+  checkTotalGained
 } from "../async/twitter";
 
 export const gainFollowersAction = userData => async dispatch => {
@@ -62,10 +64,9 @@ export const gainFollowersAction = userData => async dispatch => {
 export const beginUnFollowAction = userData => async dispatch => {
   dispatch(setIsUnFollowing(true));
   const res = await beginUnFollow(userData);
-
-  // set returned stat here
-  // dispatch(setIsUnFollowing(false));
-
+  dispatch(setStats(res.data.stats));
+  dispatch(setTotalGained(res.data.stats.totalGained))
+  dispatch(setIsUnFollowing(false));
 };
 
 export const checkFollowingAction = userId => async dispatch => {
@@ -97,11 +98,15 @@ export const checkFollowingAction = userId => async dispatch => {
       });
     }
   } catch (err) {
-    var error = {}
+    var error = {};
     error.serverError = "Server Error Try Again";
+
     dispatch({
       type: GET_ERRORS,
-      payload: err === undefined ? error : err.response.data
+      payload:
+        err === undefined || err.response === undefined
+          ? error
+          : err.response.data
     });
   }
 
@@ -144,6 +149,11 @@ export const checkFollowedBackInterval = userId => async dispatch => {
     });
   }
 };
+
+export const checkTotalGainedAction  = userId => async dispatch =>{
+  const totalGained = await checkTotalGained(userId)
+  dispatch(setTotalGained(totalGained.data.totalGained))
+}
 
 export const setProgress = progressValue => async dispatch => {
   dispatch({
@@ -225,4 +235,15 @@ export const setIsUnFollowing = val => {
     payload: val
   };
 };
-
+export const setStats = val => {
+  return {
+    type: SET_STATS,
+    payload: val
+  };
+};
+export const setTotalGained = gains =>{
+  return{
+    type: SET_TOTAL_GAINED,
+    payload: gains
+  }
+}

@@ -1,8 +1,13 @@
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
-import { GET_ERRORS, SET_CURRENT_USER, SET_USER_DATA } from "./types";
-import { registerUser, signInUser } from "../async/auth";
+import {
+  GET_ERRORS,
+  SET_CURRENT_USER,
+  SET_USER_DATA,
+  SET_USER_PROFILE
+} from "./types";
+import { registerUser, signInUser, getUserProfile } from "../async/auth";
 
 // Register - Get User Token
 export const register = userData => async dispatch => {
@@ -69,12 +74,25 @@ export const setUserData = userData => async dispatch => {
   });
 };
 
+// Set user Profile
+export const setUserProfile = userData => async dispatch => {
+  const profile = await getUserProfile(userData);
+  // Save to localStorage
+  localStorage.removeItem("userProfile");
+  localStorage.setItem("userProfile", JSON.stringify(profile.data));
+  // Set current user
+  dispatch({
+    type: SET_USER_PROFILE,
+    payload: profile.data
+  });
+};
 
 // Log user out
 export const logoutUser = () => dispatch => {
   // Remove token from localStorage
   localStorage.removeItem("jwtToken");
   localStorage.removeItem("userData");
+  localStorage.removeItem("userProfile");
   // Remove auth header for future requests
   setAuthToken(false);
   // Set current user to {} which will set isAuthenticated to false

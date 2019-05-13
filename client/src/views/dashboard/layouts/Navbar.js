@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import Badge from "@material-ui/core/Badge";
 import Avatar from "@material-ui/core/Avatar";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import Stars from "@material-ui/icons/Stars";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -55,14 +55,15 @@ class Navbar extends Component {
         color="default"
         className={classNames(classes.appBar, open && classes.appBarShift)}
       >
-        <Toolbar disableGutters={!open} >
+        <Toolbar disableGutters={!open}>
           <IconButton
             color="inherit"
             aria-label="Open drawer"
             onClick={handleDrawerOpen}
             className={classNames(
               classes.menuButton,
-              open && classes.menuButtonHidden
+              open && classes.menuButtonHidden,
+              window.innerWidth >= 500 && classes.toolbar
             )}
           >
             <MenuIcon />
@@ -77,10 +78,11 @@ class Navbar extends Component {
             FollowStack
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
+            <Badge badgeContent={50} color="primary">
+              <Stars />
             </Badge>
           </IconButton>
+
           <div>
             <IconButton
               color="inherit"

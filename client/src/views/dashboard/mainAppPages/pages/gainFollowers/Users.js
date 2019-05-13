@@ -51,7 +51,7 @@ class Users extends React.Component {
         );
         break;
 
-        case "UnFollowed":
+      case "UnFollowed":
         button = (
           <Button
             color="secondary"
@@ -88,7 +88,7 @@ class Users extends React.Component {
             <Grid container spacing={16} justify="center">
               {firstTen.map(element => (
                 <Grid
-                  key={element._id}
+                  key={element.user_id}
                   item
                   xs={window.innerWidth <= 500 ? 12 : 8}
                 >
@@ -124,7 +124,7 @@ class Users extends React.Component {
             <Grid container spacing={16} justify="center">
               {users.map(element => (
                 <Grid
-                  key={element._id}
+                  key={element.user_id}
                   item
                   xs={window.innerWidth <= 500 ? 12 : 8}
                 >

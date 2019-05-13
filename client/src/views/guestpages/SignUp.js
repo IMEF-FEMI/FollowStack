@@ -105,7 +105,10 @@ if(isMobile){
         var errorCode = error.code;
         var errorMessage = error.message;        
         console.log(`error code ${errorCode} message ${errorMessage}`)
-        if(errorCode === "auth/network-request-failed"){
+        if (
+          errorCode === "auth/network-request-failed" ||
+          errorCode === "auth/invalid-credential"
+        ) {
           // that.setState({networkError: true})
           toast.error(" ⚠️️ Network Error Try Again!", {
             position: "bottom-right",
@@ -159,9 +162,12 @@ if(isMobile){
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(`error code ${errorCode} message ${errorMessage}`)
-        if(errorCode === "auth/network-request-failed"){
+        if (
+          errorCode === "auth/network-request-failed" ||
+          errorCode === "auth/invalid-credential"
+        ) {
           // that.setState({networkError: true})
-          toast.warn(" ⚠️️ Network Error Try Again!", {
+          toast.error(" ⚠️️ Network Error Try Again!", {
             position: "bottom-right",
             autoClose: 10000,
             hideProgressBar: false,

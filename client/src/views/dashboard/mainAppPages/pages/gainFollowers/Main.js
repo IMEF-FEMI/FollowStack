@@ -18,7 +18,8 @@ import PropTypes from "prop-types";
 import {
   beginUnFollowAction,
   gainFollowersAction,
-  showFollowedTabAction
+  showFollowedTabAction,
+  checkTotalGainedAction
 } from "../../../../../actions/gainFollowersAction";
 
 const { Avatar, Icon, Typography } = atoms;
@@ -30,61 +31,81 @@ function Main(props) {
     defaultMatches: true
   });
 
-  const { hasFollowingsTime, showFollowedTab, isUnFollowing } = props.gainFollowers;
+  const {
+    hasFollowingsTime,
+    showFollowedTab,
+    isUnFollowing,
+    stats,
+    totalGained
+  } = props.gainFollowers;
+  const { userProfile } = props.auth;
+
   const beginUnfollow = () => {
     // start unfollowing, show unfollowed Tab, closeFollowed Tab
     props.beginUnFollowAction(props.auth.userData);
     setTabIndex(3);
     props.showFollowedTabAction(false);
   };
+  React.useEffect(() => {
+    props.checkTotalGainedAction(props.auth.user.userid);
+    console.log("gain followers main mounted");
+  }, []); // passing an empty array as second argument triggers the callback
+  // in useEffect only after the initial render thus replicating
+  //  `componentDidMount` lifecycle behaviour
 
   return (
     <React.Fragment>
       <CssBaseline />
       <Box mb="44px">
-        <Grid container>
+        <Grid
+          container
+          style={{
+            paddingTop: "80px"
+          }}
+        >
           <Grid item xs={4}>
             <Avatar
               ultraLarge={upSm}
               medium={!upSm}
               style={{ margin: "auto" }}
-              src="https://cc-media-foxit.fichub.com/image/fox-it-mondofox/e8c0f288-781d-4d0b-98ad-fd169782b53b/scene-sottacqua-per-i-sequel-di-avatar-maxw-654.jpg"
+              src={userProfile.photo}
             />
           </Grid>
           <Grid item xs={8}>
-            <Box clone mb="20px">
-              <Grid container alignItems="center">
-                <Typography component="h1" variant="h4" lightWeight>
-                  siriwatknp
-                </Typography>
-              </Grid>
-            </Box>
+            <Grid container alignItems="center">
+              <Typography variant="subtitle1" bold>
+                {userProfile.name}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subtitle1">
+                {userProfile.screen_name}
+              </Typography>
+            </Grid>
             <Box mb="20px">
               <Grid container spacing={40}>
                 <Grid item>
                   <Typography variant="subtitle1">
-                    <b>132</b> posts
+                    <b>{userProfile.followers}</b> followers
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Typography variant="subtitle1">
-                    <b>325</b> followers
+                    <b>{userProfile.following}</b> following
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="subtitle1">
-                    <b>260</b> following
-                  </Typography>
+                  {totalGained !== 0 && (
+                    <Typography variant="subtitle1">
+                      <b> {`${totalGained} `}</b>Followers Gained
+                    </Typography>
+                  )}
                 </Grid>
               </Grid>
             </Box>
-            <Typography variant="subtitle1" bold>
-              Siriwat Kunaporn
-            </Typography>
             <Typography variant="subtitle1">
-              Bangkok Christian College
+              {userProfile.description}
             </Typography>
-            <Typography variant="subtitle1">CU intania 96.</Typography>
           </Grid>
         </Grid>
       </Box>
@@ -129,7 +150,7 @@ function Main(props) {
           </Grid>
         </div>
       )}
-      {hasFollowingsTime < 0 && isUnFollowing === false && (
+      {hasFollowingsTime < 0 && isUnFollowing === false && !stats.gained && (
         <Grid container justify="center">
           <Button
             variant="contained"
@@ -161,6 +182,11 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { beginUnFollowAction, gainFollowersAction, showFollowedTabAction }
+  {
+    beginUnFollowAction,
+    gainFollowersAction,
+    showFollowedTabAction,
+    checkTotalGainedAction
+  }
 )(withTheme(theme)(Main));
 // export default withRouter(connect()(withStyles(styles)(FirstPage)))

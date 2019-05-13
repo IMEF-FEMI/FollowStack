@@ -8,6 +8,26 @@ const keys = require("../../config/keys");
 const User = require("../../models/User");
 const Follows = require("../../models/Follows");
 
+var Twitter = require("twitter");
+const TWITTER_KEYS = [
+  {
+    consumerKey: process.env.TWITTER_KEY,
+    consumerSecret: process.env.TWITTER_SECRET
+  },
+  {
+    consumerKey: process.env.TWITTER_APP_KEY,
+    consumerSecret: process.env.TWITTER_APP_SECRET
+  },
+  {
+    consumerKey: process.env.TWITTER_APP_ONE_KEY,
+    consumerSecret: process.env.TWITTER_APP_ONE_SECRET
+  },
+  {
+    consumerKey: process.env.TWITTER_APP_TWO_KEY,
+    consumerSecret: process.env.TWITTER_APP_TWO_SECRET
+  }
+];
+
 // @route   GET api/users/test
 // @desc    Tests users route
 // @access  Public
@@ -121,6 +141,45 @@ router.get(
         }
       })
       .catch(err => console.log(err));
+  })
+);
+
+router.post(
+  "/get-profile",
+  asyncHandler(async (req, res, next) => {
+   
+    const random = TWITTER_KEYS[0];
+    var client = new Twitter({
+      consumer_key: random.consumerKey,
+      consumer_secret: random.consumerSecret,
+      access_token_key: req.body.accessToken,
+      access_token_secret: req.body.secret
+    });
+    const params = {
+      user_id: req.body.userid
+    };
+    
+    client.get("users/show", params, function(
+      error,
+      profile,
+      response
+    ) {
+      if (!error && response.statusCode === 200) {
+        res.status(200).json({
+          name: profile.name,
+          screen_name: profile.screen_name,
+          description: profile.description,
+          followers: profile.followers_count,
+          following: profile.friends_count,
+          photo: profile.profile_image_url.replace("_normal", "")
+        })
+        
+      } else {
+        // either has an error or returned status code not equals 200
+        console.log(error);
+      }
+    });
+
   })
 );
 

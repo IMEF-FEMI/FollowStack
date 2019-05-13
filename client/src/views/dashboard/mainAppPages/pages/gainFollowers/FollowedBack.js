@@ -108,7 +108,6 @@ class FollowedBack extends Component {
 }
 FollowedBack.propTypes = {
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.string.isRequired,
   checkFollowedBackAction: PropTypes.func.isRequired,
   clearError: PropTypes.func.isRequired
 };

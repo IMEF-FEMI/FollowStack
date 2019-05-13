@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
-import { SET_USER_DATA } from "./actions/types";
+import { SET_USER_DATA, SET_USER_PROFILE } from "./actions/types";
 import { checkFollowedBackInterval } from "./actions/gainFollowersAction";
 import { Provider } from "react-redux";
 import store from "./store";
@@ -37,6 +37,12 @@ if (localStorage.jwtToken) {
     type: SET_USER_DATA,
     payload: JSON.parse(localStorage.getItem("userData"))
   });
+  console.log(JSON.parse(localStorage.getItem("userProfile")));
+
+  store.dispatch({
+    type: SET_USER_PROFILE,
+    payload: JSON.parse(localStorage.getItem("userProfile"))
+  });
   // Check for expired token
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
@@ -60,6 +66,9 @@ class App extends Component {
   }
 
   checkNewFollowBack = () => {
+    if (store.getState().auth.isAuthenticated === false) {
+      return;
+    }
     console.log("checking for new follow backs");
 
     const oldList = store.getState().gainFollowers.followedBack;

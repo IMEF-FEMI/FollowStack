@@ -2,12 +2,21 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { register,setUserData } from "../../../../../actions/authActions";
-import Spinner from './Spinner'
-
+import {
+  register,
+  setUserData,
+  setUserProfile
+} from "../../../../../actions/authActions";
+import Spinner from "./Spinner";
 
 // @material-ui/core components
-import { ListGroupItem, Button, CardBody, CardFooter, Alert } from "shards-react";
+import {
+  ListGroupItem,
+  Button,
+  CardBody,
+  CardFooter,
+  Alert
+} from "shards-react";
 class TermsAndCondition extends Component {
   constructor() {
     super();
@@ -25,9 +34,9 @@ class TermsAndCondition extends Component {
   finished() {
     const userData = this.state.user;
     userData.location = this.props.userLocation;
-    this.setState({user: userData}) 
+    this.setState({ user: userData });
     this.props.register(userData);
-    this.setState({finished: true})
+    this.setState({ finished: true });
     // console.log(JSON.stringify(userData))
   }
   componentDidMount() {
@@ -37,15 +46,15 @@ class TermsAndCondition extends Component {
         location: this.props.userLocation
       });
     }
-
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      this.props.setUserData(this.state.user)
+      this.props.setUserData(this.state.user);
+      this.props.setUserProfile(this.state.user);
       this.props.history.push("/dashboard");
-    }else if(nextProps.errors.userError){
-      this.setState({errorMessage: nextProps.errors.userError})
+    } else if (nextProps.errors.userError) {
+      this.setState({ errorMessage: nextProps.errors.userError });
     }
   }
 
@@ -58,70 +67,71 @@ class TermsAndCondition extends Component {
     return (
       <div>
         {!this.state.finished && (
-      <CardBody>
-        <ListGroupItem className="p-4  ">
-          <strong className="text-dark d-block mb-2">
-            {"Terms And Conditions"}
-          </strong>
+          <CardBody>
+            <ListGroupItem className="p-4  ">
+              <strong className="text-dark d-block mb-2">
+                {"Terms And Conditions"}
+              </strong>
 
-          <div className="row ml-auto mr-auto">
-            <div className="ten columns terms">
-              <span className="text-dark">
-                By clicking "Accept" I agree that:
-              </span>
-              <ul className="docs-terms">
-                <li className="text-dark">
-                  I have read and accepted the <Link to="/terms">Terms</Link>
-                </li>
-                <li className="text-dark">
-                  I have read and accepted the{" "}
-                  <Link to="/privacy">Privacy Policy</Link>
-                </li>
-              </ul>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={this.state.checked}
-                  onChange={this.handleCheckedChanged}
-                  autoFocus
-                />
-                <span className="text-dark ml-auto mr-auto"> Accept </span>{" "}
-              </label>
-            </div>
-          </div>
-        </ListGroupItem>
-        <CardFooter>
-          <ListGroupItem className="d-flex px-3 border-0">
-            <Button theme="danger" onClick={this.props.prevStep}>
-              Prev
-            </Button>
-            <Button
-              theme="success"
-              className="ml-auto"
-              disabled={this.state.disabled}
-              onClick={this.finished}
-            >
-              Finish
-            </Button>
-            
-          </ListGroupItem>
-        </CardFooter>
-      </CardBody>)}
+              <div className="row ml-auto mr-auto">
+                <div className="ten columns terms">
+                  <span className="text-dark">
+                    By clicking "Accept" I agree that:
+                  </span>
+                  <ul className="docs-terms">
+                    <li className="text-dark">
+                      I have read and accepted the{" "}
+                      <Link to="/terms">Terms</Link>
+                    </li>
+                    <li className="text-dark">
+                      I have read and accepted the{" "}
+                      <Link to="/privacy">Privacy Policy</Link>
+                    </li>
+                  </ul>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={this.state.checked}
+                      onChange={this.handleCheckedChanged}
+                      autoFocus
+                    />
+                    <span className="text-dark ml-auto mr-auto"> Accept </span>{" "}
+                  </label>
+                </div>
+              </div>
+            </ListGroupItem>
+            <CardFooter>
+              <ListGroupItem className="d-flex px-3 border-0">
+                <Button theme="danger" onClick={this.props.prevStep}>
+                  Prev
+                </Button>
+                <Button
+                  theme="success"
+                  className="ml-auto"
+                  disabled={this.state.disabled}
+                  onClick={this.finished}
+                >
+                  Finish
+                </Button>
+              </ListGroupItem>
+            </CardFooter>
+          </CardBody>
+        )}
 
-      {this.state.finished && (<Spinner/>)}
-      {this.state.errorMessage !== "" && (
-                  <Alert theme="danger" className="text-center">
-                    {this.state.errorMessage} 
-                  </Alert>
-                )}
-        </div>
+        {this.state.finished && <Spinner />}
+        {this.state.errorMessage !== "" && (
+          <Alert theme="danger" className="text-center">
+            {this.state.errorMessage}
+          </Alert>
+        )}
+      </div>
     );
   }
 }
 TermsAndCondition.propTypes = {
   register: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,  
+  auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
@@ -133,6 +143,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { register, setUserData }
+    { register, setUserData, setUserProfile }
   )(TermsAndCondition)
 );
