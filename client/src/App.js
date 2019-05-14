@@ -6,6 +6,7 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { SET_USER_DATA, SET_USER_PROFILE } from "./actions/types";
 import { checkFollowedBackInterval } from "./actions/gainFollowersAction";
 import { Provider } from "react-redux";
+import axios from "axios";
 import store from "./store";
 import LandingPage from "./views/guestpages/LandingPage";
 import SignUp from "./views/guestpages/SignUp";
@@ -13,10 +14,12 @@ import SignIn from "./views/guestpages/SignIn";
 import CompleteRegistration from "./views/guestpages/CompleteRegistration";
 // import Privacy from "./views/guestpages/Privacy";
 import Terms from "./views/guestpages/Terms";
+import LaunchScreen from "./views/dashboard/mainAppPages/components/loaders/LaunchScreen";
 
 import PrivateGuestRoute from "./views/common/PrivateGuestRoute";
 import PrivateDashBoardRoute from "./views/common/PrivateDashBoardRoute";
 import { toast, ToastContainer } from "react-toastify";
+import { Redirect } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
@@ -43,22 +46,41 @@ if (localStorage.jwtToken) {
     type: SET_USER_PROFILE,
     payload: JSON.parse(localStorage.getItem("userProfile"))
   });
+
   // Check for expired token
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
     // Logout user
     store.dispatch(logoutUser());
     // Redirect to login
-    window.location.href = "/sign-in";
+    // window.location.href = "/sign-in";
+    // <Redirect to="/sign-in"/>
   }
 }
 
 class App extends Component {
+  state = {
+    serverWoke: false
+  };
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    try {
+      const auth = axios.create();
+      auth.defaults.timeout = 5000;
+      const { res } = await auth.get("/wake-up");
+      this.setState({
+        serverWoke: true
+      });
+      console.log(res);
+    } catch (e) {
+      this.setState({
+        serverWoke: true
+      });
+      console.log(e);
+    }
     if (store.getState().auth.isAuthenticated === true) {
       // check for new follow backs every 10 mins
       this.timer = setInterval(this.checkNewFollowBack, 10 * 60 * 1000);
@@ -97,26 +119,41 @@ class App extends Component {
   };
 
   render() {
+    const loggedIn = store.getState().auth.isAuthenticated === true;
     return (
       <Provider store={store}>
         <Router>
           <div>
-            <Route exact path="/" component={LandingPage} />
             <ToastContainer />
+            {/* <Route exact path="/" component={LandingPage} /> */}
             <Switch>
+              {this.state.serverWoke === false ? (
+                <LaunchScreen />
+              ) : (
+                <Route
+                  exact
+                  path="/"
+                  render={() =>
+                    loggedIn === true ? (
+                      <Redirect to="/dashboard" />
+                    ) : (
+                      <LandingPage />
+                    )
+                  }
+                />
+              )}
               <PrivateGuestRoute exact path="/sign-up" component={SignUp} />
-            </Switch>
-            <Switch>
+
               <PrivateGuestRoute
                 exact
                 path="/complete-signup"
                 component={CompleteRegistration}
               />
+              <Route exact path="/sign-in" component={SignIn} />
+              {/* <Route exact path="/privacy" component={Privacy} /> */}
+              <Route exact path="/terms" component={Terms} />
+              <PrivateDashBoardRoute />
             </Switch>
-            <Route exact path="/sign-in" component={SignIn} />
-            {/* <Route exact path="/privacy" component={Privacy} /> */}
-            <Route exact path="/terms" component={Terms} />
-            <PrivateDashBoardRoute />
           </div>
         </Router>
       </Provider>

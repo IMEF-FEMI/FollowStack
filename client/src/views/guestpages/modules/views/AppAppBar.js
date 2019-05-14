@@ -1,100 +1,96 @@
 import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import Link from "@material-ui/core/Link";
-import { Link as RouterLink } from "react-router-dom";
-// import Button from "@material-ui/core/Button";
-import AppBar from "../components/AppBar";
-import Toolbar, { styles as toolbarStyles } from "../components/Toolbar";
+import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import compose from "recompose/compose";
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import MuiAppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
-const styles = theme => ({
-  title: {
-    fontSize: 24
-  },
-  placeholder: toolbarStyles(theme).root,
-  toolbar: {
-    justifyContent: "space-between"
-  },
-  left: {
-    flex: 1
-  },
-  leftLinkActive: {
-    color: theme.palette.common.white
-  },
-  right: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "flex-end"
-  },
-  rightLink: {
-    fontSize: 16,
-    color: theme.palette.common.white,
-    marginLeft: theme.spacing.unit * 3
-  },
-  linkSecondary: {
-    color: theme.palette.secondary.main
-  },
-  button: {
-    margin: theme.spacing.unit
-  }
-});
-
-function AppAppBar(props) {
-  const { classes } = props;
-
-  return (
-    <div>
-      <AppBar position="fixed">
-        <Toolbar className={classes.toolbar}>
-          <div className={classes.left} />
-          <Link
-            component={RouterLink}
-            variant="h6"
-            underline="none"
-            color="inherit"
-            className={classes.title}
-            to="/"
+class AppBar extends React.Component {
+  renderNavButtons() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.nav}>
+        <Button to="/sign-in" component={Link} variant="text" color="inherit">
+          &nbsp;Sign In
+        </Button>
+          <Button
+            to="/sign-up"
+            component={Link}
+            variant="contained"
+            color="secondary"
           >
-            {"onepirate"}
-          </Link>
-          <div className={classes.right}>
-            <Link
-              component={RouterLink}
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={`${
-                classes.rightLink
-              } btn btn-outline-danger btn-sm mr-2`}
-              to="/sign-in"
-              // className="btn btn-outline-danger btn-sm mr-2"
-              style={{ width: 100 }}
-            >
-              {"Sign In"}
-            </Link>
-            <Link
-              component={RouterLink}
-              variant="h6"
-              underline="none"
-              className={`${classNames(
-                classes.rightLink
-              )} btn btn-danger btn-sm`}
-              style={{ width: 100 }}
-              to="/sign-up"
-            >
-              {"Sign Up"}
-            </Link>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.placeholder} />
-    </div>
-  );
+            &nbsp;Sign Up
+          </Button>
+      </div>
+    );
+  }
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div className={classes.root}>
+        <MuiAppBar className={classes.heroStylesAppBar} position="static">
+          <Toolbar>
+            <div>
+              <Link to="/" className={classNames(classes.logo, classes.aTag)}>
+                <Typography
+                  variant="h6"
+                  color="inherit"
+                  className={classes.grow}
+                >
+                  FollowStack
+                </Typography>
+              </Link>
+            </div>
+
+            {this.renderNavButtons()}
+          </Toolbar>
+        </MuiAppBar>
+      </div>
+    );
+  }
 }
 
-AppAppBar.propTypes = {
+AppBar.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(AppAppBar);
+const styles = theme => ({
+  root: {
+    // flexGrow: 1
+  },
+  heroStylesAppBar: {
+    backgroundColor: "transparent",
+    boxShadow: "none",
+    position: "absolute",
+    zIndex: "1000",
+    width: "100%"
+  },
+  grow: {
+    // flexGrow: 1
+  },
+  logo: {
+    display: "flex"
+  },
+  nav: {
+    display: "flex",
+    marginLeft: "auto",
+    alignItems: "center"
+  },
+  aTag: {
+    padding: 0,
+    color: "inherit",
+    textDecoration: "none"
+  }
+});
+
+export default compose(
+  withRouter,
+  withStyles(styles)
+)(AppBar);

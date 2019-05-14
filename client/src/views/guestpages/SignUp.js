@@ -110,7 +110,7 @@ if(isMobile){
           errorCode === "auth/invalid-credential"
         ) {
           // that.setState({networkError: true})
-          toast.error(" ⚠️️ Network Error Try Again!", {
+          toast.error(" An Error has occured Try Again!", {
             position: "bottom-right",
             autoClose: 10000,
             hideProgressBar: false,
@@ -162,26 +162,24 @@ if(isMobile){
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(`error code ${errorCode} message ${errorMessage}`)
-        if (
-          errorCode === "auth/network-request-failed" ||
-          errorCode === "auth/invalid-credential"
-        ) {
-          // that.setState({networkError: true})
-          toast.error(" ⚠️️ Network Error Try Again!", {
-            position: "bottom-right",
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true
-          });
-        }
+        
+        toast.error(" An Error has occured Try Again!", {
+          position: "bottom-right",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
+        localStorage.setItem("redirected", false);
+        that.setState({ loading: false });
+        
       });
     }
 
     // size change listener
     window.addEventListener("resize", this.hasWindowSizeChange);
-    if (this.props.auth.isAuthenticated) {
+    if (this.props.auth.isAuthenticated === true) {
       this.props.history.push("/dashboard");
     }
   }

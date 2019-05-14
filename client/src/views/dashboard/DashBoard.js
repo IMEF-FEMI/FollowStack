@@ -1,10 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
-import MainFooter from "../common/AppFooter";
+// import MainFooter from "../common/AppFooter";
+// import Footer from "./layouts/Footer";
+// import StickyFooter from "react-sticky-footer";
+
+import { withRouter } from "react-router-dom";
 
 let welcome_user = {
-  color: "#FFF",
+  color: "#fff",
   fontFamily: "Nunito, sans-serif",
   fontSize: "30px",
   textAlign: "center",
@@ -13,7 +17,7 @@ let welcome_user = {
   marginLeft: "auto",
   marginRight: "auto"
 };
-let icon_index = {
+let logout_icon_index = {
   display: "block",
   margin: "0 auto",
   position: "relative",
@@ -23,12 +27,25 @@ let icon_index = {
   height: "75px",
   fontSize: "50px",
   lineHeight: "150px",
-  backgroundColor: "rgb(17, 128, 32)",
+  backgroundColor: "#f50057",
   borderRadius: "15px"
 };
 
+let twitter_icon_index = {
+  display: "block",
+  margin: "0 auto",
+  position: "relative",
+  textAlign: "center",
+  overflow: "hidden",
+  width: "75px",
+  height: "75px",
+  fontSize: "50px",
+  lineHeight: "150px",
+  backgroundColor: "#3897f0",
+  borderRadius: "15px"
+};
 let category_text = {
-  color: "#FFF",
+  color: "#fff",
   textAlign: "center",
   fontFamily: "Nunito, sans-serif",
   fontSize: "20px",
@@ -60,20 +77,17 @@ class DashBoard extends React.Component {
       width: window.innerWidth
     });
   };
+
+  push = url => {
+    this.props.history.push(url);
+  };
   render() {
     const { width } = this.state;
     const isMobile = width <= 575;
-    // const bgimage = require("./assets/img/productCurvyLines.png");
-    const bgimage = require("./assets/img/green.jpg");
     return (
       <div>
         <div
           style={{
-            backgroundImage: !isMobile && "url(" + bgimage + ")",
-            backgroundSize: !isMobile && "cover",
-            backgroundRepeat: !isMobile && "repeat",
-            backgroundPosition: !isMobile && "top center",
-            backgroundColor: "#191512",
             height: "100vh",
             position: "relative"
           }}
@@ -81,7 +95,7 @@ class DashBoard extends React.Component {
           {/* drop thelayout by 30% if not mobile */}
           <div
             style={{ top: isMobile ? "0%" : "30%", position: "relative" }}
-            className="container"
+            // className="container"
           >
             {/* display Welcome text here if not mobile */}
             {!isMobile && (
@@ -92,15 +106,7 @@ class DashBoard extends React.Component {
               </div>
             )}
 
-            <div
-              className="row"
-              style={{
-                backgroundImage: isMobile && "url(" + bgimage + ")",
-                backgroundSize: isMobile && "cover",
-                backgroundRepeat: isMobile && "repeat",
-                backgroundPosition: isMobile && "top center"
-              }}
-            >
+            <div className="row">
               {isMobile && (
                 <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 mobilePadding">
                   {/* display mobile text here if mobile */}
@@ -116,12 +122,14 @@ class DashBoard extends React.Component {
               )}
               {
                 <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
-                  <div style={icon_index} id="icon-box">
-                    <span
-                      onClick={function() {
-                        console.log("hre");
-                      }}
-                    >
+                  <div
+                    style={twitter_icon_index}
+                    id="icon-box-twitter"
+                    onClick={() => {
+                      this.push("/gain-followers");
+                    }}
+                  >
+                    <span>
                       <i className="fa fa-users fa fa-lg-modification" />
                     </span>
                   </div>
@@ -141,13 +149,15 @@ class DashBoard extends React.Component {
               }
               {
                 <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
-                  <div style={icon_index} id="icon-box">
-                    <span
-                      onClick={function() {
-                        console.log("hre");
-                      }}
-                    >
-                      <i className="fa fa-images fa fa-lg-modification" />
+                  <div
+                    style={twitter_icon_index}
+                    id="icon-box-twitter"
+                    onClick={() => {
+                      this.push("/gain-followers");
+                    }}
+                  >
+                    <span>
+                      <i className="fab fa-twitter fa-lg-modification" />
                     </span>
                   </div>
                   {
@@ -159,20 +169,22 @@ class DashBoard extends React.Component {
                       }
                     >
                       {" "}
-                      Gallery
+                      View Tweets
                     </p>
                   }
                 </div>
               }
               {
                 <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
-                  <div style={icon_index} id="icon-box">
-                    <span
-                      onClick={function() {
-                        console.log("hre");
-                      }}
-                    >
-                      <i className="fa fa-user-circle fa fa-lg-modification" />
+                  <div
+                    style={twitter_icon_index}
+                    id="icon-box-twitter"
+                    onClick={() => {
+                      this.push("/gain-followers");
+                    }}
+                  >
+                    <span>
+                      <i className="far fa-user fa fa-lg-modification" />
                     </span>
                   </div>
                   {
@@ -191,7 +203,7 @@ class DashBoard extends React.Component {
               }
               {
                 <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
-                  <div style={icon_index} id="icon-box">
+                  <div style={logout_icon_index} id="logout-icon-box">
                     <span
                       onClick={function() {
                         console.log("hre");
@@ -217,9 +229,6 @@ class DashBoard extends React.Component {
             </div>
           </div>
         </div>
-
-        {isMobile && <div style={{ paddingTop: "50vh" }}>{<MainFooter />}</div>}
-        {!isMobile && <div>{<MainFooter />}</div>}
       </div>
     );
   }
@@ -232,4 +241,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(DashBoard);
+export default withRouter(connect(mapStateToProps)(DashBoard));

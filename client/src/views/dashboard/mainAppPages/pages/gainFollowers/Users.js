@@ -88,7 +88,10 @@ class Users extends React.Component {
             <Grid container spacing={16} justify="center">
               {firstTen.map(element => (
                 <Grid
-                  key={element.user_id}
+                  key={
+                    element.user_id +
+                    `${Math.random() * 5} ${Math.random() * 20}`
+                  }
                   item
                   xs={window.innerWidth <= 500 ? 12 : 8}
                 >
@@ -124,7 +127,10 @@ class Users extends React.Component {
             <Grid container spacing={16} justify="center">
               {users.map(element => (
                 <Grid
-                  key={element.user_id}
+                  key={
+                    element.user_id +
+                    `${Math.random() * 5} ${Math.random() * 20}`
+                  }
                   item
                   xs={window.innerWidth <= 500 ? 12 : 8}
                 >

@@ -5,6 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+// import Footer from "./Footer";
 
 const drawerWidth = 240;
 
@@ -100,21 +101,37 @@ class DefaultLayout extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const bgimage = require("../assets/img/green.jpg");
+    const dash = this.props.location.pathname === "/dashboard";
 
     return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <Navbar
-          open={this.state.open}
-          handleDrawerOpen={this.handleDrawerOpen}
-          classes={classes}
-        />
-        <Sidebar
-          open={this.state.open}
-          handleDrawerClose={this.handleDrawerClose}
-          classes={classes}
-        />
-        <main className={classes.content}>{this.props.children}</main>
+      <div>
+        <div className={classes.root}>
+          <CssBaseline />
+          <Navbar
+            open={this.state.open}
+            handleDrawerOpen={this.handleDrawerOpen}
+            classes={classes}
+          />
+          <Sidebar
+            open={this.state.open}
+            handleDrawerClose={this.handleDrawerClose}
+            classes={classes}
+          />
+          <main
+            className={classes.content}
+            style={{
+              backgroundImage: dash && "url(" + bgimage + ")",
+              backgroundColor: dash && "#2c3e50",
+              backgroundSize: dash && "cover",
+              backgroundRepeat: dash && "repeat",
+              backgroundPosition: dash && "top center"
+            }}
+          >
+            {this.props.children}
+          </main>
+        </div>
+        {/* <Footer /> */}
       </div>
     );
   }

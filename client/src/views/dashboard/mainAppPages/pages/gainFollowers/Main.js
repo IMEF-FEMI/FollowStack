@@ -21,7 +21,6 @@ import {
   showFollowedTabAction,
   checkTotalGainedAction
 } from "../../../../../actions/gainFollowersAction";
-
 const { Avatar, Icon, Typography } = atoms;
 const { Tabs, Tab } = molecules;
 
@@ -48,6 +47,7 @@ function Main(props) {
   };
   React.useEffect(() => {
     props.checkTotalGainedAction(props.auth.user.userid);
+
     console.log("gain followers main mounted");
   }, []); // passing an empty array as second argument triggers the callback
   // in useEffect only after the initial render thus replicating
@@ -189,4 +189,3 @@ export default connect(
     checkTotalGainedAction
   }
 )(withTheme(theme)(Main));
-// export default withRouter(connect()(withStyles(styles)(FirstPage)))

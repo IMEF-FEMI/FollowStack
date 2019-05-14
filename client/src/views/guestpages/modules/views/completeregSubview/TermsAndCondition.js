@@ -7,6 +7,8 @@ import {
   setUserData,
   setUserProfile
 } from "../../../../../actions/authActions";
+import { checkTotalGainedAction } from "../../../../../actions/gainFollowersAction";
+
 import Spinner from "./Spinner";
 
 // @material-ui/core components
@@ -52,6 +54,7 @@ class TermsAndCondition extends Component {
     if (nextProps.auth.isAuthenticated) {
       this.props.setUserData(this.state.user);
       this.props.setUserProfile(this.state.user);
+      this.props.checkTotalGainedAction(this.state.user.userid);
       this.props.history.push("/dashboard");
     } else if (nextProps.errors.userError) {
       this.setState({ errorMessage: nextProps.errors.userError });
@@ -131,6 +134,7 @@ class TermsAndCondition extends Component {
 TermsAndCondition.propTypes = {
   register: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
+  checkTotalGainedAction: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -143,6 +147,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { register, setUserData, setUserProfile }
+    { register, setUserData, setUserProfile, checkTotalGainedAction }
   )(TermsAndCondition)
 );

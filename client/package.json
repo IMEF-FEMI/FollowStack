@@ -18,6 +18,7 @@
     "react-select": "^2.4.1",
     "react-share": "^2.4.0",
     "react-social-login-buttons": "^2.3.0",
+    "react-sticky-footer": "^0.1.0-rc3",
     "react-toastify": "5.1.0",
     "redux": "^3.7.2",
     "react-component-countdown-timer": "^0.1.1",
