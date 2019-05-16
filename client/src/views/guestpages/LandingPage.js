@@ -2,9 +2,8 @@ import withRoot from "./modules/withRoot";
 // --- Post bootstrap -----
 import React, { Component } from "react";
 import { PropTypes } from "prop-types";
-import ProductCategories from "./modules/views/ProductCategories";
 import ProductSmokingHero from "./modules/views/ProductSmokingHero";
-import AppFooter from "../common/AppFooter";
+import AppFooter from "./modules/views/AppFooter";
 import HeroUnit from "./modules/views/HeroUnit";
 import ProductValues from "./modules/views/ProductValues";
 import ProductHowItWorks from "./modules/views/ProductHowItWorks";
@@ -30,11 +29,10 @@ class LandingPage extends Component {
         <AppAppBar />
         <HeroUnit contentRef={this.contentRef} />
         <div ref={this.contentRef}>
-          <ProductValues />
-        </div>
-        <ProductCategories />
-        <ProductHow />
         <ProductHowItWorks />
+        </div>
+        <ProductValues />
+          <ProductHow />
         <ProductSmokingHero />
         <AppFooter />
       </React.Fragment>

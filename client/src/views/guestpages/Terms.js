@@ -1,21 +1,21 @@
 // --- Post bootstrap -----
 import React from "react";
-import AppFooter from "../common/AppFooter";
-import NavBar from "../common/NavBar";
+import AppFooter from "./modules/views/AppFooter";
 import Markdown from "./modules/components/Markdown";
 import Typography from "./modules/components/Typography";
 import LayoutBody from "./modules/components/LayoutBody";
 import terms from "./modules/views/terms.md";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import SigndInNav from "../common/SigndInNav";
+import AppAppBar from "./modules/views/AppAppBar";
+import Navbar from "../dashboard/layouts/Navbar";
 
 class Terms extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {!this.props.auth.isAuthenticated && <NavBar />}
-        {this.props.auth.isAuthenticated && <SigndInNav />}
+        {this.props.auth.isAuthenticated === false && <AppAppBar />}
+        {this.props.auth.isAuthenticated === true && <Navbar />}
         <LayoutBody margin marginBottom>
           <Typography variant="h3" gutterBottom marked="center" align="center">
             Terms

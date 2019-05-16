@@ -5,6 +5,7 @@ import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { SET_USER_DATA, SET_USER_PROFILE } from "./actions/types";
 import { checkFollowedBackInterval } from "./actions/gainFollowersAction";
+import { setUserProfile } from "./actions/authActions";
 import { Provider } from "react-redux";
 import axios from "axios";
 import store from "./store";
@@ -21,9 +22,7 @@ import PrivateDashBoardRoute from "./views/common/PrivateDashBoardRoute";
 import { toast, ToastContainer } from "react-toastify";
 import { Redirect } from "react-router-dom";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "shards-ui/dist/css/shards.min.css";
-import "./assets/styles/shards-dashboards.1.1.0.min.css";
+
 import "./assets/styles/custom.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -46,7 +45,7 @@ if (localStorage.jwtToken) {
     type: SET_USER_PROFILE,
     payload: JSON.parse(localStorage.getItem("userProfile"))
   });
-
+store.dispatch(setUserProfile(store.getState().auth.userData))
   // Check for expired token
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
@@ -74,7 +73,7 @@ class App extends Component {
       this.setState({
         serverWoke: true
       });
-      console.log(res);
+      console.log(!!res);
     } catch (e) {
       this.setState({
         serverWoke: true

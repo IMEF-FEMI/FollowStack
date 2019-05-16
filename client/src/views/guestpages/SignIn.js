@@ -1,13 +1,17 @@
-// --- Post bootstrap -----
 import React from "react";
+import PropTypes from "prop-types";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Divider from "@material-ui/core/Divider";
+import Paper from "@material-ui/core/Paper";
+import Typography from "./modules/components/Typography";
+import withStyles from "@material-ui/core/styles/withStyles";
+
 import firebase from "firebase/app";
 import "firebase/auth";
 import { withRouter, Link } from "react-router-dom";
-import Typography from "./modules/components/Typography";
-import AppFooter from "../common/AppFooter";
-import NavBar from "../common/NavBar";
+import AppFooter from "../guestpages/modules/views/AppFooter";
+import AppAppBar from "../guestpages/modules/views/AppAppBar";
 import Spinner from "./modules/views/completeregSubview/Spinner";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { TwitterLoginButton } from "react-social-login-buttons";
 
@@ -16,36 +20,34 @@ import { signIn, setUserData, setUserProfile } from "../../actions/authActions";
 import { checkTotalGainedAction } from "../../actions/gainFollowersAction";
 import { toast, ToastContainer } from "react-toastify";
 
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  ListGroupItem
-} from "shards-react";
-// import SignUpOAuth from "../common/SignUpOAuth ";
-
-const conatinerFluid = {
-  paddingRight: "15px",
-  paddingLeft: "15px",
-  marginRight: "auto",
-  marginLeft: "auto",
-  width: "100%"
-};
-
-const container = {
-  ...conatinerFluid,
-  zIndex: "2",
-  position: "relative",
-  paddingTop: "20vh",
-  paddingBottom: "20vh",
-  color: "#FFFFFF"
-};
+const styles = theme => ({
+  main: {
+    width: "auto",
+    display: "block", // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: "auto",
+      marginRight: "auto"
+    }
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
+      .spacing.unit * 3}px`,
+    borderRadius: "10px"
+  }
+});
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
     apiKey: " AIzaSyDPRnO_g0nrFa0PNI7IynwTdCnRg8nWNJc",
-    authDomain: "followstack.firebaseapp.com"
+    authDomain: "followstack.firebaseapp.com",
+    projectId: "followstack"
   });
 }
 
@@ -135,6 +137,8 @@ class SignIn extends React.Component {
     if (isMobile) {
       if (localStorage.getItem("redirected") === "true") {
         this.setState({ loading: true });
+      } else {
+        return;
       }
       const that = this;
       firebase
@@ -160,6 +164,7 @@ class SignIn extends React.Component {
             that.props.setUserProfile(userData);
             // console.log("user from the base" + JSON.stringify(userData));
             that.handleUserData(userData);
+            localStorage.setItem("redirected", false);
           } else if (user === null || result.credential === undefined) {
             that.setState({ loading: false });
             localStorage.setItem("redirected", false);
@@ -208,11 +213,39 @@ class SignIn extends React.Component {
   }
 
   async completeSignIn(userData) {
-    const res = await checkUser(userData.userid);
-    if (res.data === false) {
-      this.setState({ loading: false });
+    try {
+      const res = await checkUser(userData.userid);
+      if (res.data === false) {
+        this.setState({ loading: false });
 
-      toast.error(" ⚠️ User Not Registered! 👨", {
+        toast.error(" ⚠️ User Not Registered! 👨", {
+          position: "bottom-right",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
+      } else {
+        try {
+          this.props.checkTotalGainedAction(userData.userid);
+          //sign in
+          this.props.signIn(userData);
+        } catch (err) {
+          this.setState({ loading: false });
+          toast.error(" Error Connecting to Server Try again", {
+            position: "bottom-right",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+          });
+        }
+      }
+    } catch (err) {
+      this.setState({ loading: false });
+      toast.error(" Error Connecting to Server Try again", {
         position: "bottom-right",
         autoClose: 10000,
         hideProgressBar: false,
@@ -220,70 +253,88 @@ class SignIn extends React.Component {
         pauseOnHover: true,
         draggable: true
       });
-    } else {
-      this.props.checkTotalGainedAction(userData.userid);
-      //sign in
-      this.props.signIn(userData);
     }
   }
   render() {
-    const image = require("./assets/img/socialmedia.jpg");
+    const { classes } = this.props;
     return (
       <div
         style={{
-          backgroundImage: "url(" + image + ")",
+          backgroundColor: "#2c3e50",
           backgroundSize: "cover",
           backgroundPosition: "top center",
           height: "100%"
         }}
       >
-        <NavBar />
+        <AppAppBar />
         <ToastContainer />
-        <div style={container} className="col-sm-6 col-xs-6 col-md-5">
-          {
-            <Card small>
-              <CardHeader className="border-bottom">
-                <React.Fragment>
-                  <Typography
-                    variant="h3"
-                    gutterBottom
-                    marked="center"
-                    align="center"
-                  >
-                    Sign In
-                  </Typography>
-                  <Typography variant="body2" align="center">
-                    <Link to="/sign-up" underline="always">
-                      Dont have an account?
-                    </Link>
-                  </Typography>
-                </React.Fragment>
-              </CardHeader>
-              <CardBody>
+        <main className={classes.main}>
+          <CssBaseline />
+          <div
+            style={{
+              paddingTop: "15vh"
+            }}
+          >
+            <Paper className={classes.paper}>
+              <React.Fragment>
+                <Typography
+                  variant="h3"
+                  gutterBottom
+                  marked="center"
+                  align="center"
+                >
+                  Sign In
+                </Typography>
+                <Typography variant="body2" align="center">
+                  <Link to="/sign-up" underline="always">
+                    Dont have an account?
+                  </Link>
+                </Typography>
+              </React.Fragment>
+              <Divider
+                variant="fullWidth"
+                style={{
+                  width: "100%"
+                }}
+              />
+              <React.Fragment>
                 {!this.state.loading && (
-                  <TwitterLoginButton onClick={this.startTwitterAuth}>
-                    <p
-                      className="text-center"
-                      style={{ marginTop: 1, marginBottom: 1 }}
-                    >
-                      Sign In with Twitter
-                    </p>
-                  </TwitterLoginButton>
+                  <div
+                    style={{
+                      paddingTop: "5vh",
+                      paddingBottom: "5vh",
+                      width: "100%"
+                    }}
+                  >
+                    <TwitterLoginButton onClick={this.startTwitterAuth}>
+                      <p
+                        className="text-center"
+                        style={{ marginTop: 1, marginBottom: 1 }}
+                      >
+                        Sign In with Twitter
+                      </p>
+                    </TwitterLoginButton>
+                  </div>
                 )}
                 {this.state.loading && <Spinner />}
-              </CardBody>
-              <CardFooter className="border-top">
-                <ListGroupItem className="d-flex px-3 border-0">
-                  <span className="text-dark text-center">
-                    by clicking the sign in button, you agree to our
-                    <Link to="/terms">Terms of service </Link>and
-                    <Link to="/privacy">Privacy Policy</Link>
-                  </span>
-                </ListGroupItem>
-              </CardFooter>
-            </Card>
-          }
-        </div>
+              </React.Fragment>
+              <Divider
+                variant="fullWidth"
+                style={{
+                  width: "100%"
+                }}
+              />
+
+              <React.Fragment>
+                <span className="text-dark text-center">
+                  by clicking the sign in button, you agree to our
+                  <Link to="/terms">Terms of service </Link>and
+                  <Link to="/privacy">Privacy Policy</Link>
+                </span>
+              </React.Fragment>
+            </Paper>
+          </div>
+        </main>
         <AppFooter />
       </div>
     );
@@ -303,8 +354,10 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    { signIn, setUserData, setUserProfile, checkTotalGainedAction }
-  )(SignIn)
+  withStyles(styles)(
+    connect(
+      mapStateToProps,
+      { signIn, setUserData, setUserProfile, checkTotalGainedAction }
+    )(SignIn)
+  )
 );

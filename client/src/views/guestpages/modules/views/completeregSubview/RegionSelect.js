@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Cities from "./Cities.js";
 
 // @material-ui/core components
-import { ListGroupItem, Button, CardBody, CardFooter } from "shards-react";
+import Button from "@material-ui/core/Button";
 class RegionSelect extends Component {
   state = {
     selected: "",
@@ -35,8 +35,8 @@ class RegionSelect extends Component {
 
   render() {
     return (
-      <CardBody>
-        <ListGroupItem className="p-4  ">
+      <div>
+        <div className="p-4 ">
           <strong className="text-dark d-block mb-2">
             {"Select your Location or Location closest to you"}
           </strong>
@@ -44,20 +44,25 @@ class RegionSelect extends Component {
           {this.state.selected !== "" && (
             <i className="text-dark d-block mb-2">{this.state.selected}</i>
           )}
-        </ListGroupItem>
-        <CardFooter>
-          <ListGroupItem className="d-flex px-3 border-0">
+        </div>
+        <div
+          style={{
+            paddingTop: "10vh"
+          }}
+        >
+          <div className="d-flex px-3 border-0">
             <Button
-              theme="primary"
+              variant="contained"
+              color="primary"
               className="ml-auto"
               onClick={this.props.nextStep}
               disabled={this.state.disabled}
             >
-              Next<i className="material-icons">navigate_next</i>
+              Next
             </Button>
-          </ListGroupItem>
-        </CardFooter>
-      </CardBody>
+          </div>
+        </div>
+      </div>
     );
   }
 }

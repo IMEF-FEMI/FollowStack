@@ -165,10 +165,11 @@ router.post(
       response
     ) {
       if (!error && response.statusCode === 200) {
+        client = null
         res.status(200).json({
           name: profile.name,
           screen_name: profile.screen_name,
-          description: profile.description,
+          description: profile.description, 
           followers: profile.followers_count,
           following: profile.friends_count,
           photo: profile.profile_image_url.replace("_normal", "")

@@ -4,7 +4,8 @@ import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import LayoutBody from "../components/LayoutBody";
 import Typography from "../components/Typography";
-import { Row, Col, Container } from "shards-react";
+import Grid from "@material-ui/core/Grid";
+
 
 const styles = theme => ({
   root: {
@@ -51,21 +52,24 @@ function ProductSmokingHero(props) {
       <Typography variant="subtitle1" className={classes.link}>
         Check our Social media Pages
       </Typography>
-      <Container className="dr-example-container">
-        <Row>
-          <Col className="d-flex justify-content-around">
+      
+        <Grid container>
+          <Grid item xs={12} sm={4}>
             <a href="https://facebook.com/followstackapp">
               <img src={facebook} alt="Facebook" />
             </a>
+            </Grid>
+            <Grid item xs={12} sm={4}>
             <a href="https://twitter.com/followstackapp">
               <img src={twitter} alt="Twitter" />
             </a>
+            </Grid>
+            <Grid item xs={12} sm={4}>
             <a href="https://instagram/followstackapp">
               <img src={instagram} alt="Instagram" />
             </a>
-          </Col>
-        </Row>
-      </Container>
+          </Grid>
+        </Grid>
     </LayoutBody>
   );
 }

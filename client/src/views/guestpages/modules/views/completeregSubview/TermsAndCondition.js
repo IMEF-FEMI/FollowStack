@@ -8,17 +8,12 @@ import {
   setUserProfile
 } from "../../../../../actions/authActions";
 import { checkTotalGainedAction } from "../../../../../actions/gainFollowersAction";
+import { toast } from "react-toastify";
 
 import Spinner from "./Spinner";
 
-// @material-ui/core components
-import {
-  ListGroupItem,
-  Button,
-  CardBody,
-  CardFooter,
-  Alert
-} from "shards-react";
+import Button from "@material-ui/core/Button";
+
 class TermsAndCondition extends Component {
   constructor() {
     super();
@@ -27,8 +22,7 @@ class TermsAndCondition extends Component {
       disabled: true,
       user: {},
       location: "",
-      finished: false,
-      errorMessage: ""
+      finished: false
     };
     this.handleCheckedChanged = this.handleCheckedChanged.bind(this);
     this.finished = this.finished.bind(this);
@@ -39,6 +33,8 @@ class TermsAndCondition extends Component {
     this.setState({ user: userData });
     this.props.register(userData);
     this.setState({ finished: true });
+    // this.props.nextStep();
+    // this.props.gotoDashboard()
     // console.log(JSON.stringify(userData))
   }
   componentDidMount() {
@@ -55,23 +51,32 @@ class TermsAndCondition extends Component {
       this.props.setUserData(this.state.user);
       this.props.setUserProfile(this.state.user);
       this.props.checkTotalGainedAction(this.state.user.userid);
-      this.props.history.push("/dashboard");
+    this.props.nextStep();
+    this.props.gotoDashboard()
+
     } else if (nextProps.errors.userError) {
-      this.setState({ errorMessage: nextProps.errors.userError });
+      toast.error(nextProps.errors.userError, {
+        position: "bottom-right",
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
     }
   }
 
   handleCheckedChanged(event) {
     this.setState({ checked: event.target.checked });
-    this.setState({ disabled: !event.target.checked });
+    this.setState({ disabled: !event.target.checked }); 
   }
 
   render() {
     return (
       <div>
         {!this.state.finished && (
-          <CardBody>
-            <ListGroupItem className="p-4  ">
+          <div>
+            <div className="p-4  ">
               <strong className="text-dark d-block mb-2">
                 {"Terms And Conditions"}
               </strong>
@@ -102,31 +107,39 @@ class TermsAndCondition extends Component {
                   </label>
                 </div>
               </div>
-            </ListGroupItem>
-            <CardFooter>
-              <ListGroupItem className="d-flex px-3 border-0">
-                <Button theme="danger" onClick={this.props.prevStep}>
+            </div>
+            <div
+              style={{
+                paddingTop: "5vh"
+              }}
+            >
+              <div className="d-flex px-3 border-0">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={this.props.prevStep}
+                >
                   Prev
                 </Button>
                 <Button
-                  theme="success"
+                  color="primary"
                   className="ml-auto"
                   disabled={this.state.disabled}
                   onClick={this.finished}
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#28a745",
+                    borderColor: "#28a745"
+                  }}
                 >
                   Finish
                 </Button>
-              </ListGroupItem>
-            </CardFooter>
-          </CardBody>
+              </div>
+            </div>
+          </div>
         )}
 
         {this.state.finished && <Spinner />}
-        {this.state.errorMessage !== "" && (
-          <Alert theme="danger" className="text-center">
-            {this.state.errorMessage}
-          </Alert>
-        )}
       </div>
     );
   }

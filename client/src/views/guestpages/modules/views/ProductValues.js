@@ -59,7 +59,7 @@ function ProductValues(props) {
               align="center"
               component="h2"
             >
-              Why Grow Your Account
+              Why Gain More Followers?
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
@@ -69,10 +69,10 @@ function ProductValues(props) {
                 You could earn lots of money
               </Typography>
               <Typography variant="h5">
-                {`You could make a lot of money off your social media
+                {`You could make a lot of money when you have much followers on your social media
                   account by using Platforms like `}
                 {<a href="https://famebit.com">FameBit</a>}
-                {` or by posting adverts for individuals looking 
+                {` or by posting adverts for independent marketters looking 
                   for ways to make their product and services known`}
               </Typography>
             </div>

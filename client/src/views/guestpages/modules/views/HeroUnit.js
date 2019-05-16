@@ -25,16 +25,9 @@ export const HeroUnit = props => {
     <React.Fragment>
       <div className={classes.bgOverlay}>
         <main className={classes.main}>
-          {/* <div className={classes.slides}>
-            <figure />
-            <figure />
-            <figure />
-            <figure />
-            <figure />
-          </div> */}
           <div className={classes.heroContent}>
             <Typography
-              variant="h2"
+              variant={window.innerWidth <= 500 ? "h4" : "h2"}
               align="center"
               color="textPrimary"
               className={classes.heroMainTxt}
@@ -47,35 +40,89 @@ export const HeroUnit = props => {
               align="center"
               color="textSecondary"
               className={classes.heroSecText}
+            >
+              FollowStack is a simple{" "}
+              <a href="https://twitter.com/search?q=follow4follow">
+                #follow4follow
+              </a>{" "}
+              App where you gain
+            </Typography>
+            <Typography variant="h6" align="center" 
+            style={{
+              textTransform: "none"
+            }} gutterBottom>
+              more followers{"  "}
+              <i
+                className="fab fa-twitter"
+                style={{
+                  color: "#1c88cc"
+                }}
+              />
+            </Typography>
+            <Typography variant="h6" align="center" style={{
+                textTransform: "none"
+              }} gutterBottom>
+              more likes (Favs){"  "}
+              <i
+                className="fas fa-heart"
+                style={{
+                  color: "#ff3366"
+                }}
+              />
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              gutterBottom
+              // className={classes.heroSecText}
+              style={{
+                textTransform: "none"
+              }}
+            >
+              more RT's {"  "}
+              <i
+                className="fas fa-retweet"
+                style={{
+                  color: "#17bf63"
+                }}
+              />
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              color="textSecondary"
+              className={classes.heroSecText}
+              paragraph
+              style={{
+                textTransform: "none"
+              }}
+            >
+              for your Twitter Account{"  "}
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              color="textSecondary"
+              // className={classes.heroSecText}
               paragraph
             >
-              SnapsApp is an image-sharing app built with the MERN stack and
-              styled with the Material-UI library.
+              with just a few clicks
             </Typography>
             <div>
               <Grid container spacing={16} justify="center">
                 <Grid item>
                   <Button
                     to={{
-                      pathname: "/register",
-                      state: { registerOrLogin: "register" }
+                      pathname: "/sign-up"
                     }}
                     component={Link}
                     variant="outlined"
                     className={classes.heroButtons}
+                    style={{
+                      textTransform: "none"
+                    }}
                   >
-                    Sign Up
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    href="https://github.com/samokasha/snapsapp"
-                    target="_blank"
-                    component={"a"}
-                    variant="outlined"
-                    className={classes.heroButtons}
-                  >
-                    GitHub
+                    Get Started
                   </Button>
                 </Grid>
               </Grid>
@@ -103,38 +150,10 @@ const styles = theme => ({
     position: "relative",
     height: "100vh",
     background:
-    "url(https://cdn.pixabay.com/photo/2019/05/11/09/14/night-4195327_960_720.jpg)",
-  backgroundSize: "cover",
+      "url(https://cdn.pixabay.com/photo/2019/05/11/09/14/night-4195327_960_720.jpg)",
+    backgroundSize: "cover"
   },
-  slides: {
-    height: "100%",
-    "& > figure": {
-      margin: 0,
-      animation: "bg-animation 30s linear infinite 0s",
-      backfaceVisibility: "hidden",
-      backgroundSize: "cover",
-      backgroundPosition: "center center",
-      color: "transparent",
-      height: "100%",
-      left: "0px",
-      opacity: "0",
-      position: "absolute",
-      top: "0px",
-      width: "100%",
-      zIndex: "0"
-    },
-    "& figure:nth-child(1)": {
-      [theme.breakpoints.down("sm")]: {
-        background:
-          "url(https://cdn.pixabay.com/photo/2019/05/11/09/14/night-4195327_960_720.jpg)",
-        backgroundSize: "cover"
-      },
-      background:
-        "url(https://cdn.pixabay.com/photo/2019/05/11/09/14/night-4195327_960_720.jpg)",
-      animationDelay: "18s",
-      backgroundSize: "cover"
-    }
-  },
+
   "@keyframes bg-animation": {
     "0%": {
       animationTimingFunction: "ease-in",
@@ -158,10 +177,10 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 2
   },
   heroContent: {
-    width: "90%",
+    width: "100%",
     maxWidth: 600,
     position: "absolute",
-    top: "30%",
+    top: "20%",
     left: "50%",
     transform: "translate(-50%, -8px)",
     margin: "0 auto",
@@ -185,7 +204,11 @@ const styles = theme => ({
   },
   heroButtons: {
     color: "#fff",
-    border: "1px solid #fff"
+    border: "1px solid #fff",
+    "&:hover,&:focus": {
+      color: "white",
+      background: "rgba(0,0,0,.125)"
+    }
   },
   layout: {
     width: "auto",

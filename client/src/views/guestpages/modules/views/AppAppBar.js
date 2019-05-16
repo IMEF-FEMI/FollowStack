@@ -13,36 +13,63 @@ import Button from "@material-ui/core/Button";
 class AppBar extends React.Component {
   renderNavButtons() {
     const { classes } = this.props;
+    const location = this.props.location.pathname;
+
     return (
       <div className={classes.nav}>
-        <Button to="/sign-in" component={Link} variant="text" color="inherit">
+        <Button
+          to="/sign-in"
+          component={Link}
+          variant="text"
+          color={location !== "/" ? "default" : "inherit"}
+          className={classes.button}
+        >
           &nbsp;Sign In
         </Button>
-          <Button
-            to="/sign-up"
-            component={Link}
-            variant="contained"
-            color="secondary"
-          >
-            &nbsp;Sign Up
-          </Button>
+        <Button
+          to="/sign-up"
+          component={Link}
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+        >
+          &nbsp;Sign Up
+        </Button>
       </div>
     );
   }
 
   render() {
     const { classes } = this.props;
+    const location = this.props.location.pathname;
 
     return (
       <div className={classes.root}>
-        <MuiAppBar className={classes.heroStylesAppBar} position="static">
+        <MuiAppBar
+          className={classes.heroStylesAppBar}
+          style={{
+            backgroundColor: location !== "/" ? "#fff" : "transparent"
+          }}
+          position="static"
+        >
           <Toolbar>
             <div>
-              <Link to="/" className={classNames(classes.logo, classes.aTag)}>
+              <Link
+                to="/"
+                style={{
+                  textDecoration: "none",
+                  color: location !== "/" ? "black" : "#fff"
+                }}
+                className={classNames(classes.logo, classes.aTag)}
+              >
                 <Typography
                   variant="h6"
-                  color="inherit"
-                  className={classes.grow}
+                  color={location !== "/" ? "textPrimary" : "inherit"}
+                  // className={classes.grow}
+                  style={{
+                    textDecoration: "none",
+                    textTransForm: "none"
+                  }}
                 >
                   FollowStack
                 </Typography>
@@ -63,17 +90,16 @@ AppBar.propTypes = {
 
 const styles = theme => ({
   root: {
-    // flexGrow: 1
+    flexGrow: 1
   },
   heroStylesAppBar: {
-    backgroundColor: "transparent",
     boxShadow: "none",
     position: "absolute",
     zIndex: "1000",
     width: "100%"
   },
   grow: {
-    // flexGrow: 1
+    flexGrow: 1
   },
   logo: {
     display: "flex"
@@ -87,7 +113,17 @@ const styles = theme => ({
     padding: 0,
     color: "inherit",
     textDecoration: "none"
-  }
+  },
+  button: {
+    position: "relative",
+    textTransform: "uppercase",
+    textDecoration: "none",
+    display: "inline-flex",
+    "&:hover,&:focus": {
+      color: "white",
+      background: "rgba(0,0,0,.125)"
+    }
+  },
 });
 
 export default compose(

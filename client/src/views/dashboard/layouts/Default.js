@@ -118,7 +118,7 @@ class DefaultLayout extends React.Component {
             handleDrawerClose={this.handleDrawerClose}
             classes={classes}
           />
-          <main
+          <main 
             className={classes.content}
             style={{
               backgroundImage: dash && "url(" + bgimage + ")",

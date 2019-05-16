@@ -100,8 +100,8 @@ function ProductHow(props) {
                   {`Getting followers on followstack is very simple. 
                   we use a method already familiar to you - the follow back Method. 
                   It entails following a number of accounts, waiting for them to follow Back 
-                  and unfollowing those that didnt follow back after a specified time. 
-                  And all these is done with just a push of a button... Nice eh!`}
+                  and unfollowing ONLY those that didnt follow back after a specified time. 
+                  And all these are done with just a push of a button... Nice eh!`}
                 </Typography>
               </div>
             </Grid>

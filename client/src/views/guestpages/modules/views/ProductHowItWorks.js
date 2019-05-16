@@ -78,41 +78,31 @@ function ProductHowItWorks(props) {
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
                 <div className={classes.number}>1.</div>
-                <img
-                  src={identity}
-                  alt="user"
-                  className={classes.image}
-                />
+                <img src={identity} alt="user" className={classes.image} />
                 <Typography variant="h5" align="center">
-                  Register using any of your preferred social media accouint
+                  Register using your Twitter Account and go to the Gain
+                  followers Section to Gain Followers
                 </Typography>
               </div>
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
                 <div className={classes.number}>2.</div>
-                <img
-                  src={media}
-                  alt="media"
-                  className={classes.image}
-                />
+                <img src={media} alt="media" className={classes.image} />
                 <Typography variant="h5" align="center">
-                  {`Go to Spotlight Gallery section to gain points. 
-                you gain points by liking and commenting on other peoples posts`}
+                  {`Go to View Tweets section to gain points. 
+                you gain points by liking  / commenting / retweeting peoples Tweets.`}
                 </Typography>
               </div>
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
                 <div className={classes.number}>3.</div>
-                <img
-                  src={favorite}
-                  alt="clock"
-                  className={classes.image}
-                />
+                <img src={favorite} alt="clock" className={classes.image} />
                 <Typography variant="h5" align="center">
-                  {`To get likes/comments on your post go to myProfile Section
-                and add any of your post to spotlight so that others can see and like`}
+                  {`To get likes/comments and RT's on your tweets go to the Profile Section
+                and click the plus sign on any of your tweets to add to FollowStack so that others can see. 
+                This requires only 10 Points. If your points are not enough go back to the view tweets section to earn some more`}
                 </Typography>
               </div>
             </Grid>
