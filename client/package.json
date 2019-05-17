@@ -10,7 +10,9 @@
     "classnames": "^2.2.5",
     "firebase": "^5.9.3",
     "jwt-decode": "^2.2.0",
+    "markdown-to-jsx": "^6.9.3",
     "react": "^16.8.4",
+    "react-component-countdown-timer": "^0.1.1",
     "react-dom": "^16.8.4",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
@@ -18,15 +20,10 @@
     "react-select": "^2.4.1",
     "react-share": "^2.4.0",
     "react-social-login-buttons": "^2.3.0",
-    "react-sticky-footer": "^0.1.0-rc3",
     "react-toastify": "5.1.0",
     "redux": "^3.7.2",
-    "react-component-countdown-timer": "^0.1.1",
     "redux-devtools-extension": "^2.13.5",
-    "redux-thunk": "^2.2.0",
-    "shards-react": "^1.0.0",
-    "socket.io-client": "^2.2.0",
-    "markdown-to-jsx": "^6.9.3"
+    "redux-thunk": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

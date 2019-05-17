@@ -301,17 +301,20 @@ router.post(
                     console.log(error);
                   }
                 });
+                callback()
               },
-              function(error, results) {}
+              function(error, results) {
+                console.log("finish unfollowing");
+                
+                Follows.findOneAndUpdate({"user_id": req.body.userid}, {"$set": {"following": []}}).catch(err=> console.log(err))
+              }
             );
 
             stats.unFollowed = toBeUnfollowed;
             stats.usersFollowed = follows.following.length;
             stats.usersUnFollowed = toBeUnfollowed.length;
             stats.gained = followedBack.length;
-            // empty the following array
-            follows.following = [];
-            follows.save();
+            
 
             // update total gained
             User.findOne({ userid: req.body.userid }).then(user => {
@@ -340,6 +343,7 @@ router.post(
 followUsers = (req, res, userArray, client) => {
   var users = [];
   var userz = [];
+
   for (var i = 0; i < userArray.length; i++) {
     if (userArray[i] === undefined || userArray[i].length === 0) {
       continue;
@@ -355,119 +359,128 @@ followUsers = (req, res, userArray, client) => {
       });
     }
   }
- // first get the unique ones and log them
-//  https://reactgo.com/removeduplicateobjects/
+  // first get the unique ones from the users Array and log them
+  //  https://reactgo.com/removeduplicateobjects/
 
- const unique = users
- .map(e => e["user_id"])
- // store the keys of the unique objects
- .map((e, i, final) => final.indexOf(e) === i && i)
- // eliminate the dead keys & store unique objects
- .filter(e => users[e])
- .map(e => users[e]);
- 
+  const unique = users
+    .map(e => e["user_id"])
+    // store the keys of the unique objects
+    .map((e, i, final) => final.indexOf(e) === i && i)
+    // eliminate the dead keys & store unique objects
+    .filter(e => users[e])
+    .map(e => users[e]);
+
   // then check for the ones that are already followed
 
-
-
   // arrange the id's as a coma seperated list
-        // for the call to twitter api
-        let user_ids = "";
-        for (var i = 0; i < unique.length; i++) {
-          if (i === unique.length - 1 || i === 50) {
-            // max 50 as we are only following 28
-            user_ids += unique[i].user_id;
-            break;
-          } else {
-            user_ids += `${unique[i].user_id},`;
-          }
-        }
-        var params = {
-          user_id: user_ids
-        };
-        client.get("friendships/lookup", params, function(
-          error,
-          tweet,
-          response
-        ) {
-          if (!error && response.statusCode === 200) {
-            // convert the returned json to array of json objects
-            //  const arr =  Object.values(tweet)
-            const arr = Object.keys(tweet).map(i => tweet[i]);
-            users = [];
-
-            // get those accts with "connections": ["Follows", "followedby"]
-            // i.e thos m already following
-            arr.map(i => {
-              if (i.connections[0] === "none") {
-                // get original data from our following list
-                unique.map(j => {
-                  if (i.id_str === j.user_id) {
-                    users.push(j);
-                    
-                  }
-                });
-              }
-            });
-            client = null;
-          } else {
-            // either has an error or returned status code not equals 200
-            console.log(error);
-          }
-        });
-
-
-
-
-
-
-  for (var i = 0; i < users.length; i++) {
-    userz[i] = users[i];
-    // console.log(userz[i]);
-    if (i === 28) {
+  // for the call to twitter api
+  let user_ids = "";
+  for (var i = 0; i < unique.length; i++) {
+    if (i === unique.length - 1 || i === 50) {
+      // max 50 as we are only following 28
+      user_ids += unique[i].user_id;
       break;
+    } else {
+      user_ids += `${unique[i].user_id},`;
     }
   }
+  var params = {
+    user_id: user_ids
+  };
+  // follow
 
-  async.each(
-    userz,
-    function(user, callback) {
-      var params = {
-        user_id: user.user_id,
-        follow: true
-      };
-      client.post("friendships/create", params, async function(
-        error,
-        tweet,
-        response
-      ) {
-        if (!error && response.statusCode === 200) {
-          await Follows.findOne({ user_id: req.body.userid }).then(follows => {
-            var userObj = {
-              user_id: user.user_id,
-              name: user.name,
-              screen_name: user.screen_name,
-              photo: user.photo
-            };
-            follows.following.push(userObj);
-            follows.save();
+  client.get("friendships/lookup", params, function(error, tweet, response) {
+    if (!error && response.statusCode === 200) {
+      // convert the returned json to array of json objects
+      //  const arr =  Object.values(tweet)
+      const arr = Object.keys(tweet).map(i => tweet[i]);
+      var toBeFollowed = [];
+
+      // get those accts with "connections": ["Follows", "followedby"]
+      // i.e thos m already following
+      arr.map(i => {
+        if (i.connections[0] === "none") {
+          // get original data from our following list
+          unique.map(j => {
+            if (i.id_str === j.user_id) {
+              toBeFollowed.push(j);
+            }
           });
-        } else {
-          console.log(error);
         }
       });
-    },
-    function(error, results) {
-      if (error) {
-        console.log(error);
-      }
-    }
-  );
-  console.log("done following");
 
-  client = null;
-  res.status(200).json({ followedUsers: userz });
+      for (var i = 0; i < toBeFollowed.length; i++) {
+        userz[i] = toBeFollowed[i];
+        // console.log(userz[i]);
+        if (i === 28) {
+          break;
+        }
+      }
+
+      var finalList = [];
+
+      async.each(
+        userz,
+        function(user, callback) {
+          var params = {
+            user_id: user.user_id,
+            follow: true
+          };
+          client.post("friendships/create", params, async function(
+            error,
+            tweet,
+            response
+          ) {
+            if (!error && response.statusCode === 200) {
+              // await Follows.findOne({ user_id: req.body.userid }).then(follows => {
+              var userObj = {
+                user_id: user.user_id,
+                name: user.name,
+                screen_name: user.screen_name,
+                photo: user.photo
+              };
+              Follows.findOneAndUpdate(
+                { user_id: req.body.userid },
+                { $addToSet: { following: userObj } },
+                { new: true }
+              )
+                .then(follows => {
+                  if(follows !== undefined || follows.length !== undefined){
+                  finalList.push(
+                    follows.following[follows.following.length - 1]
+                  );
+                  }
+                })
+                .catch(err => console.log(err));
+              // console.log(userObj);
+              // pass the finallist to the call back to be seent to the client
+            } else {
+              console.log(error);
+            }
+          });
+          callback();
+
+        },
+        function(error, results) {
+          if (error) {
+            console.log(error);
+          } else {
+            client = null;
+// send back to client
+// wait 5secs for the list to get filled
+            setTimeout(()=>res.status(200).json({ followedUsers: finalList }), 5000 )
+            
+          }
+        }
+      );
+    } else {
+      // either has an error or returned status code not equals 200
+      console.log(error);
+    }
+  });
+
 };
+
 getUsersFromStatus = (
   screenNamE,
   statusId,
