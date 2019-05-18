@@ -216,7 +216,9 @@ router.post(
         }, 1000);
       } else {
         err = {};
-        err.serverError = "Server Connection Error Try Again";
+        err.serverError = "Error Connecting to twitter try again";
+        console.log(error);
+        
         return res.status(500).json(err);
       }
     });
@@ -320,7 +322,7 @@ router.post(
             User.findOne({ userid: req.body.userid }).then(user => {
               if (user) {
                 user.followers_gained += followedBack.length;
-                stats.totalGained = user.followers_gained;
+                stats.totalGained = user.followers_gained; 
                 user.save();
                 client = null;
                 res.json({ stats: stats });
@@ -412,7 +414,7 @@ followUsers = (req, res, userArray, client) => {
       for (var i = 0; i < toBeFollowed.length; i++) {
         userz[i] = toBeFollowed[i];
         // console.log(userz[i]);
-        if (i === 28) {
+        if (i === 29) {
           break;
         }
       }

@@ -9,7 +9,6 @@ import {
   SET_CHECKING_FOLLOWINGS,
   SET_CHECKING_FOLLOWED_BACK,
   SET_LINEAR_PROGRESS_BAR_COMPLETED,
-  SET_SHOW_FOLLOWED_TAB,
   SET_TOTAL_GAINED
 } from "../actions/types";
 
@@ -26,7 +25,6 @@ const initialState = {
   checkingFollowings: true,
   checkingFollowedBack: true,
   linearProgressBarCompleted: 0,
-  showFollowedTab: true,
   totalGained: 0
 };
 
@@ -82,11 +80,7 @@ export default function(state = initialState, action) {
         ...state,
         linearProgressBarCompleted: action.payload
       };
-    case SET_SHOW_FOLLOWED_TAB:
-      return {
-        ...state,
-        showFollowedTab: action.payload
-      };
+    
     case SET_TOTAL_GAINED:
       return {
         ...state,

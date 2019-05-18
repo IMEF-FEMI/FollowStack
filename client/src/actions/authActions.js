@@ -76,15 +76,27 @@ export const setUserData = userData => async dispatch => {
 
 // Set user Profile
 export const setUserProfile = userData => async dispatch => {
-  const profile = await getUserProfile(userData);
-  // Save to localStorage
-  localStorage.removeItem("userProfile");
-  localStorage.setItem("userProfile", JSON.stringify(profile.data));
-  // Set current user
-  dispatch({
-    type: SET_USER_PROFILE,
-    payload: profile.data
-  });
+  try {
+    const profile = await getUserProfile(userData);
+    // Save to localStorage
+    localStorage.removeItem("userProfile");
+    localStorage.setItem("userProfile", JSON.stringify(profile.data));
+    // Set current user
+    dispatch({
+      type: SET_USER_PROFILE,
+      payload: profile.data
+    });
+  } catch (err) {
+    if (
+      err.response &&
+      err.response.data !== undefined &&
+      err.response.data.errorCode !== undefined
+    ) {
+      if (parseInt(err.response.data.errorCode) === 89) {
+        dispatch(logoutUser());
+      }
+    }
+  }
 };
 
 // Log user out

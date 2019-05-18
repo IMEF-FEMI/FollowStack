@@ -40,7 +40,7 @@ router.post(
     // expiration time
     const minute = 1000 * 60;
     const hour = minute * 60;
-    const day = hour * 24; 
+    const day = hour * 24;
     const week = day * 7;
     var error = {};
     await User.findOne({
@@ -61,11 +61,11 @@ router.post(
           .save()
           .then(user => {
             Promise.all([
-            new Follows({
-              username: req.body.username,
-              user_id: req.body.userid
-            }).save()
-          ])
+              new Follows({
+                username: req.body.username,
+                user_id: req.body.userid
+              }).save()
+            ]);
 
             const payload = {
               userid: user.userid
@@ -147,7 +147,6 @@ router.get(
 router.post(
   "/get-profile",
   asyncHandler(async (req, res, next) => {
-   
     const random = TWITTER_KEYS[0];
     var client = new Twitter({
       consumer_key: random.consumerKey,
@@ -158,29 +157,36 @@ router.post(
     const params = {
       user_id: req.body.userid
     };
-    
-    client.get("users/show", params, function(
-      error,
-      profile,
-      response
-    ) {
+ 
+    client.get("users/show", params, function(error, profile, response) {
       if (!error && response.statusCode === 200) {
-        client = null
+        client = null;
         res.status(200).json({
           name: profile.name,
           screen_name: profile.screen_name,
-          description: profile.description, 
+          description: profile.description,
           followers: profile.followers_count,
           following: profile.friends_count,
           photo: profile.profile_image_url.replace("_normal", "")
-        })
-        
+        });
       } else {
+        if (
+          error[0] !== undefined &&
+          error[0].code !== undefined &&
+          parseInt(error[0].code) === 89
+        ) {
+          // if token is expired notify client to loout
+          // errorCode: parseInt(error[0].code) === 89,
+
+          res.status(500).send({
+            errorCode: parseInt(error[0].code),
+            errorMessage: error[0].message
+          });
+        }
         // either has an error or returned status code not equals 200
         console.log(error);
       }
     });
-
   })
 );
 

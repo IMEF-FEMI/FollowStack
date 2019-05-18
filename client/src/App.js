@@ -4,7 +4,6 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { SET_USER_DATA, SET_USER_PROFILE } from "./actions/types";
-import { checkFollowedBackInterval } from "./actions/gainFollowersAction";
 import { setUserProfile } from "./actions/authActions";
 import { Provider } from "react-redux";
 import axios from "axios";
@@ -19,7 +18,7 @@ import LaunchScreen from "./views/dashboard/mainAppPages/components/loaders/Laun
 
 import PrivateGuestRoute from "./views/common/PrivateGuestRoute";
 import PrivateDashBoardRoute from "./views/common/PrivateDashBoardRoute";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 import { Redirect } from "react-router-dom";
 
 
@@ -39,7 +38,6 @@ if (localStorage.jwtToken) {
     type: SET_USER_DATA,
     payload: JSON.parse(localStorage.getItem("userData"))
   });
-  console.log(JSON.parse(localStorage.getItem("userProfile")));
 
   store.dispatch({
     type: SET_USER_PROFILE,
@@ -81,40 +79,17 @@ class App extends Component {
       console.log(e);
     }
     if (store.getState().auth.isAuthenticated === true) {
-      // check for new follow backs every 10 mins
-      this.timer = setInterval(this.checkNewFollowBack, 10 * 60 * 1000);
+      // update profile every 10 mins
+      this.timer = setInterval(this.updatePrifile, 10 * 60 * 1000);
     }
   }
 
-  checkNewFollowBack = () => {
+  updatePrifile = () => {
     if (store.getState().auth.isAuthenticated === false) {
       return;
     }
-    console.log("checking for new follow backs");
-
-    const oldList = store.getState().gainFollowers.followedBack;
-
-    store.dispatch(checkFollowedBackInterval(store.getState().auth.userData));
-    setTimeout(() => {
-      const newList = store.getState().gainFollowers.followedBack;
-      console.log(oldList.length, newList.length);
-
-      var newFollowers = null;
-      // checkk for new items
-      if (oldList.length !== newList.length) {
-        newFollowers = newList.slice(oldList.length, newList.length);
-        newFollowers.forEach(user => {
-          toast(`${user.screen_name} has Followed you back!`, {
-            position: "bottom-right",
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: false
-          });
-        });
-      }
-    }, 15000);
+store.dispatch(setUserProfile(store.getState().auth.userData))
+    
   };
 
   render() {

@@ -5,13 +5,18 @@ import PropTypes from "prop-types";
 import dashboardRoutes from "../../dashboardRoutes";
 
 const PrivateDashBoardRoute = ({ auth }) => {
+
   return (
     <div>
       {dashboardRoutes.map((route, index) => {
         return (
           <Switch key={index + `${Math.random() * 10}`}>
             <Route
-              path={route.path}
+              path={
+                route.path === "/user"
+                  ? `/${auth.userProfile.screen_name}`
+                  : route.path
+              }
               exact={route.exact}
               render={props =>
                 auth.isAuthenticated === true ? (

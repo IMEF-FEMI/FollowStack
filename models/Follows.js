@@ -12,7 +12,8 @@ const Follows = new Schema({
       photo: String,
       date: {
         type: Number,
-        default: Date.now() + (60 * 30 * 1000)//30 mins
+        default: Date.now() + (60 * 35 * 1000)//30 mins
+        // default: Date.now() + (60 * 2 * 1000)//2 mins
       }
     }
   ]

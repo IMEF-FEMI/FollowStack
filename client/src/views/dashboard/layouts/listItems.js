@@ -4,30 +4,52 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import ExitToApp from "@material-ui/icons/ExitToApp";
 import { Link } from "react-router-dom";
+import store from "../../../store";
 
-export const mainListItems = (
-  <div>
-    <Link to="/dashboard" style={{    textDecoration: 'none'}}>
-      <ListItem button>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
-    </Link>
+export const mainListItems = screen_name => {
+  const n = screen_name.slice(2, -1);
+  const name =
+    screen_name
+      .slice(1, -1)
+      .charAt(0)
+      .toUpperCase() + n;
 
-    <Link to="/gain-followers" style={{    textDecoration: 'none'}}>
-      <ListItem button>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Gain Followers" />
-      </ListItem>
-    </Link>
-  </div>
-);
+  return (
+    <div>
+      <Link to="/dashboard" style={{ textDecoration: "none" }}>
+        <ListItem button>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItem>
+      </Link>
+
+      <Link to="/gain-followers" style={{ textDecoration: "none" }}>
+        <ListItem button>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Gain Followers" />
+        </ListItem>
+      </Link>
+      <Link
+        to={`/${store.getState().auth.userProfile.screen_name}`}
+        style={{ textDecoration: "none" }}
+      >
+        <ListItem button>
+          <ListItemIcon>
+            <AccountCircle />
+          </ListItemIcon>
+          <ListItemText primary={name} />
+        </ListItem>
+      </Link>
+    </div>
+  );
+};
 
 export const secondaryListItems = (
   <div>

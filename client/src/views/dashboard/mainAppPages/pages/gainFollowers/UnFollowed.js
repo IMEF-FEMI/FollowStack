@@ -3,6 +3,14 @@ import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { connect } from "react-redux";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DoneOutline from "@material-ui/icons/DoneOutline";
+
 import Users from "./Users";
 
 const containerFluid = {
@@ -23,6 +31,22 @@ const container = {
 };
 
 class UnFollowed extends Component {
+  state = {
+    open: false
+  };
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.gainFollowers.stats.gained || nextProps.gainFollowers.stats.totalGained){
+      this.handleClickOpen()
+    }
+  }
 
   render() {
     const { stats, isUnFollowing } = this.props.gainFollowers;
@@ -44,6 +68,45 @@ class UnFollowed extends Component {
             users={stats.unFollowed}
           />
         )}
+
+        {
+          <Dialog
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Unfollow Complete"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                <Grid container spacing={24} justify="center">
+                  <Grid item xs={12} align="center">
+                    <DoneOutline />
+                  </Grid>
+                  <Grid item xs={12} align="center">
+                    {stats.usersFollowed} Users Followed
+                  </Grid>
+                  <Grid item xs={12} align="center">
+                    {stats.gained} Users Following back
+                  </Grid>
+                  <Grid item xs={12} align="center">
+                    {stats.usersFollowed} Users Unfollowed
+                  </Grid>
+                  <Grid item xs={12} align="center">
+                    {stats.totalGained} Followers Gained So far
+                  </Grid>
+                </Grid>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleClose} color="primary" autoFocus>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        }
       </div>
     );
   }

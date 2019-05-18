@@ -22,8 +22,3 @@ export const PostCardLoader = props => (
 );
 
 export default PostCardLoader;
-
-    // <rect x="70" y="15" rx="4" ry="4" width="117" height="6" /> 
-    // <rect x="70" y="35" rx="3" ry="3" width="85" height="6" /> 
-    // <circle cx="30" cy="30" r="30" /> 
-    // <rect x="277" y="13" rx="0" ry="0" width="75" height="30" />

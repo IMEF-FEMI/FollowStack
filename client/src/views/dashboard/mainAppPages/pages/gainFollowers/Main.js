@@ -18,7 +18,6 @@ import PropTypes from "prop-types";
 import {
   beginUnFollowAction,
   gainFollowersAction,
-  showFollowedTabAction,
   checkTotalGainedAction
 } from "../../../../../actions/gainFollowersAction";
 const { Avatar, Icon, Typography } = atoms;
@@ -32,7 +31,6 @@ function Main(props) {
 
   const {
     hasFollowingsTime,
-    showFollowedTab,
     isUnFollowing,
     stats,
     totalGained
@@ -42,8 +40,9 @@ function Main(props) {
   const beginUnfollow = () => {
     // start unfollowing, show unfollowed Tab, closeFollowed Tab
     props.beginUnFollowAction(props.auth.userData);
+    // clear following list
+    
     setTabIndex(3);
-    props.showFollowedTabAction(false);
   };
   React.useEffect(() => {
     props.checkTotalGainedAction(props.auth.user.userid);
@@ -116,21 +115,17 @@ function Main(props) {
           setTabIndex(value);
         }}
       >
-        {showFollowedTab === true && (
-          <Tab value={1} label="Followed" icon={<Icon>offline_pin</Icon>} />
-        )}
+        <Tab value={1} label="Followed" icon={<Icon>offline_pin</Icon>} />
         <Tab
           value={2}
           label="Followed Back"
           icon={<Icon>verified_user</Icon>}
         />
-        {showFollowedTab === false && (
-          <Tab value={3} label="Unfollowed" icon={<Icon>cancel</Icon>} />
-        )}
+        <Tab value={3} label="Unfollowed" icon={<Icon>cancel</Icon>} />
       </Tabs>
-      {tabIndex === 1 && showFollowedTab === true && <Followed />}
+      {tabIndex === 1 && <Followed />}
       {tabIndex === 2 && <FollowedBack />}
-      {tabIndex === 3 && showFollowedTab === false && <UnFollowed />}
+      {tabIndex === 3 && <UnFollowed />}
 
       {!(hasFollowingsTime <= 0) && (
         <div>
@@ -172,7 +167,6 @@ function Main(props) {
 
 Main.propTypes = {
   beginUnFollowAction: PropTypes.func.isRequired,
-  showFollowedTabAction: PropTypes.func.isRequired,
   gainFollowersAction: PropTypes.func.isRequired,
   gainFollowers: PropTypes.object.isRequired
 };
@@ -185,7 +179,6 @@ export default connect(
   {
     beginUnFollowAction,
     gainFollowersAction,
-    showFollowedTabAction,
     checkTotalGainedAction
   }
 )(withTheme(theme)(Main));

@@ -1,5 +1,4 @@
 import {
-  SET_SHOW_FOLLOWED_TAB,
   SET_FOLLOWINGS,
   SET_FOLLOWED_BACK,
   SET_STATS,
@@ -67,6 +66,15 @@ export const beginUnFollowAction = userData => async dispatch => {
   dispatch(setStats(res.data.stats));
   dispatch(setTotalGained(res.data.stats.totalGained))
   dispatch(setIsUnFollowing(false));
+  dispatch({
+      type: SET_FOLLOWINGS,
+      payload: []
+  })
+  dispatch({
+    type: SET_HAS_FOLLOWINGS,
+    payload: false
+  })
+  
 };
 
 export const checkFollowingAction = userId => async dispatch => {
@@ -134,21 +142,7 @@ export const checkFollowedBackAction = userId => async dispatch => {
   dispatch(setCheckingFollowedBack(false));
 };
 
-export const checkFollowedBackInterval = userId => async dispatch => {
-  try {
-    var followedBack = await checkFollowedBack(userId);
-    if (followedBack !== undefined) {
-      dispatch(setFollowedBackData(followedBack.data));
-    }
-  } catch (err) {
-    var errors = {};
-    errors.serverError = "Server Error Try Again";
-    dispatch({
-      type: GET_ERRORS,
-      payload: err.response === undefined ? errors : err.response.data
-    });
-  }
-};
+
 
 export const checkTotalGainedAction  = userId => async dispatch =>{
   const totalGained = await checkTotalGained(userId)
@@ -162,12 +156,6 @@ export const setProgress = progressValue => async dispatch => {
   });
 };
 
-export const showFollowedTabAction = val => async dispatch => {
-  dispatch({
-    type: SET_SHOW_FOLLOWED_TAB,
-    payload: val
-  });
-};
 export const clearError = () => async dispatch => {
   dispatch({
     type: CLEAR_ERRORS
