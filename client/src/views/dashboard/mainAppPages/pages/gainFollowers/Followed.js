@@ -70,7 +70,7 @@ class Followed extends Component {
     clearInterval(this.timer);
   }
   beginFollow = () => {
-    this.props.gainFollowersAction(this.props.auth.userData);
+    this.props.gainFollowersAction(this.props.auth.userData, this.props.auth.keyInUse);
   };
 
   componentDidMount() {

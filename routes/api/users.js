@@ -145,9 +145,9 @@ router.get(
 );
 
 router.post(
-  "/get-profile",
+  "/get-profile/:key",
   asyncHandler(async (req, res, next) => {
-    const random = TWITTER_KEYS[0];
+    const random = TWITTER_KEYS[req.params.key];
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,

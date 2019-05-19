@@ -22,11 +22,11 @@ import {
   checkTotalGained
 } from "../async/twitter";
 
-export const gainFollowersAction = userData => async dispatch => {
+export const gainFollowersAction = (userData, key) => async dispatch => {
   // sett isfollowing as true
   dispatch(setIsFollowing(true));
   try {
-    var followings = await gainFollowers(userData);
+    var followings = await gainFollowers(userData, key);
     dispatch({
       type: SET_LINEAR_PROGRESS_BAR_COMPLETED,
       payload: 100
@@ -60,9 +60,9 @@ export const gainFollowersAction = userData => async dispatch => {
   }
 };
 
-export const beginUnFollowAction = userData => async dispatch => {
+export const beginUnFollowAction = (userData, key) => async dispatch => {
   dispatch(setIsUnFollowing(true));
-  const res = await beginUnFollow(userData);
+  const res = await beginUnFollow(userData, key);
   dispatch(setStats(res.data.stats));
   dispatch(setTotalGained(res.data.stats.totalGained))
   dispatch(setIsUnFollowing(false));
@@ -122,11 +122,11 @@ export const checkFollowingAction = userId => async dispatch => {
   dispatch(setCheckingFollowing(false));
 };
 
-export const checkFollowedBackAction = userId => async dispatch => {
+export const checkFollowedBackAction = (userId, key) => async dispatch => {
   dispatch(setCheckingFollowedBack(true));
 
   try {
-    var followedBack = await checkFollowedBack(userId);
+    var followedBack = await checkFollowedBack(userId, key);
     if (followedBack !== undefined) {
       dispatch(setFollowedBackData(followedBack.data));
     }

@@ -5,7 +5,8 @@ import {
   GET_ERRORS,
   SET_CURRENT_USER,
   SET_USER_DATA,
-  SET_USER_PROFILE
+  SET_USER_PROFILE,
+  SET_KEY
 } from "./types";
 import { registerUser, signInUser, getUserProfile } from "../async/auth";
 
@@ -55,6 +56,14 @@ export const signIn = userData => async dispatch => {
     });
   }
 };
+
+// set key in use
+export const setKeyInUse = key => async dispatch => {
+  dispatch({
+    type: SET_KEY,
+    payload: key
+  })
+};
 // Set logged in user
 export const setCurrentUser = decoded => {
   return {
@@ -75,9 +84,9 @@ export const setUserData = userData => async dispatch => {
 };
 
 // Set user Profile
-export const setUserProfile = userData => async dispatch => {
+export const setUserProfile = (userData, key) => async dispatch => {
   try {
-    const profile = await getUserProfile(userData);
+    const profile = await getUserProfile(userData, key);
     // Save to localStorage
     localStorage.removeItem("userProfile");
     localStorage.setItem("userProfile", JSON.stringify(profile.data));

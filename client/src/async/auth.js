@@ -14,7 +14,7 @@ export const checkUser = async id => {
   return res;
 };
 
-export const getUserProfile = async userData =>{
-  const res = await axios.post(`/api/users/get-profile`, userData);
+export const getUserProfile = async (userData, key) =>{
+  const res = await axios.post(`/api/users/get-profile/${key}`, userData);
   return res;
 }

@@ -54,7 +54,7 @@ class FollowedBack extends Component {
   }
 
   componentDidMount() {
-    this.props.checkFollowedBackAction(this.props.auth.userData);
+    this.props.checkFollowedBackAction(this.props.auth.userData, this.props.auth.keyInUse);
   }
 
   render() {

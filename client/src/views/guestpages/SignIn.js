@@ -16,7 +16,12 @@ import { connect } from "react-redux";
 import { TwitterLoginButton } from "react-social-login-buttons";
 
 import { checkUser } from "../../async/auth";
-import { signIn, setUserData, setUserProfile } from "../../actions/authActions";
+import {
+  signIn,
+  setUserData,
+  setUserProfile,
+  setKeyInUse
+} from "../../actions/authActions";
 import { checkTotalGainedAction } from "../../actions/gainFollowersAction";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -42,14 +47,6 @@ const styles = theme => ({
     borderRadius: "10px"
   }
 });
-
-if (!firebase.apps.length) {
-  firebase.initializeApp({
-    apiKey: " AIzaSyDPRnO_g0nrFa0PNI7IynwTdCnRg8nWNJc",
-    authDomain: "followstack.firebaseapp.com",
-    projectId: "followstack"
-  });
-}
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -95,8 +92,10 @@ class SignIn extends React.Component {
             userData.userid = user.providerData[0].uid;
             userData.username = user.providerData[0].displayName;
             userData.photo = user.providerData[0].photoURL;
-            that.props.setUserProfile(userData);
+            that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
             // console.log("user from the base" + JSON.stringify(userData));
+            const key = localStorage.getItem("keyInUse");
+            that.props.setKeyInUse(key);
             that.handleUserData(userData);
           }
         })
@@ -346,6 +345,7 @@ SignIn.propTypes = {
   signIn: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
   setUserProfile: PropTypes.func.isRequired,
+  setKeyInUse: PropTypes.func.isRequired,
   checkTotalGainedAction: PropTypes.func.isRequired
 };
 
@@ -357,7 +357,13 @@ export default withRouter(
   withStyles(styles)(
     connect(
       mapStateToProps,
-      { signIn, setUserData, setUserProfile, checkTotalGainedAction }
+      {
+        signIn,
+        setUserData,
+        setUserProfile,
+        checkTotalGainedAction,
+        setKeyInUse
+      }
     )(SignIn)
   )
 );

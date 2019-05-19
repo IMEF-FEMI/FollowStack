@@ -3,14 +3,16 @@ import isEmpty from "../validation/is-empty";
 import {
   SET_CURRENT_USER,
   SET_USER_DATA,
-  SET_USER_PROFILE
+  SET_USER_PROFILE,
+  SET_KEY
 } from "../actions/types";
 
 const initialState = {
   isAuthenticated: false,
   user: {},
   userData: {},
-  userProfile: {}
+  userProfile: {},
+  keyInUse: ""
 };
 
 export default function(state = initialState, action) {
@@ -30,6 +32,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         userProfile: action.payload
+      };
+
+    case SET_KEY:
+      return {
+        ...state,
+        keyInUse: action.payload
       };
     default:
       return state;

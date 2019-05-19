@@ -38,8 +38,8 @@ function Main(props) {
   const { userProfile } = props.auth;
 
   const beginUnfollow = () => {
-    // start unfollowing, show unfollowed Tab, closeFollowed Tab
-    props.beginUnFollowAction(props.auth.userData);
+    // start unfollowing, show unfollowed Tab
+    props.beginUnFollowAction(props.auth.userData, props.auth.keyInUse);
     // clear following list
     
     setTabIndex(3);

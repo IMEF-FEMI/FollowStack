@@ -1,14 +1,14 @@
 import axios from "axios";
 
-export const gainFollowers = async userData => {
+export const gainFollowers = async (userData, key) => {
   const twoMins = 2 * 60 * 1000;
-  const res = await axios.post("/api/twitter/gain-followers", userData, {
+  const res = await axios.post(`/api/twitter/gain-followers/${key}`, userData, {
     timeout: twoMins
   });
   return res;
 };
-export const beginUnFollow = async userData => {
-  const res = await axios.post(`/api/twitter/unfollow`, userData);
+export const beginUnFollow = async (userData, key) => {
+  const res = await axios.post(`/api/twitter/unfollow/${key}`, userData);
   return res;
 };
 
@@ -17,8 +17,8 @@ export const checkFollowing = async id => {
   return res;
 };
 
-export const checkFollowedBack = async userData => {
-  const res = await axios.post(`/api/twitter/get-followed-back`, userData);
+export const checkFollowedBack = async (userData, key)=> {
+  const res = await axios.post(`/api/twitter/get-followed-back/${key}`, userData);
   return res;
 };
 export const checkTotalGained = async userid => {

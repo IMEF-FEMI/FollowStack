@@ -71,10 +71,10 @@ router.get(
 );
 
 router.post(
-  "/get-followed-back",
+  "/get-followed-back/:key",
   requireAuth,
   asyncHandler(async (req, res, next) => {
-    const random = TWITTER_KEYS[0];
+    const random = TWITTER_KEYS[req.params.key];
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,
@@ -138,11 +138,11 @@ router.post(
 );
 
 router.post(
-  "/gain-followers",
+  "/gain-followers/:key",
   requireAuth,
   asyncHandler(async (req, res, next) => {
-    const random = TWITTER_KEYS[0];
-    console.log(random.consumerKey, random.consumerSecret);
+    const random = TWITTER_KEYS[req.params.key];
+    console.log(req.params.key);
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,
@@ -226,10 +226,10 @@ router.post(
 );
 
 router.post(
-  "/unfollow",
+  "/unfollow/:key",
   requireAuth,
   asyncHandler(async (req, res, next) => {
-    const random = TWITTER_KEYS[0];
+    const random = TWITTER_KEYS[req.params.key];
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,

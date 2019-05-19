@@ -44,13 +44,13 @@ const styles = theme => ({
   }
 });
 
-if (!firebase.apps.length) {
-  firebase.initializeApp({
-    apiKey: " AIzaSyDPRnO_g0nrFa0PNI7IynwTdCnRg8nWNJc",
-    authDomain: "followstack.firebaseapp.com",
-    projectId: "followstack"
-  });
-}
+// if (!firebase.apps.length) {
+//   firebase.initializeApp({
+//     apiKey: " AIzaSyDPRnO_g0nrFa0PNI7IynwTdCnRg8nWNJc",
+//     authDomain: "followstack.firebaseapp.com",
+//     projectId: "followstack"
+//   });
+// }
 
 class SignIn extends React.Component {
   constructor(props) {

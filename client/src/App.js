@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { SET_USER_DATA, SET_USER_PROFILE } from "./actions/types";
-import { setUserProfile } from "./actions/authActions";
+import { setUserProfile, setKeyInUse } from "./actions/authActions";
 import { Provider } from "react-redux";
 import axios from "axios";
 import store from "./store";
@@ -18,12 +18,29 @@ import LaunchScreen from "./views/dashboard/mainAppPages/components/loaders/Laun
 
 import PrivateGuestRoute from "./views/common/PrivateGuestRoute";
 import PrivateDashBoardRoute from "./views/common/PrivateDashBoardRoute";
-import {  ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { Redirect } from "react-router-dom";
-
+import firebase from "firebase/app";
+import "firebase/auth";
 
 import "./assets/styles/custom.css";
 import "react-toastify/dist/ReactToastify.css";
+import { firebaseKeys } from "./config";
+// init firebase
+if (localStorage.getItem("keyInUse") === null && !firebase.apps.length) {
+  const randomNumber = Math.floor(Math.random() * 4);
+  console.log(JSON.stringify(firebaseKeys[randomNumber]));
+  firebase.initializeApp(firebaseKeys[randomNumber]);
+  localStorage.setItem("keyInUse", randomNumber);
+  console.log("Key in use " + randomNumber);
+} else if (!firebase.apps.length) {
+  const key = localStorage.getItem("keyInUse");
+  store.dispatch(setKeyInUse(key));
+
+  // console.log("key in sign in pge ", key)
+  // console.log("we here", key);
+  firebase.initializeApp(firebaseKeys[key]);
+}
 
 // localStorage.clear();
 // Check for token
@@ -43,7 +60,12 @@ if (localStorage.jwtToken) {
     type: SET_USER_PROFILE,
     payload: JSON.parse(localStorage.getItem("userProfile"))
   });
-store.dispatch(setUserProfile(store.getState().auth.userData))
+  store.dispatch(
+    setUserProfile(
+      store.getState().auth.userData,
+      localStorage.getItem("keyInUse")
+    )
+  );
   // Check for expired token
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
@@ -67,11 +89,11 @@ class App extends Component {
     try {
       const auth = axios.create();
       auth.defaults.timeout = 5000;
-      const { res } = await auth.get("/wake-up");
+      await auth.get("/wake-up");
       this.setState({
         serverWoke: true
       });
-      console.log(!!res);
+      // console.log(!!res);
     } catch (e) {
       this.setState({
         serverWoke: true
@@ -80,16 +102,20 @@ class App extends Component {
     }
     if (store.getState().auth.isAuthenticated === true) {
       // update profile every 10 mins
-      this.timer = setInterval(this.updatePrifile, 10 * 60 * 1000);
+      this.timer = setInterval(this.updateProfile, 10 * 60 * 1000);
     }
   }
 
-  updatePrifile = () => {
+  updateProfile = () => {
     if (store.getState().auth.isAuthenticated === false) {
       return;
     }
-store.dispatch(setUserProfile(store.getState().auth.userData))
-    
+    store.dispatch(
+      setUserProfile(
+        store.getState().auth.userData,
+        localStorage.getItem("keyInUse")
+      )
+    );
   };
 
   render() {
