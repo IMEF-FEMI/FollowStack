@@ -33,9 +33,6 @@ class TermsAndCondition extends Component {
     this.setState({ user: userData });
     this.props.register(userData);
     this.setState({ finished: true });
-    // this.props.nextStep();
-    // this.props.gotoDashboard()
-    // console.log(JSON.stringify(userData))
   }
   componentDidMount() {
     if (this.props.user) {
@@ -49,11 +46,10 @@ class TermsAndCondition extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
       this.props.setUserData(this.state.user);
-      this.props.setUserProfile(this.state.user);
+      this.props.setUserProfile(this.state.user, this.props.auth.keyInUse);
       this.props.checkTotalGainedAction(this.state.user.userid);
-    this.props.nextStep();
-    this.props.gotoDashboard()
-
+      this.props.nextStep();
+      this.props.gotoDashboard();
     } else if (nextProps.errors.userError) {
       toast.error(nextProps.errors.userError, {
         position: "bottom-right",
@@ -68,7 +64,7 @@ class TermsAndCondition extends Component {
 
   handleCheckedChanged(event) {
     this.setState({ checked: event.target.checked });
-    this.setState({ disabled: !event.target.checked }); 
+    this.setState({ disabled: !event.target.checked });
   }
 
   render() {

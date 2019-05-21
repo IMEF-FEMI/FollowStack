@@ -51,7 +51,7 @@ class Navbar extends Component {
 
     return (
       <AppBar
-        position="absolute"
+        position="fixed"
         color="default"
         className={classNames(classes.appBar, open && classes.appBarShift)}
       >

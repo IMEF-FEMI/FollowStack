@@ -16,6 +16,9 @@ const styles = theme => ({
   toolbar: {
     paddingRight: 24 // keep right padding when drawer closed
   },
+  toolbarDiv: {
+    toolbar: theme.mixins.toolbar
+  },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
@@ -118,7 +121,7 @@ class DefaultLayout extends React.Component {
             handleDrawerClose={this.handleDrawerClose}
             classes={classes}
           />
-          <main 
+          <main
             className={classes.content}
             style={{
               backgroundImage: dash && "url(" + bgimage + ")",
@@ -128,6 +131,7 @@ class DefaultLayout extends React.Component {
               backgroundPosition: dash && "top center"
             }}
           >
+            <div className={classes.toolbarDiv} />
             {this.props.children}
           </main>
         </div>

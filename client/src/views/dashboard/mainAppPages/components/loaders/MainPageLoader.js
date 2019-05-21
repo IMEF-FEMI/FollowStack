@@ -41,7 +41,8 @@ export const MainPageLoader = props => {
 const styles = theme => ({
   root: {
     width: "95%",
-    margin: "24px auto"
+    margin: "24px auto",
+    backgroundColor: "#2c3e50"
   }
 });
 

@@ -4,8 +4,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
 import atoms from "../../components/atoms";
 import molecules from "../../components/molecules";
+import PersonAdd from "@material-ui/icons/PersonAdd";
 import PersonAddDisabled from "@material-ui/icons/PersonAddDisabled";
-import Button from "@material-ui/core/Button";
+// import Button from "@material-ui/core/Button";
 import theme from "../../theme/instapaper/theme";
 import withTheme from "./withTheme";
 import { unstable_Box as Box } from "@material-ui/core/Box";
@@ -16,11 +17,11 @@ import UnFollowed from "./UnFollowed";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
-  beginUnFollowAction,
   gainFollowersAction,
+  beginUnFollowAction,
   checkTotalGainedAction
 } from "../../../../../actions/gainFollowersAction";
-const { Avatar, Icon, Typography } = atoms;
+const { Avatar, Icon, Typography, Button } = atoms;
 const { Tabs, Tab } = molecules;
 
 function Main(props) {
@@ -41,11 +42,14 @@ function Main(props) {
     // start unfollowing, show unfollowed Tab
     props.beginUnFollowAction(props.auth.userData, props.auth.keyInUse);
     // clear following list
-    
+
     setTabIndex(3);
   };
+  const beginFollow = () => {
+    props.gainFollowersAction(props.auth.userData, props.auth.keyInUse);
+  };
   React.useEffect(() => {
-    props.checkTotalGainedAction(props.auth.user.userid);
+    // props.checkTotalGainedAction(props.auth.user.userid);
 
     console.log("gain followers main mounted");
   }, []); // passing an empty array as second argument triggers the callback
@@ -148,15 +152,21 @@ function Main(props) {
       {hasFollowingsTime < 0 && isUnFollowing === false && !stats.gained && (
         <Grid container justify="center">
           <Button
-            variant="contained"
-            color="secondary"
-            size="large"
-            style={{
-              borderColor: "#f50057"
-            }}
+            // className={classes.editButton}
+            variant="outlined"
+            // fullWidth={!upSm}
+            onClick={beginFollow}
+          >
+            Follow Some More
+            <PersonAdd />
+          </Button>
+          <Button
+            // className={classes.editButton}
+            variant="outlined"
+            fullWidth={!upSm}
             onClick={beginUnfollow}
           >
-            Start UnFollowing
+            Begin UnFollow
             <PersonAddDisabled />
           </Button>
         </Grid>
@@ -166,8 +176,8 @@ function Main(props) {
 }
 
 Main.propTypes = {
-  beginUnFollowAction: PropTypes.func.isRequired,
   gainFollowersAction: PropTypes.func.isRequired,
+  beginUnFollowAction: PropTypes.func.isRequired,
   gainFollowers: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
@@ -177,8 +187,8 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    beginUnFollowAction,
     gainFollowersAction,
+    beginUnFollowAction,
     checkTotalGainedAction
   }
 )(withTheme(theme)(Main));

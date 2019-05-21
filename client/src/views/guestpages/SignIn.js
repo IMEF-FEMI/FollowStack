@@ -94,8 +94,7 @@ class SignIn extends React.Component {
             userData.photo = user.providerData[0].photoURL;
             that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
             // console.log("user from the base" + JSON.stringify(userData));
-            const key = localStorage.getItem("keyInUse");
-            that.props.setKeyInUse(key);
+            
             that.handleUserData(userData);
           }
         })
@@ -160,7 +159,7 @@ class SignIn extends React.Component {
             userData.userid = user.providerData[0].uid;
             userData.username = user.providerData[0].displayName;
             userData.photo = user.providerData[0].photoURL;
-            that.props.setUserProfile(userData);
+            that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
             // console.log("user from the base" + JSON.stringify(userData));
             that.handleUserData(userData);
             localStorage.setItem("redirected", false);

@@ -24,7 +24,10 @@
     "react-toastify": "5.1.0",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.5",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "react-video-wrapper": "1.0.3",
+    "twemoji": "1.4.1",
+    "twitter-text": "1.13.2"
   },
   "scripts": {
     "start": "react-scripts start",

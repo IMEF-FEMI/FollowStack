@@ -5,10 +5,11 @@ import withTheme from "./withTheme";
 import { unstable_Box as Box } from "@material-ui/core/Box";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import axios from "axios";
+// import CircularProgress from "@material-ui/core/CircularProgress";
 import MainPageLoader from "../../components/loaders/MainPageLoader";
-
+import Divider from "@material-ui/core/Divider";
+import { fetchTweetsForProfile } from "../../../../../async/post";
+import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
@@ -16,6 +17,8 @@ import {
   gainFollowersAction,
   checkTotalGainedAction
 } from "../../../../../actions/gainFollowersAction";
+import RenderTweets from "../../components/tweet/RenderTweets";
+
 const { Avatar, Typography } = atoms;
 
 class Main extends Component {
@@ -37,10 +40,27 @@ class Main extends Component {
     this.signal = axios.CancelToken.source();
     this.topRef = React.createRef();
   }
-  componentDidMount() {
-    this.props.checkTotalGainedAction(this.props.auth.user.userid);
+  async componentDidMount() {
+    // this.props.checkTotalGainedAction(this.props.auth.user.userid);
+    try {
+      const { data: tweets } = await fetchTweetsForProfile(
+        this.props.auth.userData,
+        this.props.auth.keyInUse,
+        this.signal.token
+      );
+      console.log("tweets returned ", tweets);
 
-    console.log("gain followers main mounted");
+      this.setState(
+        { initialFetch: false, page: 1, pages: [...tweets] },
+        () => {}
+      );
+      console.log("tweets returned ", tweets);
+    } catch (e) {
+      if (axios.isCancel()) {
+        return console.log(e.message);
+      }
+      console.log(e);
+    }
   }
   render() {
     const upSm = window.innerWidth >= 600;
@@ -103,11 +123,23 @@ class Main extends Component {
             </Grid>
           </Grid>
         </Box>
+        {/* <Divider
+          variant="fullWidth"
+          style={{
+            width: "100%"
+          }}
+        /> */}
         <div ref={this.topRef}>
           {(this.state.initialFetch || this.state.switchingContext) && (
             <MainPageLoader />
           )}
         </div>
+
+        {!this.state.initialFetch && (
+          <React.Fragment>
+            {this.state.pages && <RenderTweets pages={this.state.pages} />}
+          </React.Fragment>
+        )}
       </React.Fragment>
     );
   }

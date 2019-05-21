@@ -32,6 +32,8 @@ if (localStorage.getItem("keyInUse") === null && !firebase.apps.length) {
   console.log(JSON.stringify(firebaseKeys[randomNumber]));
   firebase.initializeApp(firebaseKeys[randomNumber]);
   localStorage.setItem("keyInUse", randomNumber);
+  store.dispatch(setKeyInUse(randomNumber));
+
   console.log("Key in use " + randomNumber);
 } else if (!firebase.apps.length) {
   const key = localStorage.getItem("keyInUse");
@@ -119,7 +121,7 @@ class App extends Component {
   };
 
   render() {
-    const loggedIn = store.getState().auth.isAuthenticated === true;
+    var loggedIn = store.getState().auth.isAuthenticated === true;
     return (
       <Provider store={store}>
         <Router>

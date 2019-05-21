@@ -1,11 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
-// import MainFooter from "../common/AppFooter";
-// import Footer from "./layouts/Footer";
-// import StickyFooter from "react-sticky-footer";
-
 import { withRouter } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
 
 let welcome_user = {
   color: "#fff",
@@ -106,7 +103,7 @@ class DashBoard extends React.Component {
               </div>
             )}
 
-            <div className="row">
+            <Grid container spacing={24}>
               {isMobile && (
                 <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 mobilePadding">
                   {/* display mobile text here if mobile */}
@@ -121,7 +118,7 @@ class DashBoard extends React.Component {
                 </div>
               )}
               {
-                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
+                <Grid item xs={6} className="mobilePadding">
                   <div
                     style={twitter_icon_index}
                     id="icon-box-twitter"
@@ -145,10 +142,10 @@ class DashBoard extends React.Component {
                       Gain Followers
                     </p>
                   }
-                </div>
+                </Grid>
               }
               {
-                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
+                <Grid item xs={6} className="mobilePadding">
                   <div
                     style={twitter_icon_index}
                     id="icon-box-twitter"
@@ -172,10 +169,10 @@ class DashBoard extends React.Component {
                       View Tweets
                     </p>
                   }
-                </div>
+                </Grid>
               }
               {
-                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
+                <Grid item xs={6} className="mobilePadding">
                   <div
                     style={twitter_icon_index}
                     id="icon-box-twitter"
@@ -199,10 +196,10 @@ class DashBoard extends React.Component {
                       Profile
                     </p>
                   }
-                </div>
+                </Grid>
               }
               {
-                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mobilePadding">
+                <Grid item xs={6} className="mobilePadding">
                   <div style={logout_icon_index} id="logout-icon-box">
                     <span
                       onClick={function() {
@@ -224,9 +221,9 @@ class DashBoard extends React.Component {
                       Logout
                     </p>
                   }
-                </div>
+                </Grid>
               }
-            </div>
+            </Grid>
           </div>
         </div>
       </div>

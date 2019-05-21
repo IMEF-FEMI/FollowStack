@@ -92,7 +92,7 @@ class UnFollowed extends Component {
                     {stats.gained} Users Following back
                   </Grid>
                   <Grid item xs={12} align="center">
-                    {stats.usersFollowed} Users Unfollowed
+                    {stats.usersUnFollowed} Users Unfollowed
                   </Grid>
                   <Grid item xs={12} align="center">
                     {stats.totalGained} Followers Gained So far

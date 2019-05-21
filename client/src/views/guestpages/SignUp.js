@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import { TwitterLoginButton } from "react-social-login-buttons";
 
 import { checkUser } from "../../async/auth";
-import { signIn, setUserData, setUserProfile } from "../../actions/authActions";
+import { signIn, setUserData} from "../../actions/authActions";
 import { checkTotalGainedAction } from "../../actions/gainFollowersAction";
 import { toast, ToastContainer } from "react-toastify";
 import { getUserProfile } from "../../async/auth";
@@ -44,13 +44,6 @@ const styles = theme => ({
   }
 });
 
-// if (!firebase.apps.length) {
-//   firebase.initializeApp({
-//     apiKey: " AIzaSyDPRnO_g0nrFa0PNI7IynwTdCnRg8nWNJc",
-//     authDomain: "followstack.firebaseapp.com",
-//     projectId: "followstack"
-//   });
-// }
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -195,7 +188,7 @@ class SignIn extends React.Component {
     window.addEventListener("resize", this.hasWindowSizeChange);
   }
   async handleUserData(userData) {
-    const res = await getUserProfile(userData);
+    const res = await getUserProfile(userData, localStorage.getItem("keyInUse"));
     if (res !== undefined) {
       userData.photo = res.data.photo;
     }
@@ -217,7 +210,7 @@ class SignIn extends React.Component {
 
       this.setState({ userExists: true });
 
-      toast.error(" ⚠️ User Already Registered! 👨", {
+      toast.error(" ⚠️ User Already Registered!", {
         position: "bottom-right",
         autoClose: 10000,
         hideProgressBar: false,
@@ -324,7 +317,6 @@ SignIn.propTypes = {
   auth: PropTypes.object.isRequired,
   signIn: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
-  setUserProfile: PropTypes.func.isRequired,
   checkTotalGainedAction: PropTypes.func.isRequired
 };
 
@@ -336,7 +328,7 @@ export default withRouter(
   withStyles(styles)(
     connect(
       mapStateToProps,
-      { signIn, setUserData, setUserProfile, checkTotalGainedAction }
+      { signIn, setUserData,  checkTotalGainedAction }
     )(SignIn)
   )
 );

@@ -29,8 +29,8 @@ const TWITTER_KEYS = [
 const Follows = require("../../models/Follows");
 const User = require("../../models/User");
 
-// @route   GET api/users/test
-// @desc    Tests users route
+// @route   GET api/twitter/test
+// @desc    Tests twitter route
 // @access  Public
 router.get(
   "/test",

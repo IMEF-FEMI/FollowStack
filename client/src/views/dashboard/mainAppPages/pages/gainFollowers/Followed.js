@@ -1,20 +1,23 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
+// import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import PersonAdd from "@material-ui/icons/PersonAdd";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import LinearProgress from "@material-ui/core/LinearProgress";
+
 import {
   gainFollowersAction,
   checkFollowingAction,
-  beginUnFollowAction,
   setProgress,
   clearError
 } from "../../../../../actions/gainFollowersAction";
 import { connect } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import Users from "./Users";
+import atoms from "../../components/atoms";
+const { Button } = atoms;
+
 const containerFluid = {
   paddingRight: "15px",
   paddingLeft: "15px",
@@ -70,7 +73,10 @@ class Followed extends Component {
     clearInterval(this.timer);
   }
   beginFollow = () => {
-    this.props.gainFollowersAction(this.props.auth.userData, this.props.auth.keyInUse);
+    this.props.gainFollowersAction(
+      this.props.auth.userData,
+      this.props.auth.keyInUse
+    );
   };
 
   componentDidMount() {
@@ -102,7 +108,7 @@ class Followed extends Component {
       isUnFollowing,
       linearProgressBarCompleted
     } = this.props.gainFollowers;
-    // console.log(`hasFollowings ${hasFollowings} checkingFollowings ${checkingFollowings} isFollowing ${isFollowing} isUnFollowing ${isUnFollowing}`);
+    const upSm = window.innerWidth >= 600;
 
     return (
       <div>
@@ -115,9 +121,11 @@ class Followed extends Component {
             <div style={container}>
               <Grid container spacing={16} justify="center">
                 <Grid item>
+                 
                   <Button
-                    variant="contained"
-                    color="primary"
+                    // className={classes.editButton}
+                    variant="outlined"
+                    fullWidth={!upSm}
                     onClick={this.beginFollow}
                   >
                     Click To Begin
@@ -164,7 +172,6 @@ Followed.propTypes = {
   gainFollowers: PropTypes.object.isRequired,
   gainFollowersAction: PropTypes.func.isRequired,
   checkFollowingAction: PropTypes.func.isRequired,
-  beginUnFollowAction: PropTypes.func.isRequired,
   setProgress: PropTypes.func.isRequired,
   clearError: PropTypes.func.isRequired
 };
@@ -180,7 +187,6 @@ export default connect(
   {
     gainFollowersAction,
     checkFollowingAction,
-    beginUnFollowAction,
     setProgress,
     clearError
   }
