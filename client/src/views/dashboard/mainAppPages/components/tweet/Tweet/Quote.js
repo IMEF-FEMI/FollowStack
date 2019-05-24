@@ -8,7 +8,7 @@ class Quote extends React.Component {
     const {data, linkProps} = this.props
 
     return (
-      <div className="QuoteTweet" style={styles.QuoteTweet}>
+      <div className="QuoteTweet" style={styles.QuoteTweet} aria-label="quote">
         <a className="QuoteTweet-link" style={styles.QuoteLink} href={`https://twitter.com/${data.user.screen_name}/status/${data.id_str}`} {...linkProps} />
         <div className="QuoteTweet-innerContainer" style={styles.QuoteTweetInner}>
           <div className="QuoteTweet-originalAuthor" style={styles.QuoteTweetAuthor}>

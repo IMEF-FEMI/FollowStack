@@ -75,7 +75,7 @@ class SignIn extends React.Component {
       firebase
         .auth()
         .signInWithPopup(provider)
-        .then(function(result) {
+        .then(async function(result) {
           var userData = {};
           if (result.credential) {
             // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
@@ -92,7 +92,7 @@ class SignIn extends React.Component {
             userData.userid = user.providerData[0].uid;
             userData.username = user.providerData[0].displayName;
             userData.photo = user.providerData[0].photoURL;
-            that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
+            await that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
             // console.log("user from the base" + JSON.stringify(userData));
             
             that.handleUserData(userData);
@@ -142,7 +142,7 @@ class SignIn extends React.Component {
       firebase
         .auth()
         .getRedirectResult()
-        .then(function(result) {
+        .then(async function(result) {
           var userData = {};
           if (result.credential) {
             // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
@@ -159,8 +159,8 @@ class SignIn extends React.Component {
             userData.userid = user.providerData[0].uid;
             userData.username = user.providerData[0].displayName;
             userData.photo = user.providerData[0].photoURL;
-            that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
-            // console.log("user from the base" + JSON.stringify(userData));
+            await that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
+            // console.log("user from the base" + JSON.stringify(userData)); 
             that.handleUserData(userData);
             localStorage.setItem("redirected", false);
           } else if (user === null || result.credential === undefined) {

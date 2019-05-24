@@ -10,11 +10,13 @@ import { Link } from "react-router-dom";
 import store from "../../../store";
 
 export const mainListItems = screen_name => {
-  const n = screen_name.slice(2, -1);
+  // console.log("screen_name ", screen_name);
+
+  const n = store.getState().auth.userProfile.screen_name.slice(1);
   const name =
-    screen_name
-      .slice(1, -1)
-      .charAt(0)
+    store
+      .getState()
+      .auth.userProfile.screen_name.charAt(0)
       .toUpperCase() + n;
 
   return (

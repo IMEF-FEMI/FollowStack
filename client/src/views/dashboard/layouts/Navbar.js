@@ -77,13 +77,17 @@ class Navbar extends Component {
           >
             FollowStack
           </Typography>
+
+          
+          <div style={{
+            marginLeft: "auto"
+          }}>
           <IconButton color="inherit">
             <Badge badgeContent={50} color="primary">
               <Stars />
             </Badge>
           </IconButton>
 
-          <div>
             <IconButton
               color="inherit"
               style={{ padding: 4 }}

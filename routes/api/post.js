@@ -41,7 +41,7 @@ router.get(
 );
 
 router.post(
-  "/get-profile-tweets/:key",
+  "/get-profile-tweets/:key/:page",
   requireAuth,
   asyncHandler(async (req, res, next) => {
     const random = TWITTER_KEYS[req.params.key];
@@ -51,14 +51,13 @@ router.post(
       access_token_key: req.body.accessToken,
       access_token_secret: req.body.secret
     });
-
+    const page = req.params.page === 0 ? 1 : parseInt(req.params.page) + 1;
     var params = {
       user_id: req.body.userid,
-      count: 12
+      count: 12 * page
     };
-    //     get 12 * pagenumber tweets
-    // get the last 12 tweets returned
-
+    //    strip array of first 12 * page element, return remaining
+    console.log("tweets to retrieve ", params.count);
     client.get("statuses/user_timeline", params, async function(
       error,
       tweet,
@@ -66,10 +65,18 @@ router.post(
     ) {
       if (!error && response.statusCode === 200) {
         const allTweet = Object.keys(tweet).map(i => tweet[i]);
-        const tweetForPage = allTweet.slice(-12);
+        const tweetForPage = allTweet.slice(req.body.recievedTweets, 12 * page);
+        console.log("Tweets retrieved ", allTweet.length);
 
-        console.log(allTweet.length + " tweets returned");
-        res.send(tweetForPage);
+        if (parseInt(page) > 1 && tweetForPage.length !== 0) {
+          if (req.body.recievedTweets !== 0) {
+            res.send(tweetForPage);
+          }
+        } else if (parseInt(page) === 1) {
+          res.send(allTweet);
+        } else if (tweetForPage.length === 0) {
+          res.send();
+        }
       } else {
         console.log(error);
       }

@@ -121,7 +121,6 @@ class Followed extends Component {
             <div style={container}>
               <Grid container spacing={16} justify="center">
                 <Grid item>
-                 
                   <Button
                     // className={classes.editButton}
                     variant="outlined"
@@ -161,7 +160,11 @@ class Followed extends Component {
           )}
 
         {hasFollowings === true && followings.length !== 0 && (
-          <Users useContext={{ context: "Followed" }} users={followings} />
+          <Grid container justify="center"
+            
+          >
+            <Users useContext={{ context: "Followed" }} users={followings} />
+          </Grid>
         )}
       </div>
     );

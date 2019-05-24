@@ -1,10 +1,14 @@
-import React from "react";
-import { connect } from "react-redux";
-import { PropTypes } from "prop-types";
-import { withRouter } from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
+import React, { Component } from "react";
 
-let welcome_user = {
+import theme from "./mainAppPages/theme/instapaper/theme";
+import withTheme from "./mainAppPages/theme/withTheme";
+import { unstable_Box as Box } from "@material-ui/core/Box";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import Grid from "@material-ui/core/Grid";
+import { withRouter } from "react-router-dom";
+
+const welcome_user = {
   color: "#fff",
   fontFamily: "Nunito, sans-serif",
   fontSize: "30px",
@@ -14,7 +18,8 @@ let welcome_user = {
   marginLeft: "auto",
   marginRight: "auto"
 };
-let logout_icon_index = {
+
+const logout_icon_index = {
   display: "block",
   margin: "0 auto",
   position: "relative",
@@ -28,7 +33,7 @@ let logout_icon_index = {
   borderRadius: "15px"
 };
 
-let twitter_icon_index = {
+const twitter_icon_index = {
   display: "block",
   margin: "0 auto",
   position: "relative",
@@ -41,7 +46,7 @@ let twitter_icon_index = {
   backgroundColor: "#3897f0",
   borderRadius: "15px"
 };
-let category_text = {
+const category_text = {
   color: "#fff",
   textAlign: "center",
   fontFamily: "Nunito, sans-serif",
@@ -53,7 +58,7 @@ let category_text = {
   margin: "0 auto"
 };
 
-class DashBoard extends React.Component {
+class DashBoard extends Component {
   constructor() {
     super();
     this.state = {
@@ -74,168 +79,164 @@ class DashBoard extends React.Component {
       width: window.innerWidth
     });
   };
-
   push = url => {
     this.props.history.push(url);
   };
   render() {
-    const { width } = this.state;
-    const isMobile = width <= 575;
+    const bgimage = require("./assets/img/green.jpg");
     return (
-      <div>
-        <div
-          style={{
-            height: "100vh",
-            position: "relative"
-          }}
-        >
-          {/* drop thelayout by 30% if not mobile */}
-          <div
-            style={{ top: isMobile ? "0%" : "30%", position: "relative" }}
-            // className="container"
-          >
-            {/* display Welcome text here if not mobile */}
-            {!isMobile && (
-              <div className="mb-3 welcome-block">
+      <div
+        style={{
+          height: this.state.width >= 600 ? "110vh" : "140vh",
+          // height: `${window.innerHeight * 1.11}px`,
+          backgroundImage: "url(" + bgimage + ")",
+          backgroundColor: "#2c3e50",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center"
+        }}
+      >
+        <Box mb="44px">
+          <div>
+            <Grid
+              item
+              xs={12}
+              className={window.innerWidth >= 500 ? `mobilePadding` : ""}
+            >
+              <div
+                className="mb-3 welcome-block"
+                style={{ paddingTop: "100px" }}
+              >
                 <p style={welcome_user}>
                   Welcome {this.props.auth.userData.username}
                 </p>
               </div>
-            )}
-
-            <Grid container spacing={24}>
-              {isMobile && (
-                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 mobilePadding">
-                  {/* display mobile text here if mobile */}
-                  <div
-                    className="mb-3 welcome-block"
-                    style={{ paddingTop: "100px" }}
-                  >
-                    <p style={welcome_user}>
-                      Welcome {this.props.auth.userData.username}
-                    </p>
-                  </div>
-                </div>
-              )}
-              {
-                <Grid item xs={6} className="mobilePadding">
-                  <div
-                    style={twitter_icon_index}
-                    id="icon-box-twitter"
-                    onClick={() => {
-                      this.push("/gain-followers");
-                    }}
-                  >
-                    <span>
-                      <i className="fa fa-users fa fa-lg-modification" />
-                    </span>
-                  </div>
-                  {
-                    <p
-                      style={category_text}
-                      className="tooltip-bottom"
-                      data-tooltip={
-                        "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
-                      }
-                    >
-                      {" "}
-                      Gain Followers
-                    </p>
-                  }
-                </Grid>
-              }
-              {
-                <Grid item xs={6} className="mobilePadding">
-                  <div
-                    style={twitter_icon_index}
-                    id="icon-box-twitter"
-                    onClick={() => {
-                      this.push("/gain-followers");
-                    }}
-                  >
-                    <span>
-                      <i className="fab fa-twitter fa-lg-modification" />
-                    </span>
-                  </div>
-                  {
-                    <p
-                      style={category_text}
-                      className="tooltip-bottom"
-                      data-tooltip={
-                        "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
-                      }
-                    >
-                      {" "}
-                      View Tweets
-                    </p>
-                  }
-                </Grid>
-              }
-              {
-                <Grid item xs={6} className="mobilePadding">
-                  <div
-                    style={twitter_icon_index}
-                    id="icon-box-twitter"
-                    onClick={() => {
-                      this.push("/gain-followers");
-                    }}
-                  >
-                    <span>
-                      <i className="far fa-user fa fa-lg-modification" />
-                    </span>
-                  </div>
-                  {
-                    <p
-                      style={category_text}
-                      className="tooltip-bottom"
-                      data-tooltip={
-                        "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
-                      }
-                    >
-                      {" "}
-                      Profile
-                    </p>
-                  }
-                </Grid>
-              }
-              {
-                <Grid item xs={6} className="mobilePadding">
-                  <div style={logout_icon_index} id="logout-icon-box">
-                    <span
-                      onClick={function() {
-                        console.log("hre");
-                      }}
-                    >
-                      <i className="fa fa-sign-out-alt fa fa-lg-modification" />
-                    </span>
-                  </div>
-                  {
-                    <p
-                      style={category_text}
-                      className="tooltip-bottom"
-                      data-tooltip={
-                        "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
-                      }
-                    >
-                      {" "}
-                      Logout
-                    </p>
-                  }
-                </Grid>
-              }
             </Grid>
           </div>
+        </Box>
+        <div>
+          <Grid container>
+            {
+              <Grid item xs={12} sm={6} className="mobilePadding">
+                <div
+                  style={twitter_icon_index}
+                  id="icon-box-twitter"
+                  onClick={() => {
+                    this.push("/gain-followers");
+                  }}
+                >
+                  <span>
+                    <i className="fa fa-users fa fa-lg-modification" />
+                  </span>
+                </div>
+                {
+                  <p
+                    style={category_text}
+                    className="tooltip-bottom"
+                    data-tooltip={
+                      "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
+                    }
+                  >
+                    {" "}
+                    Gain Followers
+                  </p>
+                }
+              </Grid>
+            }
+
+            {
+              <Grid item xs={12} sm={6} className="mobilePadding">
+                <div
+                  style={twitter_icon_index}
+                  id="icon-box-twitter"
+                  onClick={() => {
+                    this.push("/gain-followers");
+                  }}
+                >
+                  <span>
+                    <i className="fab fa-twitter fa-lg-modification" />
+                  </span>
+                </div>
+                {
+                  <p
+                    style={category_text}
+                    className="tooltip-bottom"
+                    data-tooltip={
+                      "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
+                    }
+                  >
+                    {" "}
+                    View Tweets
+                  </p>
+                }
+              </Grid>
+            }
+
+            {
+              <Grid item xs={12} sm={6} className="mobilePadding">
+                <div
+                  style={twitter_icon_index}
+                  id="icon-box-twitter"
+                  onClick={() => {
+                    this.push("/gain-followers");
+                  }}
+                >
+                  <span>
+                    <i className="far fa-user fa fa-lg-modification" />
+                  </span>
+                </div>
+                {
+                  <p
+                    style={category_text}
+                    className="tooltip-bottom"
+                    data-tooltip={
+                      "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
+                    }
+                  >
+                    {" "}
+                    Profile
+                  </p>
+                }
+              </Grid>
+            }
+            {
+              <Grid item xs={12} sm={6} className="mobilePadding">
+                <div style={logout_icon_index} id="logout-icon-box">
+                  <span
+                    onClick={function() {
+                      console.log("hre");
+                    }}
+                  >
+                    <i className="fa fa-sign-out-alt fa fa-lg-modification" />
+                  </span>
+                </div>
+                {
+                  <p
+                    style={category_text}
+                    className="tooltip-bottom"
+                    data-tooltip={
+                      "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
+                    }
+                  >
+                    {" "}
+                    Logout
+                  </p>
+                }
+              </Grid>
+            }
+          </Grid>
         </div>
       </div>
     );
   }
 }
+
 DashBoard.propTypes = {
   auth: PropTypes.object.isRequired
 };
-
 const mapStateToProps = state => ({
   auth: state.auth
 });
-
-export default withRouter(connect(mapStateToProps)(DashBoard));
+export default connect(mapStateToProps)(
+  withRouter(withTheme(theme)(DashBoard))
+);

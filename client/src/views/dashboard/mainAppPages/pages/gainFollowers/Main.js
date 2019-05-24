@@ -4,7 +4,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
 import atoms from "../../components/atoms";
 import molecules from "../../components/molecules";
-import PersonAdd from "@material-ui/icons/PersonAdd";
 import PersonAddDisabled from "@material-ui/icons/PersonAddDisabled";
 // import Button from "@material-ui/core/Button";
 import theme from "../../theme/instapaper/theme";
@@ -17,7 +16,6 @@ import UnFollowed from "./UnFollowed";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import {
-  gainFollowersAction,
   beginUnFollowAction,
   checkTotalGainedAction
 } from "../../../../../actions/gainFollowersAction";
@@ -45,9 +43,6 @@ function Main(props) {
 
     setTabIndex(3);
   };
-  const beginFollow = () => {
-    props.gainFollowersAction(props.auth.userData, props.auth.keyInUse);
-  };
   React.useEffect(() => {
     // props.checkTotalGainedAction(props.auth.user.userid);
 
@@ -60,73 +55,81 @@ function Main(props) {
     <React.Fragment>
       <CssBaseline />
       <Box mb="44px">
-        <Grid
-          container
-          style={{
-            paddingTop: "80px"
+        <div>
+          <div>
+            <Grid
+              container
+              spacing={24}
+              style={{
+                paddingTop: "20px",
+                width: "100%"
+              }}
+            >
+              <Grid item xs={4}>
+                <Avatar
+                  ultraLarge={upSm}
+                  medium={!upSm}
+                  style={{ margin: "auto" }}
+                  src={userProfile.photo}
+                />
+              </Grid>
+              <Grid item xs={8}>
+                <Grid container alignItems="center">
+                  <Typography variant="subtitle1" bold>
+                    {userProfile.name}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle1">
+                    {userProfile.screen_name}
+                  </Typography>
+                </Grid>
+                <Box mb="20px">
+                  <Grid container spacing={40}>
+                    <Grid item>
+                      <Typography variant="subtitle1">
+                        <b>{userProfile.followers}</b> followers
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="subtitle1">
+                        <b>{userProfile.following}</b> following
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      {totalGained !== 0 && (
+                      <Typography variant="subtitle1">
+                        <b> {`${totalGained} `}</b>Followers Gained
+                      </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Box>
+                <Typography variant="subtitle1">
+                  {userProfile.description}
+                </Typography>
+              </Grid>
+            </Grid>
+          </div>
+        </div>
+      </Box>
+      <div style={{ maxWidth: window.innerWidth <= 320 && "265px" }}>
+        <Tabs
+          value={tabIndex}
+          centered
+          onChange={(event, value) => {
+            setTabIndex(value);
           }}
         >
-          <Grid item xs={4}>
-            <Avatar
-              ultraLarge={upSm}
-              medium={!upSm}
-              style={{ margin: "auto" }}
-              src={userProfile.photo}
-            />
-          </Grid>
-          <Grid item xs={8}>
-            <Grid container alignItems="center">
-              <Typography variant="subtitle1" bold>
-                {userProfile.name}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="subtitle1">
-                {userProfile.screen_name}
-              </Typography>
-            </Grid>
-            <Box mb="20px">
-              <Grid container spacing={40}>
-                <Grid item>
-                  <Typography variant="subtitle1">
-                    <b>{userProfile.followers}</b> followers
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subtitle1">
-                    <b>{userProfile.following}</b> following
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  {totalGained !== 0 && (
-                    <Typography variant="subtitle1">
-                      <b> {`${totalGained} `}</b>Followers Gained
-                    </Typography>
-                  )}
-                </Grid>
-              </Grid>
-            </Box>
-            <Typography variant="subtitle1">
-              {userProfile.description}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Box>
-      <Tabs
-        value={tabIndex}
-        centered
-        onChange={(event, value) => {
-          setTabIndex(value);
-        }}
-      >
-        <Tab value={1} label="Followed" icon={<Icon>offline_pin</Icon>} />
-        <Tab
-          value={2}
-          label="Followed Back"
-          icon={<Icon>verified_user</Icon>}
-        />
-        <Tab value={3} label="Unfollowed" icon={<Icon>cancel</Icon>} />
-      </Tabs>
+          <Tab value={1} label="Follow" icon={<Icon>offline_pin</Icon>} />
+          <Tab
+            value={2}
+            label="Followed Back"
+            icon={<Icon>verified_user</Icon>}
+          />
+          <Tab value={3} label="Unfollow" icon={<Icon>cancel</Icon>} />
+        </Tabs>
+      </div>
       {tabIndex === 1 && <Followed />}
       {tabIndex === 2 && <FollowedBack />}
       {tabIndex === 3 && <UnFollowed />}
@@ -154,15 +157,6 @@ function Main(props) {
           <Button
             // className={classes.editButton}
             variant="outlined"
-            // fullWidth={!upSm}
-            onClick={beginFollow}
-          >
-            Follow Some More
-            <PersonAdd />
-          </Button>
-          <Button
-            // className={classes.editButton}
-            variant="outlined"
             fullWidth={!upSm}
             onClick={beginUnfollow}
           >
@@ -176,7 +170,6 @@ function Main(props) {
 }
 
 Main.propTypes = {
-  gainFollowersAction: PropTypes.func.isRequired,
   beginUnFollowAction: PropTypes.func.isRequired,
   gainFollowers: PropTypes.object.isRequired
 };
@@ -187,7 +180,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    gainFollowersAction,
     beginUnFollowAction,
     checkTotalGainedAction
   }

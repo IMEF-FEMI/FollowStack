@@ -3,6 +3,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
+import Grid from "@material-ui/core/Grid";
 
 const LaunchScreen = ({ classes }) => (
   <div
@@ -12,14 +13,16 @@ const LaunchScreen = ({ classes }) => (
     }}
   >
     <LinearProgress color="secondary" />
-    <Typography
-      className={classes.brandText}
-      align="center"
-      variant="h2"
-      color="inherit"
-    >
-      FollowStack
-    </Typography>
+    <Grid item xs={12}>
+      <Typography
+        className={classes.brandText}
+        align="center"
+        variant="h2"
+        color="inherit"
+      >
+        FollowStack
+      </Typography>
+    </Grid>
   </div>
 );
 
@@ -35,7 +38,8 @@ const styles = theme => ({
     //   theme.palette.primary.dark
     // } 67%)`,
     height: "100vh",
-    position: "relative"
+    position: "relative",
+    width: "100%"
   },
   brandText: {
     position: "absolute",

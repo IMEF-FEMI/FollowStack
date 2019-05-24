@@ -1,8 +1,10 @@
 export default {
   tweet: {
     backgroundColor: "#ffffff",
-    minHeight: "51px",
-    maxWidth: "588px",
+    minHeight: window.innerWidth >= 599 && "346px",
+    // maxWidth: "588px",
+    maxWidth: window.innerWidth <= 599 && `${0.8 * window.innerWidth}px`,
+
     // 'minWidth': '350px',
     borderBottom: "1px solid #e6ecf0",
     color: "#14171a",

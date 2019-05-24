@@ -43,8 +43,11 @@ class UnFollowed extends Component {
     this.setState({ open: false });
   };
   componentWillReceiveProps(nextProps) {
-    if(nextProps.gainFollowers.stats.gained || nextProps.gainFollowers.stats.totalGained){
-      this.handleClickOpen()
+    if (
+      nextProps.gainFollowers.stats.gained ||
+      nextProps.gainFollowers.stats.totalGained
+    ) {
+      this.handleClickOpen();
     }
   }
 
@@ -63,10 +66,12 @@ class UnFollowed extends Component {
         )}
 
         {stats.unFollowed.length !== 0 && (
-          <Users
-            useContext={{ context: "UnFollowed" }}
-            users={stats.unFollowed}
-          />
+          <Grid container justify="center">
+            <Users
+              useContext={{ context: "UnFollowed" }}
+              users={stats.unFollowed}
+            />
+          </Grid>
         )}
 
         {

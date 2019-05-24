@@ -12,6 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Launch from "@material-ui/icons/Launch";
 import Tooltip from "@material-ui/core/Tooltip";
+
 import Tweet from "./Tweet/Tweet";
 
 class Profile extends Component {
@@ -32,10 +33,13 @@ class Profile extends Component {
         {data.map(item => (
           <Grid
             item
-            key={item.id}
+            key={item.id + item.id_str}
             classes={{
               item: classes.item
             }}
+            // style={{
+            //   maxWidth: window.innerWidth <= 599 && `${ 0.8 * window.innerWidth}`
+            // }}
             xs={12}
             sm={6}
             md={6}
@@ -45,8 +49,11 @@ class Profile extends Component {
             <Card className={classes.card}>
               <CardHeader
                 avatar={
-                  <Avatar aria-label="Recipe" className={classes.avatar}>
-                    <img src={`${item.user.profile_image_url}`} />
+                  <Avatar aria-label="avatar" className={classes.avatar}>
+                    <img
+                      src={`${item.user.profile_image_url}`}
+                      alt={"user avatar"}
+                    />
                   </Avatar>
                 }
                 action={
@@ -75,13 +82,6 @@ class Profile extends Component {
                     </a>
                   </div>
                 }
-                // action={
-                //   <Tooltip title="Remove from Tweets Feed" aria-label="Add">
-                //     <IconButton>
-                //       <DeleteIcon />
-                //     </IconButton>
-                //   </Tooltip>
-                // }
                 title={`${item.user.name}`}
                 subheader={`@${item.user.screen_name}`}
               />
@@ -104,15 +104,15 @@ const styles = theme => ({
     zIndex: 1000
   },
   gridContainer: {
-    minHeight: "100vh",
-    backgroundColor: "#2c3e50"
+    minHeight: "100vh"
   },
   spacingXs24: {
     width: "100%",
     margin: 0
   },
   card: {
-    maxWidth: 400,
+    // maxWidth: 400,
+
     // maxHeight: "370px",
     margin: `${theme.spacing.unit * 3}px auto`
   },
@@ -142,10 +142,9 @@ const styles = theme => ({
     color: "inherit",
     textDecoration: "none"
   },
-  circularProgress: {
-    margin: "16px auto",
-    display: "block"
-  },
+  // circularProgress: {
+  //   display: "block"
+  // },
   noResults: {
     height: "100vh",
     display: "flex",

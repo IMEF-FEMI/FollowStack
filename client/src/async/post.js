@@ -1,7 +1,7 @@
 import axios from "axios"
 
-export const fetchTweetsForProfile = async ( userData, key, cancelToken)=> {
-    const res = await axios.post(`/api/post/get-profile-tweets/${key}`, userData, {cancelToken});
+export const fetchTweetsForProfile = async ( userData, key, page, cancelToken)=> {
+    const res = await axios.post(`/api/post/get-profile-tweets/${key}/${page}`, userData, {cancelToken});
     return res;
   };
 //   export const fetchForProfile = async userid => {

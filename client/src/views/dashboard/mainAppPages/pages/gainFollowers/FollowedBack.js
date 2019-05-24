@@ -54,7 +54,10 @@ class FollowedBack extends Component {
   }
 
   componentDidMount() {
-    this.props.checkFollowedBackAction(this.props.auth.userData, this.props.auth.keyInUse);
+    this.props.checkFollowedBackAction(
+      this.props.auth.userData,
+      this.props.auth.keyInUse
+    );
   }
 
   render() {
@@ -79,7 +82,9 @@ class FollowedBack extends Component {
         )}
 
         {followedBack.length !== 0 && (
-          <Users useContext={context} users={followedBack} />
+          <Grid container justify="center">
+            <Users useContext={context} users={followedBack} />
+          </Grid>
         )}
 
         {followings.length !== 0 &&

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -11,32 +10,17 @@ import store from "../../../store";
 
 class Sidebar extends Component {
   render() {
-    var { open, classes, handleDrawerClose } = this.props;
     const screen_name = JSON.stringify(
       store.getState().auth.userProfile.screen_name
     );
 
     return (
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: classNames(
-            classes.drawerPaper,
-            !open && classes.drawerPaperClose
-          )
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
+      <div>
         <Divider />
         <List>{mainListItems(screen_name)}</List>
         <Divider />
         <List>{secondaryListItems}</List>
-      </Drawer>
+      </div>
     );
   }
 }

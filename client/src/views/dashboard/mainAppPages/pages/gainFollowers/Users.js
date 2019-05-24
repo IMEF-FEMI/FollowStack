@@ -85,7 +85,11 @@ class Users extends React.Component {
       <List>
         {!this.state.showAll && (
           <div>
-            <Grid container spacing={16} justify="center">
+            <Grid container spacing={16} justify="center"
+            style={{
+              width: 0.82 * window.innerWidth
+            }}
+            >
               {firstTen.map(element => (
                 <Grid
                   key={
@@ -123,8 +127,14 @@ class Users extends React.Component {
         )}
 
         {this.state.showAll && (
-          <div>
-            <Grid container spacing={16} justify="center">
+            <Grid
+              container
+              spacing={16}
+              justify="center"
+              style={{
+                width: 0.83 * window.innerWidth
+              }}
+            >
               {users.map(element => (
                 <Grid
                   key={
@@ -146,7 +156,6 @@ class Users extends React.Component {
                 </Grid>
               ))}
             </Grid>
-          </div>
         )}
       </List>
     );

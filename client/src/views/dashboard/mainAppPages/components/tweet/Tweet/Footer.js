@@ -24,7 +24,7 @@ class Footer extends React.Component {
   }
 
   render() {
-    const { data, linkProps } = this.props;
+    const { data} = this.props;
 
     return (
       <div>
