@@ -149,13 +149,12 @@ router.post(
   requireAuth,
   asyncHandler(async (req, res, next) => {
     const random = TWITTER_KEYS[req.params.key];
-    console.log(req.params.key);
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,
       access_token_key: req.body.accessToken,
       access_token_secret: req.body.secret
-    });
+    }); 
 
     var params = { screen_name: "nodejs" };
     client.get("statuses/home_timeline", params, function(

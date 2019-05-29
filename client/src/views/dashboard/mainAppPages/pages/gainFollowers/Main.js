@@ -46,7 +46,6 @@ function Main(props) {
   React.useEffect(() => {
     props.checkTotalGainedAction(props.auth.user.userid);
 
-    console.log("gain followers main mounted");
   }, []); // passing an empty array as second argument triggers the callback
   // in useEffect only after the initial render thus replicating
   //  `componentDidMount` lifecycle behaviour

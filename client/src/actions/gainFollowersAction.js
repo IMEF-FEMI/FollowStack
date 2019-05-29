@@ -146,6 +146,10 @@ export const checkFollowedBackAction = (userId, key) => async dispatch => {
 
 export const checkTotalGainedAction  = userId => async dispatch =>{
   const totalGained = await checkTotalGained(userId)
+   // Save to localStorage
+   localStorage.removeItem("total_gained");
+   localStorage.setItem("total_gained", JSON.stringify(totalGained.data.totalGained));
+  
   dispatch(setTotalGained(totalGained.data.totalGained))
 }
 
@@ -230,6 +234,7 @@ export const setStats = val => {
   };
 };
 export const setTotalGained = gains =>{
+  
   return{
     type: SET_TOTAL_GAINED,
     payload: gains

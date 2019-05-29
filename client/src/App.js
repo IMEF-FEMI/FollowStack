@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-import { setCurrentUser, logoutUser } from "./actions/authActions";
-import { SET_USER_DATA, SET_USER_PROFILE } from "./actions/types";
-import { setUserProfile, setKeyInUse } from "./actions/authActions";
+import { setCurrentUser, logoutUser, setUserProfile, setKeyInUse  } from "./actions/authActions";
+import { SET_USER_DATA, SET_USER_PROFILE, SET_TOTAL_GAINED} from "./actions/types";
+import {checkTotalGainedAction}from "./actions/gainFollowersAction"
 import { Provider } from "react-redux";
 import axios from "axios";
 import store from "./store";
@@ -73,6 +73,11 @@ if (localStorage.jwtToken) {
       localStorage.getItem("keyInUse")
     )
   );
+  store.dispatch({
+    type: SET_TOTAL_GAINED,
+    payload: JSON.parse(localStorage.getItem("total_gained"))
+  });
+  store.dispatch(checkTotalGainedAction(store.getState().auth.user.userid))
   // Check for expired token
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
