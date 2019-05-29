@@ -44,7 +44,7 @@ function Main(props) {
     setTabIndex(3);
   };
   React.useEffect(() => {
-    // props.checkTotalGainedAction(props.auth.user.userid);
+    props.checkTotalGainedAction(props.auth.user.userid);
 
     console.log("gain followers main mounted");
   }, []); // passing an empty array as second argument triggers the callback
@@ -98,9 +98,9 @@ function Main(props) {
                     </Grid>
                     <Grid item>
                       {totalGained !== 0 && (
-                      <Typography variant="subtitle1">
-                        <b> {`${totalGained} `}</b>Followers Gained
-                      </Typography>
+                        <Typography variant="subtitle1">
+                          <b> {`${totalGained} `}</b>Followers Gained
+                        </Typography>
                       )}
                     </Grid>
                   </Grid>
@@ -113,12 +113,23 @@ function Main(props) {
           </div>
         </div>
       </Box>
-      <div style={{ maxWidth: window.innerWidth <= 320 && "265px" }}>
+      <Grid
+        container
+        style={{
+          maxWidth: window.innerWidth <= 320 && "265px",
+          marginLeft: "auto",
+          marginRight: "auto"
+        }}
+      >
         <Tabs
           value={tabIndex}
           centered
           onChange={(event, value) => {
             setTabIndex(value);
+          }}
+          style={{
+            marginLeft: "auto",
+            marginRight: "auto"
           }}
         >
           <Tab value={1} label="Follow" icon={<Icon>offline_pin</Icon>} />
@@ -129,7 +140,7 @@ function Main(props) {
           />
           <Tab value={3} label="Unfollow" icon={<Icon>cancel</Icon>} />
         </Tabs>
-      </div>
+      </Grid>
       {tabIndex === 1 && <Followed />}
       {tabIndex === 2 && <FollowedBack />}
       {tabIndex === 3 && <UnFollowed />}
@@ -145,7 +156,7 @@ function Main(props) {
             </Typography>
           </Grid>
           <Grid container justify="center">
-            <Typography variant="caption" gutterBottom>
+            <Typography align="center" variant="caption" gutterBottom>
               Kindly note that only accounts that refused to follow back will be
               unfollowed
             </Typography>

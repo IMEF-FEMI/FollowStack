@@ -73,7 +73,7 @@ class DashBoard extends Component {
   componentWillUnmount() {
     window.addEventListener("resize", this.hasWindowSizeChange);
   }
-
+  
   hasWindowSizeChange = () => {
     this.setState({
       width: window.innerWidth
@@ -101,11 +101,11 @@ class DashBoard extends Component {
             <Grid
               item
               xs={12}
-              className={window.innerWidth >= 500 ? `mobilePadding` : ""}
+              // className={window.innerWidth >= 500 ? `mobilePadding` : ""}
             >
               <div
                 className="mb-3 welcome-block"
-                style={{ paddingTop: "100px" }}
+                style={{ paddingTop: "40px" }}
               >
                 <p style={welcome_user}>
                   Welcome {this.props.auth.userData.username}
@@ -178,7 +178,7 @@ class DashBoard extends Component {
                   style={twitter_icon_index}
                   id="icon-box-twitter"
                   onClick={() => {
-                    this.push("/gain-followers");
+                    this.push(`/${this.props.auth.userProfile.screen_name}`);
                   }}
                 >
                   <span>
@@ -194,7 +194,7 @@ class DashBoard extends Component {
                     }
                   >
                     {" "}
-                    Profile
+                   My Profile
                   </p>
                 }
               </Grid>

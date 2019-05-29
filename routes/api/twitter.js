@@ -7,6 +7,8 @@ var moment = require("moment");
 var async = require("async");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const mongoose = require("mongoose");
+ 
 const TWITTER_KEYS = [
   {
     consumerKey: process.env.TWITTER_KEY,
@@ -28,6 +30,10 @@ const TWITTER_KEYS = [
 // Load User model
 const Follows = require("../../models/Follows");
 const User = require("../../models/User");
+
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 // @route   GET api/twitter/test
 // @desc    Tests twitter route
@@ -75,6 +81,7 @@ router.post(
   requireAuth,
   asyncHandler(async (req, res, next) => {
     const random = TWITTER_KEYS[req.params.key];
+
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,
@@ -218,7 +225,7 @@ router.post(
         err = {};
         err.serverError = "Error Connecting to twitter try again";
         console.log(error);
-        
+
         return res.status(500).json(err);
       }
     });
@@ -303,12 +310,15 @@ router.post(
                     console.log(error);
                   }
                 });
-                callback()
+                callback();
               },
               function(error, results) {
                 console.log("finish unfollowing");
-                
-                Follows.findOneAndUpdate({"user_id": req.body.userid}, {"$set": {"following": []}}).catch(err=> console.log(err))
+
+                Follows.findOneAndUpdate(
+                  { user_id: req.body.userid },
+                  { $set: { following: [] } }
+                ).catch(err => console.log(err));
               }
             );
 
@@ -316,13 +326,12 @@ router.post(
             stats.usersFollowed = follows.following.length;
             stats.usersUnFollowed = toBeUnfollowed.length;
             stats.gained = followedBack.length;
-            
 
             // update total gained
             User.findOne({ userid: req.body.userid }).then(user => {
               if (user) {
                 user.followers_gained += followedBack.length;
-                stats.totalGained = user.followers_gained; 
+                stats.totalGained = user.followers_gained;
                 user.save();
                 client = null;
                 res.json({ stats: stats });
@@ -414,7 +423,7 @@ followUsers = (req, res, userArray, client) => {
       for (var i = 0; i < toBeFollowed.length; i++) {
         userz[i] = toBeFollowed[i];
         // console.log(userz[i]);
-        if (i === 29) {
+        if (i === 19) {
           break;
         }
       }
@@ -447,10 +456,10 @@ followUsers = (req, res, userArray, client) => {
                 { new: true }
               )
                 .then(follows => {
-                  if(follows !== undefined || follows.length !== undefined){
-                  finalList.push(
-                    follows.following[follows.following.length - 1]
-                  );
+                  if (follows !== undefined || follows.length !== undefined) {
+                    finalList.push(
+                      follows.following[follows.following.length - 1]
+                    );
                   }
                 })
                 .catch(err => console.log(err));
@@ -461,17 +470,18 @@ followUsers = (req, res, userArray, client) => {
             }
           });
           callback();
-
         },
         function(error, results) {
           if (error) {
             console.log(error);
           } else {
             client = null;
-// send back to client
-// wait 5secs for the list to get filled
-            setTimeout(()=>res.status(200).json({ followedUsers: finalList }), 5000 )
-            
+            // send back to client
+            // wait 5secs for the list to get filled
+            setTimeout(
+              () => res.status(200).json({ followedUsers: finalList }),
+              5000
+            );
           }
         }
       );
@@ -480,7 +490,6 @@ followUsers = (req, res, userArray, client) => {
       console.log(error);
     }
   });
-
 };
 
 getUsersFromStatus = (

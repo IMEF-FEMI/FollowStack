@@ -25,9 +25,14 @@ import "firebase/auth";
 
 import "./assets/styles/custom.css";
 import "react-toastify/dist/ReactToastify.css";
+import 'toasted-notes/src/styles.css';
 import { firebaseKeys } from "./config";
 // init firebase
-if (localStorage.getItem("keyInUse") === null && !firebase.apps.length) {
+if (
+  (localStorage.getItem("keyInUse") === undefined ||
+    localStorage.getItem("keyInUse") === null) &&
+  !firebase.apps.length
+) {
   const randomNumber = Math.floor(Math.random() * 4);
   console.log(JSON.stringify(firebaseKeys[randomNumber]));
   firebase.initializeApp(firebaseKeys[randomNumber]);

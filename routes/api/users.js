@@ -102,7 +102,8 @@ router.post(
       .then(user => {
         if (user) {
           const payload = {
-            userid: user.userid
+            userid: user.userid,
+            _id: user._id
           };
           // Sign Token
           jwt.sign(
@@ -110,8 +111,8 @@ router.post(
             keys.secretOrKey,
             { expiresIn: week },
             (err, token) => {
-              console.log("token " + token);
-              console.log("user " + user);
+              // console.log("token " + token);
+              // console.log("user " + user);
               res.json({
                 success: true,
                 token: "Bearer " + token

@@ -1,6 +1,5 @@
 // Needs binding
 export const onScroll = function(cb) {
-  console.log("Moving");
   return () => {
     /* global pageYOffset, innerHeight */
     let pageYOffset,
@@ -36,8 +35,6 @@ export const onScroll = function(cb) {
       }
       if (currentInnerHeight + currentPageYOffset >= currentDocOffsetHeight) {
         cb();
-        console.log("callback called ");
-        // somemore checks here
       }
     };
 

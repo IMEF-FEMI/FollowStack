@@ -5,21 +5,47 @@ import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
+import AddBox from "@material-ui/icons/AddBox";
+import Close from "@material-ui/icons/Close";
 import Launch from "@material-ui/icons/Launch";
 import Tooltip from "@material-ui/core/Tooltip";
-
+import { addTweetPost, removeTweetPost } from "../../../../../async/post";
 import Tweet from "./Tweet/Tweet";
+import toast from "toasted-notes";
 
 class Profile extends Component {
+  addTweet = async tweet => {
+    const { auth } = this.props;
+    const res = await addTweetPost(auth.user._id, tweet);
+    if (res.data.success) {
+      tweet.added = true;
+      toast.notify(res.data.success);
+    } else if (res.data.error) {
+      tweet.added = false;
+      toast.notify(res.data.error);
+    }
+  };
+
+  removeTweet = async tweet => {
+    const { auth } = this.props;
+    const res = await removeTweetPost(tweet.id_str, auth.user._id);
+    if (res.data.success) {
+      tweet.added = false;
+      toast.notify(res.data.success);
+    } else if (res.data.error) {
+      tweet.added = true;
+      toast.notify(res.data.error);
+    }
+  };
   render() {
     const { classes } = this.props;
     const data = this.props.pages;
     const linkProps = { target: "_blank", rel: "noreferrer" };
+
     return (
       <Grid
         className={classes.gridContainer}
@@ -30,65 +56,112 @@ class Profile extends Component {
         container
         spacing={24}
       >
-        {data.map(item => (
-          <Grid
-            item
-            key={item.id + item.id_str}
-            classes={{
-              item: classes.item
-            }}
-            // style={{
-            //   maxWidth: window.innerWidth <= 599 && `${ 0.8 * window.innerWidth}`
-            // }}
-            xs={12}
-            sm={6}
-            md={6}
-            lg={4}
-            xl={3}
-          >
-            <Card className={classes.card}>
-              <CardHeader
-                avatar={
-                  <Avatar aria-label="avatar" className={classes.avatar}>
-                    <img
-                      src={`${item.user.profile_image_url}`}
-                      alt={"user avatar"}
-                    />
-                  </Avatar>
-                }
-                action={
-                  <div>
-                    <Tooltip title="Add to Tweet Feeds" aria-label="Add">
-                      <IconButton>
-                        <AddIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Remove from Tweet Feeds" aria-label="Add">
-                      <IconButton>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <a
-                      href={`http://twitter.com/${
-                        item.user.screen_name
-                      }/status/${item.id_str}`}
-                      {...linkProps}
-                    >
-                      <Tooltip title="open in new tab" aria-label="Open">
-                        <IconButton>
-                          <Launch />
-                        </IconButton>
-                      </Tooltip>
-                    </a>
-                  </div>
-                }
-                title={`${item.user.name}`}
-                subheader={`@${item.user.screen_name}`}
-              />
-              <Tweet data={item} linkProps={linkProps} />
-            </Card>
-          </Grid>
-        ))}
+        {data.map(item => {
+          if (
+            item.in_reply_to_screen_name === null &&
+            item.in_reply_to_status_id === null &&
+            item.in_reply_to_status_id_str === null &&
+            item.in_reply_to_user_id === null &&
+            item.in_reply_to_user_id_str === null
+          ) {
+            return (
+              <Grid
+                item
+                key={item.id_str}
+                classes={{
+                  item: classes.item
+                }}
+                // style={{
+                //   maxWidth: window.innerWidth <= 599 && `${ 0.8 * window.innerWidth}`
+                // }}
+                xs={12}
+                sm={6}
+                md={6}
+                lg={4}
+                xl={3}
+              >
+                <Card className={classes.card}>
+                  <CardHeader
+                    style={{
+                      backgroundColor: item.added === true && "#ca7c7c"
+                    }}
+                    avatar={
+                      <Avatar aria-label="avatar" className={classes.avatar}>
+                        <img
+                          src={`${item.user.profile_image_url}`}
+                          alt={"user avatar"}
+                        />
+                      </Avatar>
+                    }
+                    action={
+                      <div>
+                        {this.props.context === "profile" &&
+                          (!item.added || item.added === false) && (
+                            <Tooltip
+                              title="Add to Tweet Feeds"
+                              aria-label="Add"
+                            >
+                              <IconButton
+                                onClick={async () => {
+                                  await this.addTweet(item);
+                                  this.forceUpdate();
+                                }}
+                              >
+                                <AddBox color="primary" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        {this.props.context === "profile" &&
+                          (item.added && item.added === true) && (
+                            <Tooltip
+                              title="Remove from Tweet Feeds"
+                              aria-label="Remove"
+                              onClick={async () => {
+                                await this.removeTweet(item);
+                                this.forceUpdate();
+                              }}
+                            >
+                              <IconButton>
+                                <Close color="secondary" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        <a
+                          href={`http://twitter.com/${
+                            item.user.screen_name
+                          }/status/${item.id_str}`}
+                          {...linkProps}
+                        >
+                          <Tooltip title="open in new tab" aria-label="Open">
+                            <IconButton>
+                              <Launch />
+                            </IconButton>
+                          </Tooltip>
+                        </a>
+                      </div>
+                    }
+                    title={`${item.user.name}`}
+                    subheader={`@${item.user.screen_name}`}
+                  />
+                  <Tweet
+                    data={item}
+                    linkProps={linkProps}
+                    context={this.props.context}
+                  />
+                </Card>
+              </Grid>
+            );
+          } else {
+            return null;
+          }
+        })}
+        {this.props.isFetching && (
+          <CircularProgress style={{
+            margin: "16px auto",
+            display: "block"
+          }}
+          size={50} />
+        )}
       </Grid>
     );
   }

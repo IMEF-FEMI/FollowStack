@@ -8,6 +8,10 @@ import Toolbar from "@material-ui/core/Toolbar";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
+import PowerSettingsNew from "@material-ui/icons/PowerSettingsNew";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from "@material-ui/core/IconButton";
 import classNames from "classnames";
 import Typography from "@material-ui/core/Typography";
@@ -78,15 +82,16 @@ class Navbar extends Component {
             FollowStack
           </Typography>
 
-          
-          <div style={{
-            marginLeft: "auto"
-          }}>
-          <IconButton color="inherit">
-            <Badge badgeContent={50} color="primary">
-              <Stars />
-            </Badge>
-          </IconButton>
+          <div
+            style={{
+              marginLeft: "auto"
+            }}
+          >
+            <IconButton color="inherit">
+              <Badge badgeContent={50} color="primary">
+                <Stars />
+              </Badge>
+            </IconButton>
 
             <IconButton
               color="inherit"
@@ -114,8 +119,25 @@ class Navbar extends Component {
               open={opened}
               onClose={this.handleClose}
             >
-              <MenuItem onClick={this.openProfile}>My Profile</MenuItem>
-              <MenuItem onClick={this.logout}>Logout</MenuItem>
+              <MenuItem onClick={this.openProfile}>
+              <ListItemIcon className={classes.icon}>
+                  <AccountCircle/>
+                </ListItemIcon>
+                <ListItemText
+                  inset
+                  primary="My Profile"
+                />
+             </MenuItem>
+              <MenuItem onClick={this.logout}>
+                <ListItemIcon className={classes.icon}>
+                  <PowerSettingsNew />
+                </ListItemIcon>
+                <ListItemText
+                  inset
+                  primary="Logout"
+                />
+                
+              </MenuItem>
             </Menu>
           </div>
         </Toolbar>

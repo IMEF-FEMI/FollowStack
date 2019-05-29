@@ -19,7 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 app.use(passport.initialize());
-// passportInit();
 
 app.use(cors());
 

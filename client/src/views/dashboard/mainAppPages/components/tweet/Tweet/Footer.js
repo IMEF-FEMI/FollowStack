@@ -5,12 +5,102 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Input from "@material-ui/core/Input";
 import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
+import Send from "@material-ui/icons/Send";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Tooltip from "@material-ui/core/Tooltip";
+
+import { connect } from "react-redux";
+import {
+  postComment,
+  postLike,
+  unPostLike,
+  postRetweet,
+  unPostRetweet
+} from "../../../../../../async/post";
+import toast from "toasted-notes";
 
 class Footer extends React.Component {
-  state = { expanded: false };
-
+  state = {
+    expanded: false,
+    favoriteColor: this.props.data.favorited ? "#ff3366" : "#657786",
+    RtColor: this.props.data.retweeted ? "#17bf63" : "#657786",
+    comment: ""
+  };
+  onValueChanged = e => {
+    this.setState({ comment: e.target.value }, () => {});
+  };
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
+  };
+  handleKeyDown = e => {
+    if (e.key === "Enter") {
+      this.submitComment();
+    }
+  };
+
+  submitComment = async () => {
+    const tweet = this.props.data;
+    this.handleExpandClick();
+
+    const res = await postComment(
+      this.props.auth.userData,
+      this.state.comment,
+      tweet,
+      this.props.auth.keyInUse
+    );
+    if (res.data.success || res.data.error) {
+      toast.notify(res.data.success ? res.data.success : res.data.error);
+    }
+
+    this.setState({ comment: "" });
+  };
+
+  favPost = async () => {
+    const { userData, keyInUse } = this.props.auth;
+    const tweet = this.props.data;
+    let res = null;
+    if (!tweet.favorited) {
+      tweet.favorited = true;
+      tweet.favorite_count += 1;
+      this.setState({ favoriteColor: "#ff3366" });
+      this.forceUpdate();
+      // post fav only if only tweet wasnt favorited
+      res = await postLike(userData, tweet, keyInUse);
+    } else {
+      tweet.favorited = false;
+      tweet.favorite_count -= 1;
+      this.setState({ favoriteColor: "#657786" });
+      this.forceUpdate();
+      res = await unPostLike(userData, tweet, keyInUse);
+    }
+    if (res.data.success || res.data.error) {
+      toast.notify(res.data.success ? res.data.success : res.data.error);
+    }
+  };
+
+  retweetPost = async () => {
+    const { userData, keyInUse } = this.props.auth;
+    const tweet = this.props.data;
+    let res = null;
+    if (!tweet.retweeted) {
+      tweet.retweeted = true;
+      tweet.retweet_count += 1;
+      this.setState({ RtColor: "#17bf63" });
+      this.forceUpdate();
+      // post fav only if only tweet wasnt favorited
+      res = await postRetweet(userData, tweet, keyInUse);
+    } else {
+      tweet.retweeted = false;
+      tweet.retweet_count -= 1;
+      this.setState({ RtColor: "#657786" });
+      this.forceUpdate();
+      // post fav only if only tweet wasnt favorited
+      res = await unPostRetweet(userData, tweet, keyInUse);
+    }
+    if (res.data.success || res.data.error) {
+      toast.notify(res.data.success ? res.data.success : res.data.error);
+    }
   };
 
   formatCount(count) {
@@ -24,7 +114,7 @@ class Footer extends React.Component {
   }
 
   render() {
-    const { data} = this.props;
+    const { data } = this.props;
 
     return (
       <div>
@@ -35,10 +125,15 @@ class Footer extends React.Component {
               style={styles.ProfileTweetAction}
             >
               {/* comment */}
+              <Tooltip title="Comment = 10 Points" aria-label="comment">
               <button
                 className="ProfileTweet-actionButton"
                 style={styles.ProfileTweetActionBtn}
-                onClick={this.handleExpandClick}
+                onClick={
+                  this.props.context !== "profile"
+                    ? this.handleExpandClick
+                    : undefined
+                }
               >
                 <div className="IconContainer" style={styles.IconContainer}>
                   <svg
@@ -55,15 +150,22 @@ class Footer extends React.Component {
                   </svg>
                 </div>
               </button>
+              </Tooltip>
             </div>
             <div
               className="ProfileTweet-action"
               style={styles.ProfileTweetAction}
             >
               {/* retweets */}
+              <Tooltip title="Retweet = 20 Points" aria-label="Retweet">
               <button
                 className="ProfileTweet-actionButton"
                 style={styles.ProfileTweetActionBtn}
+                onClick={
+                  this.props.context !== "profile"
+                    ? this.retweetPost
+                    : undefined
+                }
               >
                 <div className="IconContainer" style={styles.IconContainer}>
                   <svg
@@ -73,11 +175,17 @@ class Footer extends React.Component {
                     viewBox="0 0 24 24"
                   >
                     <path
-                      fill="#657786"
+                      fill={this.state.RtColor}
                       d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"
                     />
                   </svg>
                 </div>
+              </button>
+              </Tooltip>
+              <button
+                className="ProfileTweet-actionButton"
+                style={styles.ProfileTweetActionBtn}
+              >
                 <div
                   className="IconTextContainer"
                   style={styles.IconTextContainer}
@@ -97,25 +205,44 @@ class Footer extends React.Component {
               className="ProfileTweet-action"
               style={styles.ProfileTweetAction}
             >
+              <Tooltip title="Like Post = 5 Points" aria-label="Like">
+                <button
+                  className="ProfileTweet-actionButton"
+                  style={styles.ProfileTweetActionBtn}
+                  onClick={
+                    this.props.context !== "profile" ? this.favPost : undefined
+                  }
+                >
+                  {/* favs */}
+                  <div className="IconContainer" style={styles.IconContainer}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                    >
+                      <path opacity="0" d="M0 0h24v24H0z" />
+                      {this.props.data.favorited && (
+                        <path
+                          fill={this.state.favoriteColor}
+                          d="M13.35 20.13c-.76.69-1.93.69-2.69-.01l-.11-.1C5.3 15.27 1.87 12.16 2 8.28c.06-1.7.93-3.33 2.34-4.29 2.64-1.8 5.9-.96 7.66 1.1 1.76-2.06 5.02-2.91 7.66-1.1 1.41.96 2.28 2.59 2.34 4.29.14 3.88-3.3 6.99-8.55 11.76l-.1.09z"
+                        />
+                      )}
+
+                      {!this.props.data.favorited && (
+                        <path
+                          fill={this.state.favoriteColor}
+                          d="M19.66 3.99c-2.64-1.8-5.9-.96-7.66 1.1-1.76-2.06-5.02-2.91-7.66-1.1-1.4.96-2.28 2.58-2.34 4.29-.14 3.88 3.3 6.99 8.55 11.76l.1.09c.76.69 1.93.69 2.69-.01l.11-.1c5.25-4.76 8.68-7.87 8.55-11.75-.06-1.7-.94-3.32-2.34-4.28zM12.1 18.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"
+                        />
+                      )}
+                    </svg>
+                  </div>
+                </button>
+              </Tooltip>
               <button
                 className="ProfileTweet-actionButton"
                 style={styles.ProfileTweetActionBtn}
               >
-                {/* favs */}
-                <div className="IconContainer" style={styles.IconContainer}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                  >
-                    <path opacity="0" d="M0 0h24v24H0z" />
-                    <path
-                      fill="#657786"
-                      d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z"
-                    />
-                  </svg>
-                </div>
                 <div
                   className="IconTextContainer"
                   style={styles.IconTextContainer}
@@ -140,6 +267,16 @@ class Footer extends React.Component {
               inputProps={{
                 "aria-label": "Description"
               }}
+              onKeyDown={this.handleKeyDown}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={this.submitComment}>
+                    <Send color="primary" />
+                  </IconButton>
+                </InputAdornment>
+              }
+              onChange={this.onValueChanged}
+              value={this.state.comment}
             />
           </CardContent>
         </Collapse>
@@ -148,10 +285,13 @@ class Footer extends React.Component {
   }
 }
 
-Footer.propTypes = {
-  data: PropTypes.object
-};
-
 Footer.displayName = "Footer";
+Footer.propTypes = {
+  auth: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired
+};
+const mapStateToProps = state => ({
+  auth: state.auth
+});
 
-export default Footer;
+export default connect(mapStateToProps)(Footer);

@@ -1,5 +1,9 @@
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
+import { firebaseKeys } from "../config";
+
+import firebase from "firebase/app";
+import "firebase/auth";
 
 import {
   GET_ERRORS,
@@ -62,7 +66,7 @@ export const setKeyInUse = key => async dispatch => {
   dispatch({
     type: SET_KEY,
     payload: key
-  })
+  });
 };
 // Set logged in user
 export const setCurrentUser = decoded => {
@@ -114,6 +118,29 @@ export const logoutUser = () => dispatch => {
   localStorage.removeItem("jwtToken");
   localStorage.removeItem("userData");
   localStorage.removeItem("userProfile");
+
+  firebase
+    .auth()
+    .signOut()
+    .then(async function() {
+      try {
+        // Sign-out successful.
+        firebase.apps.length = 0;
+        localStorage.removeItem("keyInUse");
+
+        const randomNumber = Math.floor(Math.random() * 4);
+        await firebase.app('[DEFAULT]').delete();
+        await firebase.initializeApp(firebaseKeys[randomNumber]);
+        localStorage.setItem("keyInUse", randomNumber);
+        dispatch(setKeyInUse(randomNumber));
+      } catch (e) {
+        console.log(e);
+      }
+    })
+    .catch(function(error) {
+      // An error happened
+    });
+
   // Remove auth header for future requests
   setAuthToken(false);
   // Set current user to {} which will set isAuthenticated to false

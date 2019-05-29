@@ -10,7 +10,6 @@ import Divider from "@material-ui/core/Divider";
 import { fetchTweetsForProfile } from "../../../../../async/post";
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 import {
   beginUnFollowAction,
@@ -65,7 +64,7 @@ class Main extends Component {
       try {
         var userData = this.props.auth.userData;
         userData.recievedTweets = this.state.pages.length;
-
+        userData.user_id = this.props.auth.user._id
         const { data } = await fetchTweetsForProfile(
           userData,
           this.props.auth.keyInUse,
@@ -98,6 +97,8 @@ class Main extends Component {
     try {
       var userData = this.props.auth.userData;
       userData.recievedTweets = this.state.pages.length;
+      userData.user_id = this.props.auth.user._id
+      // append number of already recieved tweets and the database user_id
       const { data: tweets } = await fetchTweetsForProfile(
         userData,
         this.props.auth.keyInUse,
@@ -213,7 +214,8 @@ class Main extends Component {
               {this.state.pages && (
                 <RenderTweets
                   pages={this.state.pages}
-                  
+                  context="profile"
+                  isFetching={this.state.isFetching}
                 />
               )}
             </React.Fragment>
@@ -223,15 +225,6 @@ class Main extends Component {
             <NavToTopButton scrollToTop={this.scrollToTop} />
           )}
 
-         { this.state.isFetching && (
-            <CircularProgress
-              style={{
-                margin: "16px auto",
-                display: "block"
-              }}
-              size={50}
-            />
-          )} 
         </div>
       </div>
     );

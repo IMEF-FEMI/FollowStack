@@ -5,7 +5,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import ExitToApp from "@material-ui/icons/ExitToApp";
+import PowerSettingsNew from "@material-ui/icons/PowerSettingsNew";
 import { Link } from "react-router-dom";
 import store from "../../../store";
 
@@ -57,7 +57,7 @@ export const secondaryListItems = (
   <div>
     <ListItem button>
       <ListItemIcon>
-        <ExitToApp />
+        <PowerSettingsNew />
       </ListItemIcon>
       <ListItemText primary="Logout" />
     </ListItem>
