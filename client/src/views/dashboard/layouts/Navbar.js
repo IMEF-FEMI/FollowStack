@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 import Badge from "@material-ui/core/Badge";
 import Avatar from "@material-ui/core/Avatar";
-import Stars from "@material-ui/icons/Stars";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -10,9 +9,10 @@ import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
 import PowerSettingsNew from "@material-ui/icons/PowerSettingsNew";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
+import SvgIcon from "@material-ui/core/SvgIcon";
 import classNames from "classnames";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
@@ -26,6 +26,7 @@ class Navbar extends Component {
     anchorEl: null
   };
 
+ 
   handleChange = event => {
     this.setState({ auth: event.target.checked });
   };
@@ -48,6 +49,15 @@ class Navbar extends Component {
     this.setState({ anchorEl: null });
     this.props.history.push("/user-profile");
   };
+  formatCount(count) {
+    const readablize = num => {
+      var e = Math.floor(Math.log(num) / Math.log(1000));
+      return (num / Math.pow(1000, e)).toFixed(1) + "K";
+    };
+
+    if (count > 999) return readablize(count);
+    else return count;
+  }
   render() {
     var { open, classes, handleDrawerOpen } = this.props;
     const { anchorEl } = this.state;
@@ -88,8 +98,14 @@ class Navbar extends Component {
             }}
           >
             <IconButton color="inherit">
-              <Badge badgeContent={50} color="primary">
-                <Stars />
+              <Badge
+                badgeContent={this.formatCount(this.props.auth.points)}
+                color={this.props.auth.points >= 50 ? "primary" : "secondary"}
+              >
+                <SvgIcon>
+                  <path
+                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
+                </SvgIcon>
               </Badge>
             </IconButton>
 
@@ -120,23 +136,16 @@ class Navbar extends Component {
               onClose={this.handleClose}
             >
               <MenuItem onClick={this.openProfile}>
-              <ListItemIcon className={classes.icon}>
-                  <AccountCircle/>
+                <ListItemIcon className={classes.icon}>
+                  <AccountCircle />
                 </ListItemIcon>
-                <ListItemText
-                  inset
-                  primary="My Profile"
-                />
-             </MenuItem>
+                <ListItemText inset primary="My Profile" />
+              </MenuItem>
               <MenuItem onClick={this.logout}>
                 <ListItemIcon className={classes.icon}>
                   <PowerSettingsNew />
                 </ListItemIcon>
-                <ListItemText
-                  inset
-                  primary="Logout"
-                />
-                
+                <ListItemText inset primary="Logout" />
               </MenuItem>
             </Menu>
           </div>

@@ -18,3 +18,7 @@ export const getUserProfile = async (userData, key) =>{
   const res = await axios.post(`/api/users/get-profile/${key}`, userData);
   return res;
 }
+export const getPoints = async(user_id)=>{
+  const res = await axios.get(`/api/users/get-points/${user_id}`)
+  return res;
+}

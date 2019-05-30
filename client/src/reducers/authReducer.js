@@ -4,7 +4,8 @@ import {
   SET_CURRENT_USER,
   SET_USER_DATA,
   SET_USER_PROFILE,
-  SET_KEY
+  SET_KEY,
+  SET_POINTS
 } from "../actions/types";
 
 const initialState = {
@@ -12,7 +13,8 @@ const initialState = {
   user: {},
   userData: {},
   userProfile: {},
-  keyInUse: ""
+  keyInUse: "",
+  points: 0
 };
 
 export default function(state = initialState, action) {
@@ -39,6 +41,12 @@ export default function(state = initialState, action) {
         ...state,
         keyInUse: action.payload
       };
+
+    case SET_POINTS:
+    return{
+      ...state,
+      points: action.payload
+    }
     default:
       return state;
   }

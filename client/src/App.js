@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-import { setCurrentUser, logoutUser, setUserProfile, setKeyInUse  } from "./actions/authActions";
+import { setCurrentUser, logoutUser, setUserProfile, setKeyInUse, setPointsAction  } from "./actions/authActions";
 import { SET_USER_DATA, SET_USER_PROFILE, SET_TOTAL_GAINED} from "./actions/types";
 import {checkTotalGainedAction}from "./actions/gainFollowersAction"
 import { Provider } from "react-redux";
@@ -78,6 +78,8 @@ if (localStorage.jwtToken) {
     payload: JSON.parse(localStorage.getItem("total_gained"))
   });
   store.dispatch(checkTotalGainedAction(store.getState().auth.user.userid))
+
+  store.dispatch(setPointsAction(store.getState().auth.user._id))
   // Check for expired token
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
@@ -129,7 +131,6 @@ class App extends Component {
       )
     );
   };
-
   render() {
     var loggedIn = store.getState().auth.isAuthenticated === true;
     return (

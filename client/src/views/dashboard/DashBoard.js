@@ -150,7 +150,7 @@ class DashBoard extends Component {
                   style={twitter_icon_index}
                   id="icon-box-twitter"
                   onClick={() => {
-                    this.push("/gain-followers");
+                    this.push("/tweets");
                   }}
                 >
                   <span>
@@ -162,7 +162,7 @@ class DashBoard extends Component {
                     style={category_text}
                     className="tooltip-bottom"
                     data-tooltip={
-                      "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
+                      "Collection of tweets by fellow FollowStack users. Commenting and liking tweets earn you points which you'd use to also add your own tweet"
                     }
                   >
                     {" "}
@@ -190,7 +190,7 @@ class DashBoard extends Component {
                     style={category_text}
                     className="tooltip-bottom"
                     data-tooltip={
-                      "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
+                      "My Profile"
                     }
                   >
                     {" "}
@@ -215,8 +215,7 @@ class DashBoard extends Component {
                     style={category_text}
                     className="tooltip-bottom"
                     data-tooltip={
-                      "You Gain Followers by Following a number of accounts, wait for a while and unfollow ONLY those that refuse to follow back"
-                    }
+                      "Logout"}
                   >
                     {" "}
                     Logout

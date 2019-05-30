@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
@@ -135,13 +136,26 @@ router.get(
       .then(user => {
         if (user) {
           res.json(true);
-          console.log(true);
         } else {
           res.json(false);
-          console.log(false);
         }
       })
       .catch(err => console.log(err));
+  })
+);
+
+router.get(
+  "/get-points/:user_id",
+  asyncHandler(async (req, res, next) => {
+    User.findOne(
+      { _id: mongoose.Types.ObjectId(req.params.user_id) },
+      "points",
+      function(err, user) {
+        if (err) return handleError(err);
+        res.status(200).json(user.points)
+          
+      }
+    );
   })
 );
 
@@ -158,7 +172,7 @@ router.post(
     const params = {
       user_id: req.body.userid
     };
- 
+
     client.get("users/show", params, function(error, profile, response) {
       if (!error && response.statusCode === 200) {
         client = null;

@@ -14,16 +14,23 @@ import Close from "@material-ui/icons/Close";
 import Launch from "@material-ui/icons/Launch";
 import Tooltip from "@material-ui/core/Tooltip";
 import { addTweetPost, removeTweetPost } from "../../../../../async/post";
+import {setPoints} from '../../../../../actions/authActions'
 import Tweet from "./Tweet/Tweet";
 import toast from "toasted-notes";
 
-class Profile extends Component {
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+
+
+class RenderTweets extends Component {
+  
   addTweet = async tweet => {
     const { auth } = this.props;
     const res = await addTweetPost(auth.user._id, tweet);
     if (res.data.success) {
       tweet.added = true;
       toast.notify(res.data.success);
+      this.props.setPoints(res.data.points)
     } else if (res.data.error) {
       tweet.added = false;
       toast.notify(res.data.error);
@@ -41,6 +48,8 @@ class Profile extends Component {
       toast.notify(res.data.error);
     }
   };
+
+
   render() {
     const { classes } = this.props;
     const data = this.props.pages;
@@ -52,7 +61,7 @@ class Profile extends Component {
         classes={{ "spacing-xs-24": classes.spacingXs24 }}
         direction="row"
         wrap="wrap"
-        justify={"flex-start"}
+        justify={"center"}
         container
         spacing={24}
       >
@@ -75,10 +84,10 @@ class Profile extends Component {
                 //   maxWidth: window.innerWidth <= 599 && `${ 0.8 * window.innerWidth}`
                 // }}
                 xs={12}
-                sm={6}
-                md={6}
-                lg={4}
-                xl={3}
+                sm={10}
+                md={8}
+                lg={8}
+                xl={8}
               >
                 <Card className={classes.card}>
                   <CardHeader
@@ -147,21 +156,34 @@ class Profile extends Component {
                     data={item}
                     linkProps={linkProps}
                     context={this.props.context}
+                    // setPoints={this.props.setPoints}
                   />
                 </Card>
               </Grid>
             );
-          } else {
+          } else { 
             return null;
           }
         })}
         {this.props.isFetching && (
-          <CircularProgress style={{
+         <Grid
+         item
+         xs={12}>
+         <CircularProgress style={{
             margin: "16px auto",
             display: "block"
           }}
           size={50} />
+          </Grid>
+          
         )}
+        { <Fab
+            color="primary"
+            aria-label="Points"
+            className={classes.fab}
+          >
+            <AddIcon />
+          </Fab>}
       </Grid>
     );
   }
@@ -183,16 +205,12 @@ const styles = theme => ({
     width: "100%",
     margin: 0
   },
-  card: {
-    // maxWidth: 400,
-
-    // maxHeight: "370px",
-    margin: `${theme.spacing.unit * 3}px auto`
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%", // 16:9
-    cursor: "pointer"
+  fab: {
+    margin: theme.spacing.unit,
+    position: "fixed",
+    bottom: "5%",
+    left: "45%",
+    zIndex: 5000
   },
   actions: {
     display: "flex",
@@ -215,9 +233,7 @@ const styles = theme => ({
     color: "inherit",
     textDecoration: "none"
   },
-  // circularProgress: {
-  //   display: "block"
-  // },
+
   noResults: {
     height: "100vh",
     display: "flex",
@@ -230,18 +246,18 @@ const styles = theme => ({
   goBackBtn: {
     textTransform: "capitalize"
   },
-  // Adds Vertical Space to avoid jolting up when HeroUnit displayed and switching context
   verticalSpace: {
     height: "100vh"
   }
 });
 
-Profile.propTypes = {
+RenderTweets.propTypes = {
   gainFollowers: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  setPoints: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => ({
   auth: state.auth,
   gainFollowers: state.gainFollowers
 });
-export default connect(mapStateToProps)(withStyles(styles)(Profile));
+export default connect(mapStateToProps,{setPoints})(withStyles(styles)(RenderTweets));

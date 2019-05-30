@@ -9,30 +9,21 @@ export const MainPageLoader = props => {
   const { classes } = props;
   return (
     <Grid
-      justify="flex-start"
+      justify="center"
       alignItems="center"
       wrap="wrap"
       className={classes.root}
       container
       spacing={24}
     >
-      <Grid item xs={12} sm={6} md={6} lg={4}>
+      <Grid item xs={12} sm={8}>
         <PostCardLoader className={classes.gridItem} />
       </Grid>
-      <Grid item xs={12} sm={6} md={6} lg={4}>
+      <Grid item xs={12} sm={8}>
         <PostCardLoader className={classes.gridItem} />
       </Grid>
-      <Grid item sm={6} md={6} lg={4}>
-        <PostCardLoader />
-      </Grid>
-      <Grid item sm={6} md={6} lg={4}>
-        <PostCardLoader />
-      </Grid>
-      <Grid item sm={6} md={6} lg={4}>
-        <PostCardLoader />
-      </Grid>
-      <Grid item sm={6} md={6} lg={4}>
-        <PostCardLoader />
+      <Grid item xs={12} sm={8}>
+        <PostCardLoader className={classes.gridItem} />
       </Grid>
     </Grid>
   );
@@ -41,7 +32,7 @@ export const MainPageLoader = props => {
 const styles = theme => ({
   root: {
     width: "95%",
-    margin: "24px auto",
+    margin: "auto",
     backgroundColor: "#2c3e50"
   }
 });

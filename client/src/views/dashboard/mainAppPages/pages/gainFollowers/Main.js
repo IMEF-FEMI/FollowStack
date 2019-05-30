@@ -43,9 +43,18 @@ function Main(props) {
 
     setTabIndex(3);
   };
+
+  const formatCount = (count)=> {
+    const readablize = num => {
+      var e = Math.floor(Math.log(num) / Math.log(1000));
+      return (num / Math.pow(1000, e)).toFixed(1) + "K";
+    };
+
+    if (count > 999) return readablize(count);
+    else return count;
+  }
   React.useEffect(() => {
     props.checkTotalGainedAction(props.auth.user.userid);
-
   }, []); // passing an empty array as second argument triggers the callback
   // in useEffect only after the initial render thus replicating
   //  `componentDidMount` lifecycle behaviour
@@ -87,12 +96,14 @@ function Main(props) {
                   <Grid container spacing={40}>
                     <Grid item>
                       <Typography variant="subtitle1">
-                        <b>{userProfile.followers}</b> followers
+                        <b>{formatCount(userProfile.followers)}</b>{" "}
+                        followers
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography variant="subtitle1">
-                        <b>{userProfile.following}</b> following
+                        <b>{formatCount(userProfile.following)}</b>{" "}
+                        following
                       </Typography>
                     </Grid>
                     <Grid item>

@@ -4,9 +4,7 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const requireAuth = require("../../middlewares/requireAuth");
 var Twitter = require("twitter");
-var moment = require("moment");
-var async = require("async");
-const axios = require("axios");
+
 const TWITTER_KEYS = [
   {
     consumerKey: process.env.TWITTER_KEY,
@@ -85,7 +83,8 @@ router.post(
               });
             } else {
               res.status(200).send({
-                success: "Tweet Successfully Added! - 50 Points "
+                success: "Tweet Successfully Added! - 50 Points ",
+                points: user.points
               });
             }
           });
@@ -99,7 +98,7 @@ router.post(
       .catch(e => {
         console.log(e); //user.findOneAndUpdate error
         res.status(200).send({
-          success: "An error Occured try again"
+          error: "An error Occured try again"
           // postData: post
         });
       });
@@ -167,16 +166,17 @@ router.post(
           {
             new: true
           }
-        ).then(user=>{
-          if(user){
+        ).then(user => {
+          if (user) {
             res.status(200).send({
-              success: "👍 10 Points Gained "
+              success: "👍 +10 Points Gained ",
+              points: user.points
             });
           }
         });
-      }else{
+      } else {
         // comment reply error
-        console.log(error)
+        console.log(error);
       }
     });
   })
@@ -215,16 +215,17 @@ router.post(
           {
             new: true
           }
-        ).then(user=>{
-          if(user){
+        ).then(user => {
+          if (user) {
             res.status(200).send({
-              success: "👍 5 Points Added "
+              success: "👍 +5 Points Gained ",
+              points: user.points
             });
           }
         });
-      }else{
+      } else {
         // comment reply error
-        console.log(error)
+        console.log(error);
       }
     });
   })
@@ -263,21 +264,21 @@ router.post(
           {
             new: true
           }
-        ).then(user=>{
-          if(user){
+        ).then(user => {
+          if (user) {
             res.status(200).send({
-              success: "👎 5 Points Removed"
+              success: "👎 5 Points Removed",
+              points: user.points
             });
           }
         });
-      }else{
+      } else {
         // comment reply error
-        console.log(error)
+        console.log(error);
       }
     });
   })
 );
-
 
 router.post(
   `/post-retweet/:key`,
@@ -312,16 +313,17 @@ router.post(
           {
             new: true
           }
-        ).then(user=>{
-          if(user){
+        ).then(user => {
+          if (user) {
             res.status(200).send({
-              success: "👍 20 Points Added "
+              success: "👍 +20 Points Gained",
+              points: user.points
             });
           }
         });
-      }else{
+      } else {
         // comment reply error
-        console.log(error)
+        console.log(error);
       }
     });
   })
@@ -360,16 +362,17 @@ router.post(
           {
             new: true
           }
-        ).then(user=>{
-          if(user){
+        ).then(user => {
+          if (user) {
             res.status(200).send({
-              success: "👎 20 Points Removed"
+              success: "👎 20 Points Removed",
+              points: user.points
             });
           }
         });
-      }else{
+      } else {
         // comment reply error
-        console.log(error)
+        console.log(error);
       }
     });
   })
@@ -396,7 +399,7 @@ router.post(
       user_id: req.body.userid,
       count: 20 * page
     };
-    //    strip array of first 12 * page element, return remaining
+    
     console.log("tweets to retrieve ", params.count);
     client.get("statuses/user_timeline", params, async function(
       error,
@@ -447,4 +450,56 @@ router.post(
   })
 );
 
+router.post(
+  "/get-main-tweets/:key/:page",
+  requireAuth,
+  asyncHandler(async (req, res, next) => {
+    const random = TWITTER_KEYS[req.params.key];
+    var client = new Twitter({
+      consumer_key: random.consumerKey,
+      consumer_secret: random.consumerSecret,
+      access_token_key: req.body.accessToken,
+      access_token_secret: req.body.secret
+    });
+
+    try {
+      const { page } = req.params;
+
+      const posts = await Post.find({})
+        .sort({ createdAt: -1 })
+        .limit(12)
+        .skip(12 * page)
+        // .populate({
+        //   path: "_owner",
+        //   select: "profilePhoto displayName"
+        // })
+        .exec();
+      // console.log(posts)
+      let post_ids = "";
+      for (var i = 0; i < posts.length; i++) {
+        if (i === posts.length - 1) {
+          post_ids += posts[i].post_id;
+        } else {
+          post_ids += `${posts[i].post_id},`;
+        }
+      }
+      var params = {
+        id: post_ids
+      };
+      client.get("statuses/lookup", params, async function(
+        error,
+        tweet,
+        response
+      ) {
+        if (!error && response.statusCode === 200) {
+          res.send(tweet);
+        } else {
+          console.log(error);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  })
+);
 module.exports = router;

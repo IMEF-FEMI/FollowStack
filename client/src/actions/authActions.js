@@ -10,9 +10,15 @@ import {
   SET_CURRENT_USER,
   SET_USER_DATA,
   SET_USER_PROFILE,
-  SET_KEY
+  SET_KEY,
+  SET_POINTS
 } from "./types";
-import { registerUser, signInUser, getUserProfile } from "../async/auth";
+import {
+  registerUser,
+  signInUser,
+  getUserProfile,
+  getPoints
+} from "../async/auth";
 
 // Register - Get User Token
 export const register = userData => async dispatch => {
@@ -105,13 +111,28 @@ export const setUserProfile = (userData, key) => async dispatch => {
       err.response.data !== undefined &&
       err.response.data.errorCode !== undefined
     ) {
-      if (parseInt(err.response.data.errorCode) === 89) {
+      if (parseInt(err.response.data.errorCode) === 89 || parseInt(err.response.data.errorCode) === 32) {
         dispatch(logoutUser());
       }
     }
   }
 };
 
+export const setPointsAction = user_id => async dispatch => {
+  try {
+    const { data: points } = await getPoints(user_id);
+    dispatch(setPoints(points))
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setPoints = points => dispatch => {
+  dispatch({
+    type: SET_POINTS,
+    payload: points
+  });
+};
 // Log user out
 export const logoutUser = () => dispatch => {
   // Remove token from localStorage
@@ -129,7 +150,7 @@ export const logoutUser = () => dispatch => {
         localStorage.removeItem("keyInUse");
 
         const randomNumber = Math.floor(Math.random() * 4);
-        await firebase.app('[DEFAULT]').delete();
+        await firebase.app("[DEFAULT]").delete();
         await firebase.initializeApp(firebaseKeys[randomNumber]);
         localStorage.setItem("keyInUse", randomNumber);
         dispatch(setKeyInUse(randomNumber));

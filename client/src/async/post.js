@@ -13,6 +13,19 @@ export const fetchTweetsForProfile = async (
   );
   return res;
 };
+export const fetchTweetsForMain = async (
+  userData,
+  key,
+  page,
+  cancelToken
+) => {
+  const res = await axios.post(
+    `/api/post/get-main-tweets/${key}/${page}`,
+    userData,
+    { cancelToken }
+  );
+  return res;
+};
 
 export const addTweetPost = async (user_id, tweet) => {
   const res = await axios.post(`/api/post/add-tweet/`, { user_id, tweet });
@@ -52,8 +65,3 @@ export const unPostRetweet = async (userData, tweet, key) => {
   const res = axios.post(`/api/post/unpost-retweet/${key}`, { userData, tweet });
   return res;
 };
-
-//   export const fetchForProfile = async userid => {
-//     const res = await axios.get(`/api/twitter/check-total-gained/${userid}`);
-//     return res;
-//   };

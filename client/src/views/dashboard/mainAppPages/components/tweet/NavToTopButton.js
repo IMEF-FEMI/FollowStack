@@ -1,22 +1,22 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Navigation";
 
 export const NavToTopButton = props => {
   const { classes } = props;
   return (
-    <Button
+    <Fab
       id="goTopButton"
-      variant="extendedFab"
+      variant="extended"
       aria-label="go-top"
       className={classes.root}
       onClick={props.scrollToTop}
     >
       <NavigationIcon className={classes.navIcon} />
       Go to Top
-    </Button>
+    </Fab>
   );
 };
 
