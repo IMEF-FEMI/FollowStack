@@ -14,23 +14,19 @@ import Close from "@material-ui/icons/Close";
 import Launch from "@material-ui/icons/Launch";
 import Tooltip from "@material-ui/core/Tooltip";
 import { addTweetPost, removeTweetPost } from "../../../../../async/post";
-import {setPoints} from '../../../../../actions/authActions'
+import { setPoints } from "../../../../../actions/authActions";
 import Tweet from "./Tweet/Tweet";
 import toast from "toasted-notes";
 
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
 
-
-class RenderTweets extends Component {
-  
+class RenderProfileTweets extends Component {
   addTweet = async tweet => {
     const { auth } = this.props;
     const res = await addTweetPost(auth.user._id, tweet);
     if (res.data.success) {
       tweet.added = true;
       toast.notify(res.data.success);
-      this.props.setPoints(res.data.points)
+      this.props.setPoints(res.data.points);
     } else if (res.data.error) {
       tweet.added = false;
       toast.notify(res.data.error);
@@ -49,11 +45,11 @@ class RenderTweets extends Component {
     }
   };
 
-
   render() {
     const { classes } = this.props;
     const data = this.props.pages;
     const linkProps = { target: "_blank", rel: "noreferrer" };
+    const { myProfile} = this.props;
 
     return (
       <Grid
@@ -80,9 +76,6 @@ class RenderTweets extends Component {
                 classes={{
                   item: classes.item
                 }}
-                // style={{
-                //   maxWidth: window.innerWidth <= 599 && `${ 0.8 * window.innerWidth}`
-                // }}
                 xs={12}
                 sm={10}
                 md={8}
@@ -92,7 +85,7 @@ class RenderTweets extends Component {
                 <Card className={classes.card}>
                   <CardHeader
                     style={{
-                      backgroundColor: item.added === true && "#ca7c7c"
+                      backgroundColor:(item.added && item.added === true) && "#ca7c7c"
                     }}
                     avatar={
                       <Avatar aria-label="avatar" className={classes.avatar}>
@@ -104,8 +97,7 @@ class RenderTweets extends Component {
                     }
                     action={
                       <div>
-                        {this.props.context === "profile" &&
-                          (!item.added || item.added === false) && (
+                          {(!item.added || item.added === false) && 
                             <Tooltip
                               title="Add to Tweet Feeds"
                               aria-label="Add"
@@ -119,8 +111,8 @@ class RenderTweets extends Component {
                                 <AddBox color="primary" />
                               </IconButton>
                             </Tooltip>
-                          )}
-                        {this.props.context === "profile" &&
+                          }
+                        {
                           (item.added && item.added === true) && (
                             <Tooltip
                               title="Remove from Tweet Feeds"
@@ -155,35 +147,27 @@ class RenderTweets extends Component {
                   <Tweet
                     data={item}
                     linkProps={linkProps}
-                    context={this.props.context}
-                    // setPoints={this.props.setPoints}
+                    context={"profile"}
                   />
                 </Card>
               </Grid>
             );
-          } else { 
+          } else {
             return null;
           }
         })}
-        {this.props.isFetching && (
-         <Grid
-         item
-         xs={12}>
-         <CircularProgress style={{
-            margin: "16px auto",
-            display: "block"
-          }}
-          size={50} />
+        {(myProfile.isFetching)&& (
+          <Grid item xs={12}>
+            <CircularProgress
+              style={{
+                margin: "16px auto",
+                display: "block"
+              }}
+              size={50}
+            />
           </Grid>
-          
         )}
-        { <Fab
-            color="primary"
-            aria-label="Points"
-            className={classes.fab}
-          >
-            <AddIcon />
-          </Fab>}
+       
       </Grid>
     );
   }
@@ -251,13 +235,15 @@ const styles = theme => ({
   }
 });
 
-RenderTweets.propTypes = {
-  gainFollowers: PropTypes.object.isRequired,
+RenderProfileTweets.propTypes = {
   classes: PropTypes.object.isRequired,
-  setPoints: PropTypes.func.isRequired,
+  setPoints: PropTypes.func.isRequired
 };
 const mapStateToProps = state => ({
   auth: state.auth,
-  gainFollowers: state.gainFollowers
+  myProfile: state.myProfile,
 });
-export default connect(mapStateToProps,{setPoints})(withStyles(styles)(RenderTweets));
+export default connect(
+  mapStateToProps,
+  { setPoints }
+)(withStyles(styles)(RenderProfileTweets));

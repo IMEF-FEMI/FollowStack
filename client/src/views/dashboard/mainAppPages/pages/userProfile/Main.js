@@ -7,14 +7,13 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import MainPageLoader from "../../components/loaders/MainPageLoader";
 import Divider from "@material-ui/core/Divider";
-import { fetchTweetsForProfile } from "../../../../../async/post";
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 
-import RenderTweets from "../../components/tweet/RenderTweets";
+import RenderProfileTweets from "../../components/tweet/RenderProfileTweets";
 import { onScroll } from "../../components/tweet/utils";
 import NavToTopButton from "../../components/tweet/NavToTopButton";
-
+import {initialFetchAction, fetchNextAction} from"../../../../../actions/myProfileActions"
 const { Avatar, Typography } = atoms;
 
 class Main extends Component {
@@ -22,14 +21,6 @@ class Main extends Component {
     super();
 
     this.state = {
-      context: "profile",
-      searchTerms: null,
-      page: 0,
-      pages: [],
-      initialFetch: true,
-      isFetching: false,
-      hasMore: true,
-      switchingContext: false,
       showNavToTop: false
     };
     this.onScroll = onScroll.call(this, this.fetchNextPage);
@@ -46,47 +37,24 @@ class Main extends Component {
   toggleShowNavToTopButton = bool => {
     this.setState({ showNavToTop: bool });
   };
-  fetchNextPage = () => {
+  fetchNextPage = async() => {
+    const {auth, myProfile, fetchNextAction} = this.props
+
     if (
-      this.state.initialFetch ||
-      this.state.isFetching ||
-      !this.state.hasMore
+      myProfile.initialFetch ||
+      myProfile.isFetching ||
+      !myProfile.hasMore
     ) {
       return;
     }
-
-    this.setState({ isFetching: true }, async () => {
-      try {
-        var userData = this.props.auth.userData;
-        userData.recievedTweets = this.state.pages.length;
-        userData.user_id = this.props.auth.user._id
-        const { data } = await fetchTweetsForProfile(
-          userData,
-          this.props.auth.keyInUse,
-          this.state.page,
-          this.signal.token
-        );
-
-        if (!data.length) {
-          return this.setState({ hasMore: false, isFetching: false }, () => {});
-        }
-        console.log("tweets returned ", data);
-        this.setState(
-          {
-            isFetching: false,
-            page: this.state.page + 1,
-            pages: [...this.state.pages, ...data]
-          },
-          () => {}
-        );
-      } catch (e) {
-        if (axios.isCancel()) {
-          return console.log(e.message);
-        }
-        console.log(e);
-      }
-    });
+    //   // quick patches
+    //   // append number of already recieved tweets and the database user_id
+    var userData = auth.userData
+      userData.recievedTweets = myProfile.pages.length
+      userData.user_id = auth.user._id
+     await fetchNextAction(userData, auth.keyInUse, myProfile.page, this.signal.token)
   };
+
   formatCount(count) {
     const readablize = num => {
       var e = Math.floor(Math.log(num) / Math.log(1000));
@@ -98,41 +66,33 @@ class Main extends Component {
   }
   async componentDidMount() {
     window.addEventListener("scroll", this.onScroll, false);
-    try {
-      var userData = this.props.auth.userData;
-      userData.recievedTweets = this.state.pages.length;
-      userData.user_id = this.props.auth.user._id
-      // append number of already recieved tweets and the database user_id
-      const { data: tweets } = await fetchTweetsForProfile(
-        userData,
-        this.props.auth.keyInUse,
-        this.state.page,
-        this.signal.token
-      );
 
-      this.setState(
-        { initialFetch: false, page: 1, pages: [...tweets] },
-        () => {}
-      );
-      console.log("tweets returned ", tweets);
-    } catch (e) {
-      if (axios.isCancel()) {
-        return console.log(e.message);
-      }
-      console.log(e);
+    const {auth, myProfile, initialFetchAction} = this.props
+    if(myProfile.initialFetch === true){
+
+      // quick patches
+      // append number of already recieved tweets and the database user_id
+      var userData = auth.userData
+      userData.recievedTweets = myProfile.pages.length
+      userData.user_id = auth.user._id
+     await initialFetchAction(userData, auth.keyInUse, myProfile.page, this.signal.token)
     }
+   
   }
   componentWillUnmount() {
     // Remove onScroll event listener
     window.removeEventListener("scroll", this.onScroll, false);
     // Cancel asyncs
     this.signal.cancel("Async call cancelled.");
+    
   }
 
   render() {
     const upSm = window.innerWidth >= 600;
     const { totalGained } = this.props.gainFollowers;
     const { userProfile } = this.props.auth;
+    const {myProfile} = this.props
+
 
     return (
       <div ref={this.topRef}>
@@ -208,18 +168,18 @@ class Main extends Component {
           }}
         >
           <div>
-            {(this.state.initialFetch || this.state.switchingContext) && (
+            {(myProfile.initialFetch ) && (
               <MainPageLoader />
             )}
           </div>
 
-          {!this.state.initialFetch && (
+          {!myProfile.initialFetch && (
             <React.Fragment>
-              {this.state.pages && (
-                <RenderTweets
-                  pages={this.state.pages}
+              {myProfile.pages && (
+                <RenderProfileTweets
+                  pages={myProfile.pages}
                   context="profile"
-                  isFetching={this.state.isFetching}
+                  isFetching={myProfile.isFetching}
                 />
               )}
             </React.Fragment>
@@ -236,12 +196,16 @@ class Main extends Component {
 }
 
 Main.propTypes = {
-  gainFollowers: PropTypes.object.isRequired
+  gainFollowers: PropTypes.object.isRequired,
+  myProfile: PropTypes.object.isRequired,
+  initialFetchAction: PropTypes.func.isRequired,
+  fetchNextAction: PropTypes.func.isRequired,
 };
 const mapStateToProps = state => ({
   auth: state.auth,
-  gainFollowers: state.gainFollowers
+  gainFollowers: state.gainFollowers,
+  myProfile: state.myProfile
 });
 export default connect(
-  mapStateToProps,
+  mapStateToProps,{initialFetchAction, fetchNextAction}
 )(withTheme(theme)(Main));

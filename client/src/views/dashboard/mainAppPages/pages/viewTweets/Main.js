@@ -5,15 +5,14 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import MainPageLoader from "../../components/loaders/MainPageLoader";
 import Divider from "@material-ui/core/Divider";
-import { fetchTweetsForMain } from "../../../../../async/post";
 import axios from "axios";
 
 import {
-  beginUnFollowAction,
-  gainFollowersAction,
-  checkTotalGainedAction
-} from "../../../../../actions/gainFollowersAction";
-import RenderTweets from "../../components/tweet/RenderTweets";
+  initialFetchAction,
+  fetchNextAction
+} from "../../../../../actions/viewTweetsAction";
+
+import RenderTweetsMain from "../../components/tweet/RenderTweetsMain";
 import { onScroll } from "../../components/tweet/utils";
 import NavToTopButton from "../../components/tweet/NavToTopButton";
 
@@ -22,16 +21,7 @@ class Main extends Component {
     super();
 
     this.state = {
-      context: "Main",
-      searchTerms: null,
-      page: 0,
-      pages: [],
-      initialFetch: true,
-      isFetching: false,
-      hasMore: true,
-      switchingContext: false,
       showNavToTop: false
-      // points: 0
     };
     this.onScroll = onScroll.call(this, this.fetchNextPage);
     this.signal = axios.CancelToken.source();
@@ -44,76 +34,50 @@ class Main extends Component {
       inline: "nearest"
     });
   };
- 
+
   toggleShowNavToTopButton = bool => {
     this.setState({ showNavToTop: bool });
   };
-  fetchNextPage = () => {
+  fetchNextPage = async () => {
+    const { auth, viewTweets, fetchNextAction } = this.props;
+
     if (
-      this.state.initialFetch ||
-      this.state.isFetching ||
-      !this.state.hasMore
+      viewTweets.tweetInitialFetch ||
+      viewTweets.tweetIsFetching ||
+      !viewTweets.tweetHasMore
     ) {
       return;
     }
-
-    this.setState({ isFetching: true }, async () => {
-      try {
-        var userData = this.props.auth.userData;
-        userData.recievedTweets = this.state.pages.length;
-        userData.user_id = this.props.auth.user._id;
-        const { data } = await fetchTweetsForMain(
-          userData,
-          this.props.auth.keyInUse,
-          this.state.page,
-          this.signal.token
-        );
-
-        if (!data.length) {
-          return this.setState({ hasMore: false, isFetching: false }, () => {});
-        }
-        console.log("tweets returned ", data);
-        this.setState(
-          {
-            isFetching: false,
-            page: this.state.page + 1,
-            pages: [...this.state.pages, ...data]
-          },
-          () => {}
-        );
-      } catch (e) {
-        if (axios.isCancel()) {
-          return console.log(e.message);
-        }
-        console.log(e);
-      }
-    });
+    //   // quick patches
+    //   // append number of already recieved tweets and the database user_id
+    var userData = auth.userData;
+    userData.recievedTweets = viewTweets.tweetPages.length;
+    userData.user_id = auth.user._id;
+    await fetchNextAction(
+      userData,
+      auth.keyInUse,
+      viewTweets.tweetPage,
+      this.signal.token
+    );
   };
+
   async componentDidMount() {
     window.addEventListener("scroll", this.onScroll, false);
-    console.info("Mounting again")
-    try {
-      var userData = this.props.auth.userData;
-      userData.recievedTweets = this.state.pages.length;
-      userData.user_id = this.props.auth.user._id;
+    // this.forceUpdate();
+
+    const { auth, viewTweets, initialFetchAction } = this.props;
+    if (viewTweets.tweetInitialFetch === true) {
+      // quick patches
       // append number of already recieved tweets and the database user_id
-      const { data: tweets } = await fetchTweetsForMain(
+      var userData = auth.userData;
+      userData.recievedTweets = viewTweets.tweetPages.length;
+      userData.user_id = auth.user._id;
+      await initialFetchAction(
         userData,
-        this.props.auth.keyInUse,
-        this.state.page,
+        auth.keyInUse,
+        viewTweets.tweetPage,
         this.signal.token
       );
-
-      this.setState(
-        { initialFetch: false, page: 1, pages: [...tweets] },
-        () => {}
-      );
-      console.log("tweets returned ", tweets);
-    } catch (e) {
-      if (axios.isCancel()) {
-        return console.log(e.message);
-      }
-      console.log(e);
     }
   }
   componentWillUnmount() {
@@ -124,6 +88,8 @@ class Main extends Component {
   }
 
   render() {
+    const { viewTweets } = this.props;
+
     return (
       <div ref={this.topRef}>
         <Divider
@@ -138,20 +104,15 @@ class Main extends Component {
             backgroundColor: "#2c3e50"
           }}
         >
-          <div>
-            {(this.state.initialFetch || this.state.switchingContext) && (
-              <MainPageLoader />
-            )}
-          </div>
+          <div>{viewTweets.tweetInitialFetch && <MainPageLoader />}</div>
 
-          {!this.state.initialFetch && (
+          {!viewTweets.tweetInitialFetch && (
             <React.Fragment>
-              {this.state.pages && (
-                <RenderTweets
-                  pages={this.state.pages}
+              {viewTweets.tweetPages && (
+                <RenderTweetsMain
+                  pages={viewTweets.tweetPages}
                   context="Main"
-                  isFetching={this.state.isFetching}
-                  setPoints={this.setPoints}
+                  isFetching={viewTweets.tweetIsFetching}
                 />
               )}
             </React.Fragment>
@@ -167,19 +128,17 @@ class Main extends Component {
 }
 
 Main.propTypes = {
-  beginUnFollowAction: PropTypes.func.isRequired,
-  gainFollowersAction: PropTypes.func.isRequired,
-  gainFollowers: PropTypes.object.isRequired
+  gainFollowers: PropTypes.object.isRequired,
+  viewTweets: PropTypes.object.isRequired,
+  initialFetchAction: PropTypes.func.isRequired,
+  fetchNextAction: PropTypes.func.isRequired
 };
 const mapStateToProps = state => ({
   auth: state.auth,
-  gainFollowers: state.gainFollowers
+  gainFollowers: state.gainFollowers,
+  viewTweets: state.viewTweets
 });
 export default connect(
   mapStateToProps,
-  {
-    beginUnFollowAction,
-    gainFollowersAction,
-    checkTotalGainedAction
-  }
+  { initialFetchAction, fetchNextAction }
 )(withTheme(theme)(Main));
