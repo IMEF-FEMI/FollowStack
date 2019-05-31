@@ -26,7 +26,7 @@ export const initialFetchAction = (
     dispatch(setPage(1));
     dispatch(setInitialFetch(false));
 
-    console.log("tweets returned ", tweets);
+    // console.log("tweets returned ", tweets);
   } catch (e) {
     if (axios.isCancel()) {
       return console.log(e.message);
@@ -57,7 +57,7 @@ export const fetchNextAction = (
       dispatch(setPage(page + 1));
       dispatch(setPages(data));
     }
-    console.log("tweets returned ", data);
+    // console.log("tweets returned ", data);
   } catch (e) {
     if (axios.isCancel()) {
       return console.log(e.message);

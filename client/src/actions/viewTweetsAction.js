@@ -26,7 +26,7 @@ export const initialFetchAction = (
     dispatch(setPage(1));
     dispatch(setInitialFetch(false));
 
-    console.log("tweets returned ", tweets);
+    // console.log("tweets returned ", tweets);
   } catch (e) {
     if (axios.isCancel()) {
       return console.log(e.message);
@@ -43,7 +43,7 @@ export const fetchNextAction = (
 ) => async dispatch => {
   try {
     dispatch(setIsFetching(true));
-    console.log("we here")
+    // console.log("we here")
     const { data } = await fetchTweetsForMain(
       userData,
       keyInUse,
@@ -58,7 +58,7 @@ export const fetchNextAction = (
       dispatch(setPage(page + 1));
       dispatch(setPages(data));
     }
-    console.log("tweets returned ", data);
+    // console.log("tweets returned ", data);
   } catch (e) {
     if (axios.isCancel()) {
       return console.log(e.message);
