@@ -10,6 +10,7 @@ const app = express();
 const users = require("./routes/api/users");
 const twitter = require("./routes/api/twitter");
 const post = require("./routes/api/post");
+const usersOnline = require("./routes/api/usersOnline");
 
 // Setup for passport and to accept JSON objects
 app.use(express.json());
@@ -55,6 +56,7 @@ app.get("/wake-up", (req, res) => res.send("👍"));
 app.use("/api/users", users);
 app.use("/api/twitter", twitter);
 app.use("/api/post", post);
+app.use("/api/users-online", usersOnline);
 
 app.listen(process.env.PORT || 8080, () => {
   console.log("listening");

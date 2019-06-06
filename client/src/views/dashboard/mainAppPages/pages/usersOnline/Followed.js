@@ -7,15 +7,16 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 import {
-  gainFollowersAction,
+  getOnlineUsersAction,
   checkFollowingAction,
   setProgress,
   clearError
-} from "../../../../../actions/gainFollowersAction";
+} from "../../../../../actions/usersOnlineAction";
 import { connect } from "react-redux";
-import { toast, ToastContainer } from "react-toastify";
 import Users from "./Users";
 import atoms from "../../components/atoms";
+import CustomSnackbar from "../../../../../components/CustomSnackbar"
+
 const { Button } = atoms;
 
 const containerFluid = {
@@ -42,82 +43,71 @@ class Followed extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.errors.newFollowersError
-      // &&
-      // (this.state.newFollowersError !== nextProps.errors.newFollowersError)
-    ) {
-      // this.setState({newFollowersError: nextProps.errors.newFollowersError})
-      toast.warn(" ⚠️️ " + nextProps.errors.newFollowersError, {
-        position: "bottom-right",
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      });
+    if (nextProps.errors.newFollowersError) {
+      this.setState(
+        {
+          snackbarMessage: nextProps.errors.newFollowersError,
+          snackbarvariant: "error"
+        },
+        () => {
+          this.onSnackbarOpen();
+        }
+      );
       this.props.clearError();
     } else if (nextProps.errors.serverError) {
-      toast.error("❌ " + nextProps.errors.serverError, {
-        position: "bottom-right",
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      });
+      this.setState(
+        {
+          snackbarMessage: nextProps.errors.serverError,
+          snackbarvariant: "error"
+        },
+        () => {
+          this.onSnackbarOpen();
+        }
+      );
       this.props.clearError();
     }
   }
   componentWillUnmount() {
     clearInterval(this.timer);
   }
-  beginFollow = () => {
-    this.props.gainFollowersAction(
-      this.props.auth.userData,
-      this.props.auth.keyInUse
-    );
-  };
 
   componentDidMount() {
-    const { linearProgressBarCompleted } = this.props.gainFollowers;
+    const { linearProgressBarCompleted } = this.props.usersOnline;
     if (linearProgressBarCompleted !== 100) {
       this.timer = setInterval(this.progress, 500);
     }
-    this.props.checkFollowingAction(this.props.auth.userData.userid);
+    if (this.props.usersOnline.onlineUsers.length === 0) {
+      this.props.checkFollowingAction(this.props.auth.userData.userid);
+    }
   }
   progress = () => {
-    const {
-      linearProgressBarCompleted,
-      isFollowing
-    } = this.props.gainFollowers;
+    const { linearProgressBarCompleted, gettingUsers } = this.props.usersOnline;
     if (linearProgressBarCompleted === 100) {
       clearInterval(this.timer);
       // this.setState({ linearProgressBarCompleted: 0 });
-    } else if (isFollowing && linearProgressBarCompleted !== 100) {
-      const diff = Math.random() * 3;
+    } else if (gettingUsers && linearProgressBarCompleted !== 100) {
+      const diff = Math.random() * 2;
       this.props.setProgress(Math.min(linearProgressBarCompleted + diff, 100));
     }
   };
   render() {
     const {
       hasFollowings,
-      followings,
+      onlineUsers,
       checkingFollowings,
-      isFollowing,
+      gettingUsers,
       isUnFollowing,
       linearProgressBarCompleted
-    } = this.props.gainFollowers;
+    } = this.props.usersOnline;
     const upSm = window.innerWidth >= 600;
 
     return (
       <div>
-        <ToastContainer />
         {hasFollowings === false &&
           checkingFollowings === false &&
-          isFollowing === false &&
+          gettingUsers === false &&
           isUnFollowing === false &&
-          followings.length === 0 && (
+          onlineUsers.length === 0 && (
             <div style={container}>
               <Grid container spacing={16} justify="center">
                 <Grid item>
@@ -125,9 +115,14 @@ class Followed extends Component {
                     // className={classes.editButton}
                     variant="outlined"
                     fullWidth={!upSm}
-                    onClick={this.beginFollow}
+                    onClick={() => {
+                      this.props.getOnlineUsersAction(
+                        this.props.auth.userData,
+                        this.props.auth.keyInUse
+                      );
+                    }}
                   >
-                    Click to Begin
+                    Get Online Users
                     <PersonAdd />
                   </Button>
                 </Grid>
@@ -145,7 +140,7 @@ class Followed extends Component {
           </div>
         )}
 
-        {(isFollowing === true || isUnFollowing === true) &&
+        {(gettingUsers === true || isUnFollowing === true) &&
           checkingFollowings === false && (
             <div style={container}>
               <Grid container spacing={24} justify="center">
@@ -159,21 +154,29 @@ class Followed extends Component {
             </div>
           )}
 
-        {hasFollowings === true && followings.length !== 0 && (
-          <Grid container justify="center"
-            
-          >
-            <Users useContext={{ context: "Followed" }} users={followings} />
+        {hasFollowings === true && onlineUsers.length !== 0 && (
+          <Grid container justify="center">
+            <Users useContext={{ context: "Followed" }} users={onlineUsers} />
           </Grid>
         )}
+
+        <CustomSnackbar
+          snackbarOpen={this.state.snackbarOpen}
+          variant={this.state.snackbarvariant}
+          message={this.state.snackbarMessage}
+          onSnackbarOpen={this.onSnackbarOpen}
+          onSnackbarClose={this.onSnackbarClose}
+          horizontal={this.state.horizontal}
+          vertical={this.state.vertical}
+        />
       </div>
     );
   }
 }
 Followed.propTypes = {
   auth: PropTypes.object.isRequired,
-  gainFollowers: PropTypes.object.isRequired,
-  gainFollowersAction: PropTypes.func.isRequired,
+  usersOnline: PropTypes.object.isRequired,
+  getOnlineUsersAction: PropTypes.func.isRequired,
   checkFollowingAction: PropTypes.func.isRequired,
   setProgress: PropTypes.func.isRequired,
   clearError: PropTypes.func.isRequired
@@ -181,14 +184,14 @@ Followed.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  gainFollowers: state.gainFollowers,
+  usersOnline: state.usersOnline,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
   {
-    gainFollowersAction,
+    getOnlineUsersAction,
     checkFollowingAction,
     setProgress,
     clearError

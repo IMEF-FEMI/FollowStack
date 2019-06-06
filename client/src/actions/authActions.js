@@ -160,6 +160,7 @@ export const logoutUser = () => dispatch => {
     })
     .catch(function(error) {
       // An error happened
+      console.log(error)
     });
 
   // Remove auth header for future requests

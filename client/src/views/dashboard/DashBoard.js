@@ -19,19 +19,6 @@ const welcome_user = {
   marginRight: "auto"
 };
 
-const logout_icon_index = {
-  display: "block",
-  margin: "0 auto",
-  position: "relative",
-  textAlign: "center",
-  overflow: "hidden",
-  width: "75px",
-  height: "75px",
-  fontSize: "50px",
-  lineHeight: "150px",
-  backgroundColor: "#f50057",
-  borderRadius: "15px"
-};
 
 const twitter_icon_index = {
   display: "block",
@@ -150,6 +137,31 @@ class DashBoard extends Component {
                   style={twitter_icon_index}
                   id="icon-box-twitter"
                   onClick={() => {
+                    this.push("/users-online");
+                  }}
+                >
+                  <span>
+                    <i className="fa fa-users fa fa-lg-modification" />
+                  </span>
+                </div>
+                {
+                  <p
+                    style={category_text}
+                    className="tooltip-bottom"
+                  >
+                    {" "}
+                    Users Online
+                  </p>
+                }
+              </Grid>
+            }
+
+            {
+              <Grid item xs={12} sm={6} className="mobilePadding">
+                <div
+                  style={twitter_icon_index}
+                  id="icon-box-twitter"
+                  onClick={() => {
                     this.push("/tweets");
                   }}
                 >
@@ -195,30 +207,6 @@ class DashBoard extends Component {
                   >
                     {" "}
                    My Profile
-                  </p>
-                }
-              </Grid>
-            }
-            {
-              <Grid item xs={12} sm={6} className="mobilePadding">
-                <div style={logout_icon_index} id="logout-icon-box">
-                  <span
-                    onClick={function() {
-                      console.log("hre");
-                    }}
-                  >
-                    <i className="fa fa-sign-out-alt fa fa-lg-modification" />
-                  </span>
-                </div>
-                {
-                  <p
-                    style={category_text}
-                    className="tooltip-bottom"
-                    data-tooltip={
-                      "Logout"}
-                  >
-                    {" "}
-                    Logout
                   </p>
                 }
               </Grid>

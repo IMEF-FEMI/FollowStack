@@ -19,7 +19,7 @@ import {
   beginUnFollow,
   checkFollowing,
   checkFollowedBack,
-  checkTotalGained
+  checkTotalGained,
 } from "../async/twitter";
 
 export const gainFollowersAction = (userData, key) => async dispatch => {

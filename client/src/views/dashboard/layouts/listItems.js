@@ -48,6 +48,14 @@ export const mainListItems = screen_name => {
           <ListItemText primary="Gain Followers" />
         </ListItem>
       </Link>
+      <Link to="/users-online" style={{ textDecoration: "none" }}>
+        <ListItem button>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Users Online" />
+        </ListItem>
+      </Link>
       <Link
         to={`/${store.getState().auth.userProfile.screen_name}`}
         style={{ textDecoration: "none" }}

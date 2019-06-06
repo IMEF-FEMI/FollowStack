@@ -13,14 +13,11 @@ import Launch from "@material-ui/icons/Launch";
 import Tooltip from "@material-ui/core/Tooltip";
 import Tweet from "./Tweet/Tweet";
 
-
 class RenderTweetsMain extends Component {
- 
   render() {
-    const { classes,viewTweets } = this.props;
+    const { classes, viewTweets } = this.props;
     const data = this.props.pages;
     const linkProps = { target: "_blank", rel: "noreferrer" };
-    
 
     return (
       <Grid
@@ -47,6 +44,7 @@ class RenderTweetsMain extends Component {
                 classes={{
                   item: classes.item
                 }}
+                style={{padding: "0px"}}
                 // style={{
                 //   maxWidth: window.innerWidth <= 599 && `${ 0.8 * window.innerWidth}`
                 // }}
@@ -58,7 +56,6 @@ class RenderTweetsMain extends Component {
               >
                 <Card className={classes.card}>
                   <CardHeader
-                    
                     avatar={
                       <Avatar aria-label="avatar" className={classes.avatar}>
                         <img
@@ -86,11 +83,7 @@ class RenderTweetsMain extends Component {
                     title={`${item.user.name}`}
                     subheader={`@${item.user.screen_name}`}
                   />
-                  <Tweet
-                    data={item}
-                    linkProps={linkProps}
-                    context="Main"
-                  />
+                  <Tweet data={item} linkProps={linkProps} context="Main" />
                 </Card>
               </Grid>
             );
@@ -98,7 +91,7 @@ class RenderTweetsMain extends Component {
             return null;
           }
         })}
-        {(viewTweets.tweetIsFetching)&& (
+        {viewTweets.tweetIsFetching && (
           <Grid item xs={12}>
             <CircularProgress
               style={{
@@ -123,12 +116,15 @@ const styles = theme => ({
     paddingRight: "48px",
     zIndex: 1000
   },
+  card: {
+    borderRadius: "0px"
+  },
   gridContainer: {
     minHeight: "100vh"
   },
   spacingXs24: {
     width: "100%",
-    margin: 0
+    margin: 0,
   },
   fab: {
     margin: theme.spacing.unit,
@@ -177,12 +173,10 @@ const styles = theme => ({
 });
 
 RenderTweetsMain.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   auth: state.auth,
   viewTweets: state.viewTweets
 });
-export default connect(
-  mapStateToProps,
-)(withStyles(styles)(RenderTweetsMain));
+export default connect(mapStateToProps)(withStyles(styles)(RenderTweetsMain));

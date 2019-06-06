@@ -18,7 +18,6 @@ import { setPoints } from "../../../../../actions/authActions";
 import Tweet from "./Tweet/Tweet";
 import toast from "toasted-notes";
 
-
 class RenderProfileTweets extends Component {
   addTweet = async tweet => {
     const { auth } = this.props;
@@ -49,7 +48,7 @@ class RenderProfileTweets extends Component {
     const { classes } = this.props;
     const data = this.props.pages;
     const linkProps = { target: "_blank", rel: "noreferrer" };
-    const { myProfile} = this.props;
+    const { myProfile } = this.props;
 
     return (
       <Grid
@@ -84,9 +83,10 @@ class RenderProfileTweets extends Component {
               >
                 <Card className={classes.card}>
                   <CardHeader
-                    style={{
-                      backgroundColor:(item.added && item.added === true) && "#ca7c7c"
-                    }}
+                    // style={{
+                    //   backgroundColor:
+                    //     item.added && item.added === true && "#ca7c7c"
+                    // }}
                     avatar={
                       <Avatar aria-label="avatar" className={classes.avatar}>
                         <img
@@ -97,36 +97,32 @@ class RenderProfileTweets extends Component {
                     }
                     action={
                       <div>
-                          {(!item.added || item.added === false) && 
-                            <Tooltip
-                              title="Add to Tweet Feeds"
-                              aria-label="Add"
-                            >
-                              <IconButton
-                                onClick={async () => {
-                                  await this.addTweet(item);
-                                  this.forceUpdate();
-                                }}
-                              >
-                                <AddBox color="primary" />
-                              </IconButton>
-                            </Tooltip>
-                          }
-                        {
-                          (item.added && item.added === true) && (
-                            <Tooltip
-                              title="Remove from Tweet Feeds"
-                              aria-label="Remove"
+                        {(!item.added || item.added === false) && (
+                          <Tooltip title="Add to Tweet Feeds" aria-label="Add">
+                            <IconButton
                               onClick={async () => {
-                                await this.removeTweet(item);
+                                await this.addTweet(item);
                                 this.forceUpdate();
                               }}
                             >
-                              <IconButton>
-                                <Close color="secondary" />
-                              </IconButton>
-                            </Tooltip>
-                          )}
+                              <AddBox color="primary" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {item.added && item.added === true && (
+                          <Tooltip
+                            title="Remove from Tweet Feeds"
+                            aria-label="Remove"
+                            onClick={async () => {
+                              await this.removeTweet(item);
+                              this.forceUpdate();
+                            }}
+                          >
+                            <IconButton>
+                              <Close color="secondary" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                         <a
                           href={`http://twitter.com/${
                             item.user.screen_name
@@ -156,7 +152,7 @@ class RenderProfileTweets extends Component {
             return null;
           }
         })}
-        {(myProfile.isFetching)&& (
+        {myProfile.isFetching && (
           <Grid item xs={12}>
             <CircularProgress
               style={{
@@ -167,7 +163,6 @@ class RenderProfileTweets extends Component {
             />
           </Grid>
         )}
-       
       </Grid>
     );
   }
@@ -189,6 +184,10 @@ const styles = theme => ({
     width: "100%",
     margin: 0
   },
+  card: {
+    borderRadius: "0px"
+  },
+  
   fab: {
     margin: theme.spacing.unit,
     position: "fixed",
@@ -241,7 +240,7 @@ RenderProfileTweets.propTypes = {
 };
 const mapStateToProps = state => ({
   auth: state.auth,
-  myProfile: state.myProfile,
+  myProfile: state.myProfile
 });
 export default connect(
   mapStateToProps,

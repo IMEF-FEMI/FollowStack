@@ -10,12 +10,16 @@ const Follows = new Schema({
       name: String,
       screen_name: String,
       photo: String,
+      following: {
+        type: Boolean,
+        default: false
+      },
       date: {
         type: Number,
-        default: Date.now() + (70 * 60 * 1000)//1hr plus
+        default: Date.now() + 70 * 60 * 1000 //1hr plus
       }
     }
   ]
 });
 
-module.exports = User = mongoose.model("Follows", Follows);
+module.exports = User = mongoose.model("UsersOnline", Follows);

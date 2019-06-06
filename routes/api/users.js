@@ -8,6 +8,7 @@ const keys = require("../../config/keys");
 // Load User && Follows model
 const User = require("../../models/User");
 const Follows = require("../../models/Follows");
+const UsersOnline = require("../../models/UsersOnline");
 
 var Twitter = require("twitter");
 const TWITTER_KEYS = [
@@ -65,6 +66,10 @@ router.post(
               new Follows({
                 username: req.body.username,
                 user_id: req.body.userid
+              }).save(),
+              new UsersOnline({
+                username: req.body.username,
+                user_id: req.body.userid
               }).save()
             ]);
 
@@ -99,6 +104,10 @@ router.post(
     const hour = minute * 60;
     const day = hour * 24;
     const week = day * 7;
+    // await new UsersOnline({
+    //   username: req.body.username,
+    //   user_id: req.body.userid
+    // }).save()
     await User.findOne({ userid: req.body.userid })
       .then(user => {
         if (user) {
