@@ -18,7 +18,7 @@ import SignUp from "./views/guestpages/SignUp";
 import SignIn from "./views/guestpages/SignIn";
 import NotFound from "./views/guestpages/404/NotFound";
 import CompleteRegistration from "./views/guestpages/CompleteRegistration";
-// import Privacy from "./views/guestpages/Privacy";
+import Privacy from "./views/guestpages/Privacy";
 import Terms from "./views/guestpages/Terms";
 import LaunchScreen from "./views/dashboard/mainAppPages/components/loaders/LaunchScreen";
 
@@ -88,9 +88,6 @@ if (localStorage.jwtToken) {
   if (decoded.exp < currentTime) {
     // Logout user
     store.dispatch(logoutUser());
-    // Redirect to login
-    // window.location.href = "/sign-in";
-    // <Redirect to="/sign-in"/>
   }
 }
 
@@ -141,7 +138,7 @@ class App extends Component {
         <ThemeProvider theme={theme}>
           <Router>
             <div>
-              {/* <Route exact path="/" component={LandingPage} /> */}
+             
               <Switch>
                 {this.state.serverWoke === false ? (
                   <LaunchScreen />
@@ -166,7 +163,7 @@ class App extends Component {
                   component={CompleteRegistration}
                 />
                 <Route exact path="/sign-in" component={SignIn} />
-                {/* <Route exact path="/privacy" component={Privacy} /> */}
+                <Route exact path="/privacy" component={Privacy} />
                 <Route exact path="/terms" component={Terms} />
                 {dashboardRoutes.map((route, index) => {
                   return (

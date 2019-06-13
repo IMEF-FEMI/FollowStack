@@ -55,7 +55,7 @@ class AppBar extends React.Component {
           style={{
             backgroundColor: location !== "/" ? "#fff" : "transparent"
           }}
-          position="static"
+          position="fixed"
         >
           <Toolbar style={{paddingRight: "10px"}}>
             <div>

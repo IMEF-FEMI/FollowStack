@@ -1,88 +1,213 @@
-Last modified: October 7th, 2018.
+Privacy Policy  
+==============
 
-Material-UI is committed to protecting and respecting your privacy. This Privacy Policy sets out how we collect and process personal information about you when you visit our website argos-ci.com, when you use our products and services (our “Services”), or when you otherwise do business or make contact with us.
+Effective date: June 13, 2019
 
-Please read this policy carefully to understand how we handle and treat your personal information.
+followstack ("us", "we", or "our") operates the https://followstack.com
+website (hereinafter referred to as the "Service").
 
-## What information do we collect?
+This page informs you of our policies regarding the collection, use, and
+disclosure of personal data when you use our Service and the choices you have
+associated with that data. 
 
-We may collect and process the following personal information from you:
+We use your data to provide and improve the Service. By using the Service, you
+agree to the collection and use of information in accordance with this policy.
+Unless otherwise defined in this Privacy Policy, the terms used in this
+Privacy Policy have the same meanings as in our Terms and Conditions,
+accessible from https://followstack.com
 
-- **Information you provide to us:** We collect personal information when you voluntarily provide us with such information in the course of using our website or Services. For example, when you register to use our Services, we will collect your name, email address and organization information. We also collect personal information from you when you subscribe to our newsletter, or respond to a survey. If you make an enquiry through our website, or contact us in any other way, we will keep a copy of your communications with us.
-- **Information we collect when you do business with us:** We may process your personal information when you do business with us – for example, as a customer or prospective customer, or as a vendor, supplier, consultant or other third party. For example, we may hold your business contact information and financial account information (if any) and other communications you have with us for the purposes of maintaining our business relations with you.
-- **Information we automatically collect:** We may also collect certain technical information by automatic means when you visit our website, such as IP address, browser type and operating system, referring URLs, your use of our website, and other clickstream data. We collect this information automatically through the use of various technologies, such as cookies.
-- **Personal information where we act as a data processor:** We also process personal information on behalf of our customers in the context of supporting our products and services. Where a customer subscribes to our Services for their website, game or app, they will be the ones who control what event data is collected and stored on our systems. For example, they may ask us to log basic user data (e.g. email address or username), device identifiers, IP addresses, event type, and related source code. In such cases, we are data processors acting in accordance with the instructions of our customers. You will need to refer to the privacy policies of our customers to find out more about how such information is handled by them.
+Definitions  
+-----------
 
-## What do we use your information for?
+  * Service
 
-The personal information we collect from you may be used in one of the following ways:
+    Service is the https://followstack.com website operated by followstack
 
-- To deal with your inquiries and requests
-- To create and administer records about any online account that you register with us
-- To provide you with information and access to resources that you have requested from us
-- To provide you with technical support (your information helps us to better respond to your individual needs)
-- To improve our website (we continually strive to improve our website offerings based on the information and feedback we receive from you), including to improve the navigation and content of our sites
-- For website and system administration and security
-- For general business purposes, including to improve customer service (your information helps us to more effectively respond to your customer service requests and support needs), to help us improve the content and functionality of our Services, to better understand our users, to protect against wrongdoing, to enforce our Terms of Service, and to generally manage our business
-- To process transactions and to provide Services to our customers and end-users
-- For recruitment purposes, where you apply for a job with us
-- To administer a contest, promotion, survey, or other site features
-- To send periodic emails. The email address you provide for order processing, will only be used to send you information and updates pertaining to your order. Where it is in accordance with your marketing preferences, we will send occasional marketing emails about our products and services, which you can unsubscribe from at any time using the link provided in the message.
+  * Personal Data
 
-## How do we protect your information?
+    Personal Data means data about a living individual who can be identified
+    from those data (or from those and other information either in our
+    possession or likely to come into our possession).
 
-We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information. We offer the use of a secure server. All supplied sensitive/credit information is transmitted via Secure Socket Layer (SSL) technology and then encrypted into our Payment gateway providers database only to be accessible by those authorized with special access rights to such systems, and are required to keep the information confidential. After a transaction, your private information (credit cards, social security numbers, financials, etc.) will not be stored on our servers.
+  * Usage Data
 
-## Do we use cookies?
+    Usage Data is data collected automatically either generated by the use of
+    the Service or from the Service infrastructure itself (for example, the
+    duration of a page visit).
 
-Yes. Cookies are small files that a site or its service provider transfers to your computers hard drive through your Web browser (if you allow) that enables the sites or service providers systems to recognize your browser and capture and remember certain information.
+  * Cookies
 
-We use cookies to understand and save your preferences for future visits, to advertise to you on other sites and compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future.
+    Cookies are small files stored on your device (computer or mobile device).
 
-You may refuse to accept cookies by activating the setting on your browser which allows you to refuse the setting of cookies. You can find information on popular browsers and how to adjust your cookie preferences at the following websites:
+Information Collection and Use  
+------------------------------
 
-- [Microsoft Internet Explorer](https://www.microsoft.com/info/cookies.mspx)
-- [Mozilla Firefox](https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences)
-- [Google Chrome](https://support.google.com/accounts/answer/61416)
-- [Apple Safari](https://support.apple.com/en-us/HT201265)
+We collect several different types of information for various purposes to
+provide and improve our Service to you.
 
-However, if you choose to disable cookies, you may be unable to access certain parts of our site. Unless you have adjusted your browser setting so that it will refuse cookies, our system will issue cookies when you log on to our site.
+Types of Data Collected  
+~~~~~~~~~~~~~~~~~~~~~~~
 
-## Do we disclose any information to outside parties?
+Personal Data  
+*************
 
-We will only share your information with third parties in certain circumstances:
+While using our Service, we may ask you to provide us with certain personally
+identifiable information that can be used to contact or identify you
+("Personal Data"). Personally identifiable information may include, but is not
+limited to:
 
-- We engage certain trusted third parties to perform functions and provide services to us, including cloud hosting services, off-site backups, email service providers, and customer support providers. We will only share your personal information with third parties to the extent necessary to perform these functions, in accordance with the purposes set out in this Privacy Policy and applicable laws.
-- In the event of a corporate sale, merger, reorganization, dissolution or similar event, your personal information may be sold, disposed of, transferred or otherwise disclosed as part of that transaction.
-- We may also disclose information about you to third parties where we believe it necessary or appropriate under law, for example: (1) to protect or defend our rights, interests or property or that of third parties; (2) to comply with legal process, judicial orders or subpoenas; (3) to respond to requests from public or government authorities, including for national security and law enforcement purposes; (4) to prevent or investigate possible wrongdoing in connection with the Services or to enforce our Terms of Service; (5) to protect the vital interests of our users, customers and other third parties.
-- We may use and share aggregated non-personal information with third parties for marketing, advertising and analytics purposes.
+  * First name and last name
+  * Address, State, Province, ZIP/Postal code, City
+  * Cookies and Usage Data
 
-We do not sell or trade your personal information to third parties.
+Usage Data  
+**********
 
-## Third Party Links
+We may also collect information how the Service is accessed and used ("Usage
+Data"). This Usage Data may include information such as your computer's
+Internet Protocol address (e.g. IP address), browser type, browser version,
+the pages of our Service that you visit, the time and date of your visit, the
+time spent on those pages, unique device identifiers and other diagnostic
+data.
 
-Occasionally, at our discretion, we may include or offer third party products or services on our website. If you access other websites using the links provided, the operators of these websites may collect information from you that will be used by them in accordance with their privacy policies. These third party sites have separate and independent privacy policies. We therefore have no responsibility or liability for the content and activities of these linked sites. Nonetheless, we seek to protect the integrity of our site and welcome any feedback about these sites.
+Tracking &amp; Cookies Data  
+************
 
-## International Transfers
+We use cookies and similar tracking technologies to track the activity on our
+Service and we hold certain information.
 
-If you are visiting our website or using our Services from outside the United States (US), please be aware that you are sending personal information to the US where our servers are located. The US may not have data protection laws that are as comprehensive or protective as those in your country of residence; however, our collection, storage and use of your personal information will at all times be in accordance with this Privacy Policy.
+Cookies are files with a small amount of data which may include an anonymous
+unique identifier. Cookies are sent to your browser from a website and stored
+on your device. Other tracking technologies are also used such as beacons,
+tags and scripts to collect and track information and to improve and analyse
+our Service.
 
-## Your Rights
+You can instruct your browser to refuse all cookies or to indicate when a
+cookie is being sent. However, if you do not accept cookies, you may not be
+able to use some portions of our Service.
 
-If you are from the EU, you may have the right to access a copy of the personal information we hold about you, or to request the correction, amendment or deletion of such information where it is inaccurate or processed in violation of the Privacy Shield Principles. To make such a request, please contact us at the contact details at the left.
+Examples of Cookies we use:
 
-We will consider and respond to your request in accordance with the Privacy Shield Principles and applicable laws.
+  * Session Cookies. We use Session Cookies to operate our Service.
+  * Preference Cookies. We use Preference Cookies to remember your preferences
+    and various settings.
+  * Security Cookies. We use Security Cookies for security purposes.
 
-Furthermore, we commit to giving you an opportunity to opt-out if your personal information is to be disclosed to any other independent third parties, or to be used for a purpose materially different from those that are set out in this Privacy Policy. Where sensitive personal information is involved, we will always obtain your express opt-in consent to do such things. If you otherwise wish to limit the use or disclosure of your personal information, please write to us at the contact details further below.
+Use of Data  
+-----------
 
-You can also unsubscribe from our marketing communications at any time by following the instructions or unsubscribe mechanism in the email message itself.
+followstack uses the collected data for various purposes:
 
-## Data Retention
+  * To provide and maintain the Service
+  * To notify you about changes to our Service
+  * To allow you to participate in interactive features of our Service when
+    you choose to do so
+  * To provide customer care and support
+  * To provide analysis or valuable information so that we can improve the
+    Service
+  * To monitor the usage of the Service
+  * To detect, prevent and address technical issues
 
-We may retain your personal information as long as you continue to use the Services, have an account with us or for as long as is necessary to fulfil the purposes outlined in the policy. You can ask to close your account by contacting us at the details below and we will delete your personal information on request.
+Transfer Of Data  
+----------------
 
-We may however retain personal information for an additional period as is permitted or required under applicable laws, for legal, tax or regulatory reasons, or for legitimate and lawful business purposes.
+Your information, including Personal Data, may be transferred to - and
+maintained on - computers located outside of your state, province, country or
+other governmental jurisdiction where the data protection laws may differ than
+those from your jurisdiction.
 
-## Changes to our Privacy Policy
+If you are located outside United States and choose to provide information to
+us, please note that we transfer the data, including Personal Data, to United
+States and process it there.
 
-If we decide to change our privacy policy, we will post those changes on this page, and/or update the Privacy Policy modification date below.
+Your consent to this Privacy Policy followed by your submission of such
+information represents your agreement to that transfer.
+
+followstack will take all steps reasonably necessary to ensure that your data
+is treated securely and in accordance with this Privacy Policy and no transfer
+of your Personal Data will take place to an organization or a country unless
+there are adequate controls in place including the security of your data and
+other personal information.
+
+Disclosure Of Data  
+------------------
+
+Legal Requirements  
+~~~~~~~~~~~~~~~~~~
+
+followstack may disclose your Personal Data in the good faith belief that such
+action is necessary to:
+
+  * To comply with a legal obligation
+  * To protect and defend the rights or property of followstack
+  * To prevent or investigate possible wrongdoing in connection with the
+    Service
+  * To protect the personal safety of users of the Service or the public
+  * To protect against legal liability
+
+As an European citizen, under GDPR, you have certain individual rights. You
+can learn more about these guides in the [GDPR
+Guide](https://termsfeed.com/blog/gdpr/#Individual_Rights_Under_the_GDPR).
+
+Security of Data  
+----------------
+
+The security of your data is important to us but remember that no method of
+transmission over the Internet or method of electronic storage is 100% secure.
+While we strive to use commercially acceptable means to protect your Personal
+Data, we cannot guarantee its absolute security.
+
+Service Providers  
+-----------------
+
+We may employ third party companies and individuals to facilitate our Service
+("Service Providers"), to provide the Service on our behalf, to perform
+Service-related services or to assist us in analyzing how our Service is used.
+
+These third parties have access to your Personal Data only to perform these
+tasks on our behalf and are obligated not to disclose or use it for any other
+purpose.
+
+Links to Other Sites  
+--------------------
+
+Our Service may contain links to other sites that are not operated by us. If
+you click a third party link, you will be directed to that third party's site.
+We strongly advise you to review the Privacy Policy of every site you visit.
+
+We have no control over and assume no responsibility for the content, privacy
+policies or practices of any third party sites or services.
+
+Children's Privacy  
+------------------
+
+Our Service does not address anyone under the age of 18 ("Children").
+
+We do not knowingly collect personally identifiable information from anyone
+under the age of 18. If you are a parent or guardian and you are aware that
+your Child has provided us with Personal Data, please contact us. If we become
+aware that we have collected Personal Data from children without verification
+of parental consent, we take steps to remove that information from our
+servers.
+
+Changes to This Privacy Policy  
+------------------------------
+
+We may update our Privacy Policy from time to time. We will notify you of any
+changes by posting the new Privacy Policy on this page.
+
+We will let you know via email and/or a prominent notice on our Service, prior
+to the change becoming effective and update the "effective date" at the top of
+this Privacy Policy.
+
+You are advised to review this Privacy Policy periodically for any changes.
+Changes to this Privacy Policy are effective when they are posted on this
+page.
+
+Contact Us  
+----------
+
+If you have any questions about this Privacy Policy, please contact us:
+
+  * By email: followstackapp@gmail.com
+

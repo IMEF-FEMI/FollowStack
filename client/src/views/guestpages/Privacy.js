@@ -1,32 +1,49 @@
-import withRoot from "./modules/withRoot";
 // --- Post bootstrap -----
-import React from "react";
+import React, { Component } from "react";
+import AppFooter from "./modules/views/AppFooter";
 import Markdown from "./modules/components/Markdown";
 import Typography from "./modules/components/Typography";
-import LayoutBody from "./modules/components/LayoutBody";
-import NavBar from "../modules/views/NavBar";
-import {Navbar as SigndInNav} from "../dashboard/layouts/Navbar";
 import privacy from "./modules/views/privacy.md";
-import AppFooter from "../modules/views/AppFooter";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import AppAppBar from "./modules/views/AppAppBar";
+import Navbar from "../dashboard/layouts/Navbar";
 
+class Privacy extends Component {
+  constructor(props) {
+    super(props);
 
-function Privacy() {
-  return (
-    <React.Fragment>
-    {this.props.auth.isAuthenticated === false && <NavBar />}
-    {this.props.auth.isAuthenticated === true && <SigndInNav />}
-      <LayoutBody margin marginBottom>
-        <Typography variant="h3" gutterBottom marked="center" align="center">
-          Privacy
-        </Typography>
-        <Markdown>{privacy}</Markdown>
-      </LayoutBody>
+    this.state = { privacy: "" };
+  }
+  async componentWillMount() {
+    const that = this;
+
+   await fetch(privacy)
+      .then(response => response.text())
+      .then(text => {
+        that.setState({ privacy: text });
+      });
+  }
+  render() {
+    return (
+      <React.Fragment>
+      {this.props.auth.isAuthenticated === false && <AppAppBar />}
+        {this.props.auth.isAuthenticated === true && <Navbar />}
+      <Container>
+        <Box mt={7} mb={12}>
+          <Typography variant="h3" gutterBottom marked="center" align="center">
+            Privacy
+          </Typography>
+          <Markdown>{this.state.privacy}</Markdown>
+        </Box>
+      </Container>
       <AppFooter />
     </React.Fragment>
-  );
+    );
+  }
 }
-
 Privacy.propTypes = {
   auth: PropTypes.object.isRequired
 };
