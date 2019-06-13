@@ -4,12 +4,15 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import LayoutBody from "../components/LayoutBody";
 import Typography from "../components/Typography";
+import VerifiedUser from "@material-ui/icons/VerifiedUser";
+import Face from "@material-ui/icons/Face";
+import AttachMoney from "@material-ui/icons/AttachMoney";
 
 const styles = theme => ({
   root: {
     display: "flex",
     overflow: "hidden",
-    backgroundColor: theme.palette.secondary.light
+    backgroundColor: "#0d1625"
   },
   layoutBody: {
     marginTop: theme.spacing(15),
@@ -28,7 +31,8 @@ const styles = theme => ({
   },
   title: {
     marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(5)
+    marginBottom: theme.spacing(5),
+    color: "#fff"
   },
   curvyLines: {
     pointerEvents: "none",
@@ -39,18 +43,9 @@ const styles = theme => ({
 
 function ProductValues(props) {
   const { classes } = props;
-  const money = require("../../assets/img/attach_money_48px.svg");
-  const face = require("../../assets/img/face_48px.svg");
-  const verified = require("../../assets/img/verified_user_48px.svg");
-  const productCurvyLines = require("../../assets/img/productCurvyLines.png");
   return (
     <section className={classes.root}>
       <LayoutBody className={classes.layoutBody} width="large">
-        <img
-          src={productCurvyLines}
-          className={classes.curvyLines}
-          alt="curvy lines"
-        />
         <Grid container spacing={4}>
           <Grid item xs={12} md={12}>
             <Typography
@@ -58,20 +53,23 @@ function ProductValues(props) {
               marked="center"
               align="center"
               component="h2"
+              style={{ color: "#fff" }}
             >
               Why Gain More Followers?
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
             <div className={classes.item}>
-              <img className={classes.image} src={money} alt="Money" />
-              <Typography variant="h6" className={`${classes.title} `}>
+              <AttachMoney
+                style={{ color: "#908a16", width: "55px", height: "55px" }}
+              />
+              <Typography variant="h6" align="center" className={classes.title}>
                 You could earn lots of money
               </Typography>
-              <Typography variant="h5">
+              <Typography variant="h5" align="center" style={{ color: "#fff" }}>
                 {`You could make a lot of money when you have much followers on your social media
                   account by using Platforms like `}
-                {<a href="https://famebit.com">FameBit</a>}
+                {<a href="https://famebit.com" style={{textDecoration: "none"}}>FameBit</a>}
                 {` or by posting adverts for independent marketters looking 
                   for ways to make their product and services known`}
               </Typography>
@@ -79,14 +77,13 @@ function ProductValues(props) {
           </Grid>
           <Grid item xs={12} md={4}>
             <div className={classes.item}>
-              <img className={classes.image} src={face} alt="graph" />
-              <Typography variant="h6" className={`${classes.title} `}>
+              <Face
+                style={{ color: "rgb(28, 136, 204)", width: "55px", height: "55px" }}
+              />
+              <Typography align="center" variant="h6" className={classes.title}>
                 More clients for your business
               </Typography>
-              <Typography
-                variant="h5"
-                //  className="text-center"
-              >
+              <Typography align="center" variant="h5" style={{ color: "#fff" }}>
                 {`Getting a massive following will make both you 
                   and your business popular. And anyone visiting your account 
                   will be operating on the assumption that whatever product or 
@@ -97,11 +94,21 @@ function ProductValues(props) {
           </Grid>
           <Grid item xs={12} md={4}>
             <div className={classes.item}>
-              <img className={classes.image} src={verified} alt="clock" />
-              <Typography variant="h6" className={`${classes.title} `}>
+              <VerifiedUser
+                style={{
+                  color: "rgb(23,191, 99)",
+                  width: "55px",
+                  height: "55px"
+                }}
+              />
+              <Typography align="center"
+                variant="h6"
+                className={classes.title}
+                style={{ color: "#fff" }}
+              >
                 You'll get even more followers
               </Typography>
-              <Typography variant="h5">
+              <Typography align="center" variant="h5" style={{ color: "#fff" }}>
                 {`Having a massive Instagram following will 
                 naturally attract more users to your profile. People will become curious 
                 about you, and they will want to become a part of your 

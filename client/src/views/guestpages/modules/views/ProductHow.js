@@ -1,22 +1,19 @@
 import React from "react";
-import {Link as RouterLink} from 'react-router-dom'
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import LayoutBody from "../components/LayoutBody";
-import Button from "../components/Button";
 import Typography from "../components/Typography";
 
 const styles = theme => ({
   root: {
     display: "flex",
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: "#0d1625",
     overflow: "hidden"
   },
   layoutBody: {
-    marginTop: theme.spacing(10) ,
-    marginBottom: theme.spacing(15) ,
+    marginTop: theme.spacing(10),
+    marginBottom: theme.spacing(15),
     position: "relative",
     display: "flex",
     flexDirection: "column",
@@ -26,10 +23,10 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `0px ${theme.spacing(5) }px`
+    padding: `0px ${theme.spacing(5)}px`
   },
   title: {
-    marginBottom: theme.spacing(14) 
+    marginBottom: theme.spacing(14)
   },
   number: {
     fontSize: 24,
@@ -39,56 +36,29 @@ const styles = theme => ({
   },
   image: {
     height: 55,
-    marginTop: theme.spacing(4) ,
-    marginBottom: theme.spacing(4) 
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4)
   },
   curvyLines: {
     pointerEvents: "none",
     position: "absolute",
     top: -180,
     opacity: 0.7
-  },
-  button: {
-    marginTop: theme.spacing(8) 
   }
 });
-const button = {
-  minWidth: 200,
-
-  color: "white",
-  position: "relative",
-  // padding: "0.9375rem",
-  // fontWeight: "400",
-  // fontSize: "12px",
-  textTransform: "uppercase",
-  // borderRadius: "3px",
-  // lineHeight: "20px",
-  textDecoration: "none",
-  // margin: "0px",
-  display: "inline-flex",
-  "&:hover,&:focus": {
-    color: "white",
-    background: "rgba(200, 200, 200, 0.2)"
-  }
-};
 
 function ProductHow(props) {
   const { classes } = props;
-  const productCurvyLines = require("../../assets/img/productCurvyLines.png");
 
   return (
     <section className={classes.root}>
       <LayoutBody className={classes.layoutBody} width="large">
-        <img
-          src={productCurvyLines}
-          className={classes.curvyLines}
-          alt="curvy lines"
-        />
         <Typography
           variant="h4"
           marked="center"
           className={classes.title}
           component="h2"
+          style={{ color: "#fff" }}
         >
           How you get followers!
         </Typography>
@@ -96,34 +66,21 @@ function ProductHow(props) {
           <Grid container spacing={4}>
             <Grid item xs={12} md={12}>
               <div className={classes.item}>
-                <Typography variant="h5" align="center">
+                <Typography
+                  variant="h5"
+                  align="center"
+                  style={{ color: "#fff" }}
+                >
                   {`Getting followers on followstack is very simple. 
                   we use a method already familiar to you - the follow back Method. 
                   It entails following a number of accounts, waiting for them to follow Back 
-                  and unfollowing ONLY those that didnt follow back after a specified time. 
-                  And all these are done with just a push of a button... Nice eh!`}
+                  and unfollowing ONLY those that didnt follow back after a specified time. This is on of the most
+                  efficient ways of growing your account quickly as the followers you get are REAL twitter followers. `}
                 </Typography>
               </div>
             </Grid>
           </Grid>
         </div>
-        <Button
-          color="secondary"
-          size="large"
-          variant="contained"
-          className={classes.button}
-          component={linkProps => (
-            <Link
-            component={RouterLink}
-              {...linkProps}
-              to="/sign-up"
-              variant="button"
-              style={button}
-            />
-          )}
-        >
-          Get started
-        </Button>
       </LayoutBody>
     </section>
   );

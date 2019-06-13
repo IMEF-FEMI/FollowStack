@@ -4,11 +4,14 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import LayoutBody from "../components/LayoutBody";
 import Typography from "../components/Typography";
+import PermIdentity from "@material-ui/icons/PermIdentity";
+import Favorite from "@material-ui/icons/Favorite";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 const styles = theme => ({
   root: {
     display: "flex",
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: "#0d1625",
     overflow: "hidden"
   },
   layoutBody: {
@@ -26,7 +29,8 @@ const styles = theme => ({
     padding: `0px ${theme.spacing(5)}px`
   },
   title: {
-    marginBottom: theme.spacing(14)
+    marginBottom: theme.spacing(14),
+    color: "#fff"
   },
   number: {
     fontSize: 24,
@@ -52,19 +56,11 @@ const styles = theme => ({
 
 function ProductHowItWorks(props) {
   const { classes } = props;
-  const productCurvyLines = require("../../assets/img/productCurvyLines.png");
-  const media = require("../../assets/img/media.svg");
-  const identity = require("../../assets/img/identity.svg");
-  const favorite = require("../../assets/img/favorite.svg");
+  
 
   return (
     <section className={classes.root}>
       <LayoutBody className={classes.layoutBody} width="large">
-        <img
-          src={productCurvyLines}
-          className={classes.curvyLines}
-          alt="curvy lines"
-        />
         <Typography
           variant="h4"
           marked="center"
@@ -78,8 +74,14 @@ function ProductHowItWorks(props) {
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
                 <div className={classes.number}>1.</div>
-                <img src={identity} alt="user" className={classes.image} />
-                <Typography variant="h5" align="center">
+                <PermIdentity
+                  style={{ color: "#908a16", width: "55px", height: "55px" }}
+                />
+                <Typography
+                  variant="h5"
+                  align="center"
+                  style={{ color: "#fff" }}
+                >
                   Register using your Twitter Account and go to the Gain
                   followers Section to Gain Followers
                 </Typography>
@@ -88,9 +90,22 @@ function ProductHowItWorks(props) {
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
                 <div className={classes.number}>2.</div>
-                <img src={media} alt="media" className={classes.image} />
-                <Typography variant="h5" align="center">
-                  {`Go to View Tweets section to gain points. 
+
+                <SvgIcon
+                  style={{
+                    color: "rgb(28, 136, 204)",
+                    width: "55px",
+                    height: "55px"
+                  }}
+                >
+                  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
+                </SvgIcon>
+                <Typography
+                  variant="h5"
+                  align="center"
+                  style={{ color: "#fff" }}
+                >
+                  {`Go to View shared Tweets section to gain points. 
                 you gain points by liking  / commenting / retweeting peoples Tweets.`}
                 </Typography>
               </div>
@@ -98,11 +113,17 @@ function ProductHowItWorks(props) {
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
                 <div className={classes.number}>3.</div>
-                <img src={favorite} alt="clock" className={classes.image} />
-                <Typography variant="h5" align="center">
+                <Favorite
+                  style={{ color: "#ff3366", width: "55px", height: "55px" }}
+                />
+                <Typography
+                  variant="h5"
+                  align="center"
+                  style={{ color: "#fff" }}
+                >
                   {`To get likes/comments and RT's on your tweets go to the Profile Section
-                and click the plus sign on any of your tweets to add to FollowStack so that others can see. 
-                This requires only 10 Points. If your points are not enough go back to the view tweets section to earn some more`}
+                and click on the share button sign on any of your tweets to add to FollowStack so that others can see. 
+                This requires only 50 Points. If your points are not enough go back to the view shared tweets section to earn some points`}
                 </Typography>
               </div>
             </Grid>

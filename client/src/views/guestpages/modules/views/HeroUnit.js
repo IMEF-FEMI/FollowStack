@@ -1,3 +1,4 @@
+
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
@@ -5,15 +6,14 @@ import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+// import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import ExpandMore from "@material-ui/icons/ExpandMore";
 
 export const HeroUnit = props => {
   const { classes } = props;
 
-  const scrollToContent = props => {
+  const scrollToContent = () => {
     console.log("called");
-    console.log(props.contentRef);
-
     props.contentRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -27,31 +27,13 @@ export const HeroUnit = props => {
         <main className={classes.main}>
           <div className={classes.heroContent}>
             <Typography
-              variant={window.innerWidth <= 500 ? "h4" : "h2"}
+              variant="h2"
               align="center"
               color="textPrimary"
               className={classes.heroMainTxt}
               gutterBottom
             >
-              FollowStack For Twitter
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              color="textSecondary"
-              className={classes.heroSecText}
-            >
-              FollowStack is a simple{" "}
-              <a href="https://twitter.com/search?q=follow4follow">
-                #follow4follow
-              </a>{" "}
-              App where you gain
-            </Typography>
-            <Typography variant="h6" align="center" 
-            style={{
-              textTransform: "none"
-            }} gutterBottom>
-              more followers{"  "}
+              FollowStack For Twitter{" "}
               <i
                 className="fab fa-twitter"
                 style={{
@@ -59,57 +41,33 @@ export const HeroUnit = props => {
                 }}
               />
             </Typography>
-            <Typography variant="h6" align="center" style={{
-                textTransform: "none"
-              }} gutterBottom>
-              more likes (Favs){"  "}
-              <i
-                className="fas fa-heart"
-                style={{
-                  color: "#ff3366"
-                }}
-              />
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              gutterBottom
-              // className={classes.heroSecText}
-              style={{
-                textTransform: "none"
-              }}
-            >
-              more RT's {"  "}
-              <i
-                className="fas fa-retweet"
-                style={{
-                  color: "#17bf63"
-                }}
-              />
-            </Typography>
             <Typography
               variant="h6"
               align="center"
               color="textSecondary"
               className={classes.heroSecText}
               paragraph
-              style={{
-                textTransform: "none"
-              }}
             >
-              for your Twitter Account{"  "}
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              color="textSecondary"
-              // className={classes.heroSecText}
-              paragraph
-            >
-              with just a few clicks
+              FollowStack is a simple Twitter app that helps you gain more
+              Followers, more likes (Favs){"  "}
+              <i
+                className="fas fa-heart"
+                style={{
+                  color: "#ff3366"
+                }}
+              />
+              {"  "}
+              and more Retweets {"  "}
+              <i
+                className="fas fa-retweet"
+                style={{
+                  color: "#17bf63"
+                }}
+              />{" "}
+              on your twitter account
             </Typography>
             <div>
-              <Grid container spacing={4} justify="center">
+              <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button
                     to={{
@@ -126,14 +84,16 @@ export const HeroUnit = props => {
                   </Button>
                 </Grid>
               </Grid>
+              <Grid container spacing={2} justify="center">
+                <Grid item>
+                  <ExpandMore
+                    onClick={scrollToContent}
+                    className={classes.scrollDownIcon}
+                  />
+                </Grid>
+              </Grid>
             </div>
           </div>
-          <ArrowBackIosIcon
-            onClick={() => {
-              scrollToContent(props);
-            }}
-            className={classes.scrollDownIcon}
-          />
         </main>
       </div>
     </React.Fragment>
@@ -174,13 +134,13 @@ const styles = theme => ({
     }
   },
   icon: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing( 2)
   },
   heroContent: {
-    width: "100%",
+    width: "90%",
     maxWidth: 600,
     position: "absolute",
-    top: "20%",
+    top: "45%",
     left: "50%",
     transform: "translate(-50%, -8px)",
     margin: "0 auto",
@@ -204,27 +164,21 @@ const styles = theme => ({
   },
   heroButtons: {
     color: "#fff",
-    border: "1px solid #fff",
-    "&:hover,&:focus": {
-      color: "white",
-      background: "rgba(0,0,0,.125)"
-    }
+    border: "1px solid #fff"
   },
   layout: {
     width: "auto",
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-    [theme.breakpoints.up(1100 + theme.spacing(3* 2) )]: {
+    marginLeft: theme.spacing( 3),
+    marginRight: theme.spacing( 3),
+    [theme.breakpoints.up(1100 + theme.spacing(3 * 2))]: {
       width: 1100,
       marginLeft: "auto",
       marginRight: "auto"
     }
   },
   scrollDownIcon: {
-    fontSize: "48px",
-    position: "absolute",
-    bottom: "24px",
-    left: "50%",
+    fontSize: "60px",
+
     color: "#fff",
     cursor: "pointer",
     // transform: "translateX(-50%) rotateZ(-90deg)",

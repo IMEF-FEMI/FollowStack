@@ -22,7 +22,6 @@ class RenderTweetsMain extends Component {
     return (
       <Grid
         className={classes.gridContainer}
-        // classes={{ "spacing-xs-24": classes.spacingXs24 }}
         direction="row"
         wrap="wrap"
         justify={"center"}
@@ -44,9 +43,7 @@ class RenderTweetsMain extends Component {
                   item: classes.item
                 }}
                 style={{padding: "0px"}}
-                // style={{
-                //   maxWidth: window.innerWidth <= 599 && `${ 0.8 * window.innerWidth}`
-                // }}
+                
                 xs={12}
                 sm={10}
                 md={8}
@@ -121,10 +118,6 @@ const styles = theme => ({
   gridContainer: {
     minHeight: "100vh"
   },
-  // spacingXs24: {
-  //   width: "100%",
-  //   margin: 0,
-  // },
   fab: {
     margin: theme.spacing(),
     position: "fixed",

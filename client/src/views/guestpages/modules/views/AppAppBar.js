@@ -52,7 +52,7 @@ class AppBar extends React.Component {
           }}
           position="static"
         >
-          <Toolbar>
+          <Toolbar style={{paddingRight: "10px"}}>
             <div>
               <Link
                 to="/"

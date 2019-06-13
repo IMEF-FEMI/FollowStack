@@ -29,10 +29,10 @@ class LandingPage extends Component {
         <AppAppBar />
         <HeroUnit contentRef={this.contentRef} />
         <div ref={this.contentRef}>
-        <ProductHowItWorks />
+          <ProductValues />
         </div>
-        <ProductValues />
-          <ProductHow />
+        <ProductHowItWorks />
+        <ProductHow />
         <ProductSmokingHero />
         <AppFooter />
       </React.Fragment>
