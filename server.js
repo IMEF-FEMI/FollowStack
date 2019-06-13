@@ -8,7 +8,6 @@ const cors = require("cors");
 const app = express();
 
 const users = require("./routes/api/users");
-const twitter = require("./routes/api/twitter");
 const post = require("./routes/api/post");
 const usersOnline = require("./routes/api/usersOnline");
 

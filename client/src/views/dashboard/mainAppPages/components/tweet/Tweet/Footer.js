@@ -34,7 +34,7 @@ class Footer extends React.Component {
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarvariant: "success",
-    vertical: window.innerWidth >= 600? "bottom":"top",
+    vertical: "top",
     horizontal: "right"
   };
 

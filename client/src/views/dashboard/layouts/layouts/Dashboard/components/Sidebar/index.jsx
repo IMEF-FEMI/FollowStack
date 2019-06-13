@@ -76,7 +76,9 @@ class Sidebar extends Component {
             to="/dashboard"
           >
             <ListItemIcon className={classes.listItemIcon}>
-              <DashboardIcon />
+              <DashboardIcon style={{
+                color:"rgb(28, 136, 204)"
+              }}/>
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
@@ -90,7 +92,7 @@ class Sidebar extends Component {
             to="/gain-followers"
           >
             <ListItemIcon className={classes.listItemIcon}>
-              <PeopleIcon />
+              <PeopleIcon style={{color:"rgb(144, 138, 22)"}} />
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
@@ -104,7 +106,9 @@ class Sidebar extends Component {
             to="/shared-tweets"
           >
             <ListItemIcon className={classes.listItemIcon}>
-              <SvgIcon>
+              <SvgIcon style={{
+                color: "rgb(28, 136, 204)"
+              }}>
                 <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
               </SvgIcon>
             </ListItemIcon>
@@ -121,7 +125,9 @@ class Sidebar extends Component {
             to="/profile"
           >
             <ListItemIcon className={classes.listItemIcon}>
-              <AccountBoxIcon />
+              <AccountBoxIcon style={{
+                color:"rgb(144, 138, 22)"
+              }}/>
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
@@ -143,6 +149,9 @@ class Sidebar extends Component {
             <ListItemText
               classes={{ primary: classes.listItemText }}
               primary={`Total Points: ${this.props.auth.points}`}
+              style={{
+                color: this.props.auth.points>=100?"rgb(23, 191, 99)":"#ff3366"
+              }}
             />
           </ListItem>
         </List>

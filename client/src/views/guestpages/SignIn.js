@@ -131,7 +131,7 @@ class SignIn extends React.Component {
           var errorMessage = error.message;
           console.log(`error code ${errorCode} message ${errorMessage}`);
 
-          that.notify("An Error has occured Try Again!", "error");
+          that.notify("Connection Error Try Again!", "error");
         });
     }
   };
@@ -191,7 +191,7 @@ class SignIn extends React.Component {
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(`error code ${errorCode} message ${errorMessage}`);
-          that.notify("An Error has occured Try Again!", "error");
+          that.notify("Connnectio Error Try Again!", "error");
           localStorage.setItem("redirected", false);
           that.setState({ loading: false });
         });
@@ -272,7 +272,7 @@ class SignIn extends React.Component {
                   Sign In
                 </Typography>
                 <Typography variant="body2" align="center">
-                  <Link to="/sign-up" underline="always">
+                  <Link to="/sign-up" underline="always" >
                     Dont have an account?
                   </Link>
                 </Typography>
@@ -293,12 +293,12 @@ class SignIn extends React.Component {
                     }}
                   >
                     <TwitterLoginButton onClick={this.startTwitterAuth}>
-                      <p
-                        className="text-center"
+                      <Typography
+                        align="center"
                         style={{ marginTop: 1, marginBottom: 1 }}
                       >
                         Sign In with Twitter
-                      </p>
+                      </Typography>
                     </TwitterLoginButton>
                   </div>
                 )}
@@ -312,11 +312,11 @@ class SignIn extends React.Component {
               />
 
               <React.Fragment>
-                <span className="text-dark text-center">
+                <Typography align="center" >
                   by clicking the sign in button, you agree to our
-                  <Link to="/terms">Terms of service </Link>and
-                  <Link to="/privacy">Privacy Policy</Link>
-                </span>
+                  <Link to="/terms" >Terms of service </Link>and 
+                  <Link to="/privacy" > Privacy Policy</Link>
+                </Typography>
               </React.Fragment>
             </Paper>
           </div>

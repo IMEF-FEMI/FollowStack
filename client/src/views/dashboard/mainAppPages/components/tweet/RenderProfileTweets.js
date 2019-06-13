@@ -26,7 +26,7 @@ class RenderProfileTweets extends Component {
     snackbarOpen: false,
     snackbarMessage: "",
     snackbarvariant: "",
-    vertical: window.innerWidth >= 600 ?"bottom":"top",
+    vertical: "top",
     horizontal: "right"
   };
   addTweet = async tweet => {

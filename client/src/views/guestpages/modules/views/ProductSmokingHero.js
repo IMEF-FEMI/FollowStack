@@ -41,10 +41,10 @@ function ProductSmokingHero(props) {
       </Typography>
 
       <Grid container justify="center">
-        <Grid item spacing={6}>
+        <Grid item>
           <a href="https://instagram.com/followstack_app" {...linkProps}>
             <i
-              class="fab fa-facebook-f fa-2x"
+              className="fab fa-facebook-f fa-2x"
               style={{
                 color: "#fff",
                 width: "55px",
@@ -64,7 +64,7 @@ function ProductSmokingHero(props) {
           </a>
           <a href="https://instagram.com/followstack_app" {...linkProps}>
             <i
-              class="fab fa-instagram fa-2x"
+              className="fab fa-instagram fa-2x"
               style={{
                 color: "#c78732",
                 width: "55px",

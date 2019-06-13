@@ -465,16 +465,12 @@ router.post(
     try {
       const { page } = req.params;
 
-      const posts = await Post.find({})
+      var posts = await Post.find({})
         .sort({ createdAt: -1 })
         .limit(12)
         .skip(12 * page)
-        // .populate({
-        //   path: "_owner",
-        //   select: "profilePhoto displayName"
-        // })
+        
         .exec();
-      // console.log(posts)
       let post_ids = "";
       for (var i = 0; i < posts.length; i++) {
         if (i === posts.length - 1) {
@@ -486,13 +482,24 @@ router.post(
       var params = {
         id: post_ids
       };
+      
       client.get("statuses/lookup", params, async function(
         error,
         tweet,
         response
       ) {
         if (!error && response.statusCode === 200) {
-          res.send(tweet);
+         
+          // return in createdAt order
+           for(var i = 0; i<posts.length; i++){
+            for(var j = 0; j<tweet.length; j++){
+              if(posts[i].post_id === tweet[j].id_str){
+                posts[i] = tweet[j]
+              }
+            }
+          }
+
+          res.send(posts);
         } else {
           console.log(error);
         }

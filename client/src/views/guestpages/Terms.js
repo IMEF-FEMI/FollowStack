@@ -16,12 +16,15 @@ class Terms extends React.Component {
       <React.Fragment>
         {this.props.auth.isAuthenticated === false && <AppAppBar />}
         {this.props.auth.isAuthenticated === true && <Navbar />}
-        <LayoutBody margin marginBottom>
+        {/* <LayoutBody margin marginBottom>
           <Typography variant="h3" gutterBottom marked="center" align="center">
             Terms
           </Typography>
           <Markdown>{terms}</Markdown>
-        </LayoutBody>
+        </LayoutBody> */}
+        <Typography variant="h3" gutterBottom marked="center" align="center">
+          Terms
+        </Typography>
         <AppFooter />
       </React.Fragment>
     );

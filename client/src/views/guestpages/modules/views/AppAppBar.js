@@ -14,12 +14,13 @@ class AppBar extends React.Component {
   renderNavButtons() {
     const { classes } = this.props;
     const location = this.props.location.pathname;
+    const MyLink = React.forwardRef((props, ref) => <Link innerRef={ref} {...props} />);
 
     return (
       <div className={classes.nav}>
         <Button
           to="/sign-in"
-          component={Link}
+          component={MyLink}
           variant="text"
           color={location !== "/" ? "default" : "inherit"}
           className={classes.button}
@@ -28,9 +29,12 @@ class AppBar extends React.Component {
         </Button>
         <Button
           to="/sign-up"
-          component={Link}
+          component={MyLink}
           variant="contained"
           color="secondary"
+          // style={{
+          //   color: "#ff3366"
+          // }}
           className={classes.button}
         >
           &nbsp;Sign Up
@@ -42,6 +46,7 @@ class AppBar extends React.Component {
   render() {
     const { classes } = this.props;
     const location = this.props.location.pathname;
+    const MyLink = React.forwardRef((props, ref) => <Link innerRef={ref} {...props} />);
 
     return (
       <div className={classes.root}>
@@ -54,7 +59,7 @@ class AppBar extends React.Component {
         >
           <Toolbar style={{paddingRight: "10px"}}>
             <div>
-              <Link
+              <MyLink
                 to="/"
                 style={{
                   textDecoration: "none",
@@ -73,7 +78,7 @@ class AppBar extends React.Component {
                 >
                   FollowStack
                 </Typography>
-              </Link>
+              </MyLink>
             </div>
 
             {this.renderNavButtons()}

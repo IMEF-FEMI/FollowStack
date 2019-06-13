@@ -4,6 +4,7 @@ import theme from "./mainAppPages/theme/instapaper/theme";
 import withTheme from "./mainAppPages/theme/withTheme";
 import Box from "@material-ui/core/Box";
 import { connect } from "react-redux";
+import { logoutUser } from "../../actions/authActions";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withRouter } from "react-router-dom";
@@ -17,6 +18,19 @@ const welcome_user = {
   maxWidth: "500px",
   marginLeft: "auto",
   marginRight: "auto"
+};
+let logout_icon_index = {
+  display: "block",
+  margin: "0 auto",
+  position: "relative",
+  textAlign: "center",
+  overflow: "hidden",
+  width: "75px",
+  height: "75px",
+  fontSize: "50px",
+  lineHeight: "150px",
+  backgroundColor: "#f50057",
+  borderRadius: "15px"
 };
 
 const twitter_icon_index = {
@@ -85,7 +99,7 @@ class DashBoard extends Component {
           backgroundPosition: "center"
         }}
       >
-        <Box mb="44px" style={{paddingTop: "50px"}}>
+        <Box mb="44px" style={{ paddingTop: "50px" }}>
           <div>
             <Grid
               item
@@ -140,33 +154,7 @@ class DashBoard extends Component {
                   style={twitter_icon_index}
                   id="icon-box-twitter"
                   onClick={() => {
-                    this.push("/users-online");
-                  }}
-                >
-                  <span>
-                    <i className="fa fa-users fa fa-lg-modification" />
-                  </span>
-                </div>
-                {
-                  <Typography
-                    variant="h4"
-                    style={category_text}
-                    className="tooltip-bottom"
-                  >
-                    {" "}
-                    Users Online
-                  </Typography>
-                }
-              </Grid>
-            }
-
-            {
-              <Grid item xs={12} sm={6} className="mobilePadding">
-                <div
-                  style={twitter_icon_index}
-                  id="icon-box-twitter"
-                  onClick={() => {
-                    this.push("/tweets");
+                    this.push("/shared-tweets");
                   }}
                 >
                   <span>
@@ -200,6 +188,7 @@ class DashBoard extends Component {
                 >
                   <span>
                     <i className="far fa-user fa fa-lg-modification" />
+                    <i className="fa fa-sign-out-alt fa fa-lg-modification" />
                   </span>
                 </div>
                 {
@@ -211,6 +200,32 @@ class DashBoard extends Component {
                   >
                     {" "}
                     My Profile
+                  </Typography>
+                }
+              </Grid>
+            }
+            {
+              <Grid item xs={12} sm={6} className="mobilePadding">
+                <div
+                  style={logout_icon_index}
+                  id="logout-icon-box"
+                  onClick={() => {
+                    this.props.logoutUser();
+                  }}
+                >
+                  <span>
+                    <i className="fa fa-sign-out-alt fa fa-lg-modification" />
+                  </span>
+                </div>
+                {
+                  <Typography
+                    variant="h4"
+                    style={category_text}
+                    className="tooltip-bottom"
+                    data-tooltip={"Sign Out"}
+                  >
+                    {" "}
+                    Sign Out
                   </Typography>
                 }
               </Grid>
@@ -228,6 +243,7 @@ DashBoard.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth
 });
-export default connect(mapStateToProps)(
-  withRouter(withTheme(theme)(DashBoard))
-);
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(withRouter(withTheme(theme)(DashBoard)));

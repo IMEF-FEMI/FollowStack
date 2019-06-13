@@ -278,12 +278,12 @@ class SignIn extends React.Component {
                     }}
                   >
                     <TwitterLoginButton onClick={this.startTwitterAuth}>
-                      <p
-                        className="text-center"
+                    <Typography
+                        align="center"
                         style={{ marginTop: 1, marginBottom: 1 }}
                       >
                         Sign Up with Twitter
-                      </p>
+                      </Typography>
                     </TwitterLoginButton>
                   </div>
                 )}
@@ -297,11 +297,11 @@ class SignIn extends React.Component {
               />
 
               <React.Fragment>
-                <span className="text-dark text-center">
+              <Typography align="center" >
                   by clicking the sign up button, you agree to our
-                  <Link to="/terms">Terms of service </Link>and
-                  <Link to="/privacy">Privacy Policy</Link>
-                </span>
+                  <Link to="/terms" >Terms of service </Link>and 
+                  <Link to="/privacy" > Privacy Policy</Link>
+                </Typography>
               </React.Fragment>
             </Paper>
           </div>

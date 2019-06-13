@@ -33,7 +33,8 @@ class RenderTweetsMain extends Component {
             item.in_reply_to_status_id === null &&
             item.in_reply_to_status_id_str === null &&
             item.in_reply_to_user_id === null &&
-            item.in_reply_to_user_id_str === null
+            item.in_reply_to_user_id_str === null&&
+            item.user
           ) {
             return (
               <Grid

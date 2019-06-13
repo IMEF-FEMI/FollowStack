@@ -10,6 +10,7 @@ import ProductHowItWorks from "./modules/views/ProductHowItWorks";
 import ProductHow from "./modules/views/ProductHow";
 import AppAppBar from "./modules/views/AppAppBar";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 class LandingPage extends Component {
   constructor() {
@@ -48,5 +49,5 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default withRoot(connect(mapStateToProps)(LandingPage));
+export default withRouter(withRoot(connect(mapStateToProps)(LandingPage)));
 // export default withRoot(LandingPage);
