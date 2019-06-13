@@ -9,33 +9,33 @@ const styles = theme => ({
     height: 4,
     width: 73,
     display: 'block',
-    margin: `${theme.spacing.unit}px auto 0`,
+    margin: `${theme.spacing()}px auto 0`,
     backgroundColor: theme.palette.secondary.main,
   },
   markedH3Center: {
     height: 4,
     width: 55,
     display: 'block',
-    margin: `${theme.spacing.unit}px auto 0`,
+    margin: `${theme.spacing()}px auto 0`,
     backgroundColor: theme.palette.secondary.main,
   },
   markedH4Center: {
     height: 4,
     width: 55,
     display: 'block',
-    margin: `${theme.spacing.unit}px auto 0`,
+    margin: `${theme.spacing()}px auto 0`,
     backgroundColor: theme.palette.secondary.main,
   },
   markedH6Left: {
     height: 2,
     width: 28,
     display: 'block',
-    marginTop: theme.spacing.unit / 2,
+    marginTop: theme.spacing() / 2,
     background: 'currentColor',
   },
 });
 
-const headlineMapping = {
+const headlinemapping = {
   h1: 'h1',
   h2: 'h1',
   h3: 'h1',
@@ -49,7 +49,7 @@ function Typography(props) {
   const { children, classes, marked, variant, ...other } = props;
 
   return (
-    <MuiTypography headlineMapping={headlineMapping} variant={variant} {...other}>
+    <MuiTypography headlinemapping={headlinemapping} variant={variant} {...other}>
       {children}
       {marked ? (
         <span className={classes[`marked${capitalize(variant) + capitalize(marked)}`]} />

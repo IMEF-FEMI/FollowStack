@@ -2,7 +2,6 @@
 import { DefaultLayout } from "./views/dashboard/layouts";
 // Route Views
 import DashBoard from "./views/dashboard/DashBoard";
-import Main from "./views/dashboard/mainAppPages/pages/gainFollowers/Main";
 import Tweets from "./views/dashboard/mainAppPages/pages/viewTweets/Main";
 import Profile from "./views/dashboard/mainAppPages/pages/userProfile/Main";
 import UsersOnline from "./views/dashboard/mainAppPages/pages/usersOnline/Main";
@@ -16,20 +15,15 @@ export default [
   {
     path: "/gain-followers",
     layout: DefaultLayout,
-    component: Main
-  },
-  {
-    path: "/users-online",
-    layout: DefaultLayout,
     component: UsersOnline
   },
   {
-    path: "/tweets",
+    path: "/shared-tweets",
     layout: DefaultLayout,
     component: Tweets
   },
   {
-    path: "/user",
+    path: "/profile",
     layout: DefaultLayout,
     component: Profile
   }

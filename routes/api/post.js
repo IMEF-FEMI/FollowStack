@@ -79,11 +79,11 @@ router.post(
             if (err) {
               console.log(err);
               res.status(200).send({
-                error: "Could not add post. Try again"
+                error: "Could Not share tweet. Try again"
               });
             } else {
               res.status(200).send({
-                success: "Tweet Successfully Added! - 50 Points ",
+                success: "Tweet Shared Successfully! ",
                 points: user.points
               });
             }
@@ -169,7 +169,7 @@ router.post(
         ).then(user => {
           if (user) {
             res.status(200).send({
-              success: "👍 +10 Points Gained ",
+              success: "👍 +10 Points Earned ",
               points: user.points
             });
           }
@@ -218,7 +218,7 @@ router.post(
         ).then(user => {
           if (user) {
             res.status(200).send({
-              success: "👍 +5 Points Gained ",
+              success: "👍 +5 Points Earned ",
               points: user.points
             });
           }
@@ -267,7 +267,7 @@ router.post(
         ).then(user => {
           if (user) {
             res.status(200).send({
-              success: "👎 5 Points Removed",
+              success: "👎 5 Points Deducted",
               points: user.points
             });
           }
@@ -316,7 +316,7 @@ router.post(
         ).then(user => {
           if (user) {
             res.status(200).send({
-              success: "👍 +20 Points Gained",
+              success: "👍 +20 Points Earned",
               points: user.points
             });
           }
@@ -365,7 +365,7 @@ router.post(
         ).then(user => {
           if (user) {
             res.status(200).send({
-              success: "👎 20 Points Removed",
+              success: "👎 20 Points Deducted",
               points: user.points
             });
           }

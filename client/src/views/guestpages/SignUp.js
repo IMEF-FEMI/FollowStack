@@ -17,29 +17,29 @@ import { TwitterLoginButton } from "react-social-login-buttons";
 
 import { checkUser } from "../../async/auth";
 import { signIn, setUserData} from "../../actions/authActions";
-import { checkTotalGainedAction } from "../../actions/gainFollowersAction";
-import { toast, ToastContainer } from "react-toastify";
 import { getUserProfile } from "../../async/auth";
+import CustomSnackbar from "../../components/CustomSnackbar";
+
 
 const styles = theme => ({
   main: {
     width: "auto",
     display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(3)  ,
+    marginRight: theme.spacing(3)  ,
+    [theme.breakpoints.up(400 + theme.spacing(3 * 2) )]: {
       width: 400,
       marginLeft: "auto",
       marginRight: "auto"
     }
   },
   paper: {
-    marginTop: theme.spacing.unit * 8,
+    marginTop: theme.spacing(8) ,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`,
+    padding: `${theme.spacing(2) }px ${theme.spacing(3)}px ${theme
+      .spacing(3)}px`,
     borderRadius: "10px"
   }
 });
@@ -52,11 +52,33 @@ class SignIn extends React.Component {
       loading: false,
       userExists: false,
       user: {},
-      width: window.innerWidth
+      width: window.innerWidth,
+      snackbarOpen: false,
+      snackbarMessage: "",
+      snackbarvariant: "",
+      vertical: "bottom",
+      horizontal: "right"
     };
     this.handleUserData = this.handleUserData.bind(this);
   }
+  onSnackbarOpen = () => {
+    this.setState({ snackbarOpen: true }, () => {});
+  };
 
+  onSnackbarClose = () => {
+    this.setState({ snackbarOpen: false }, () => {});
+  };
+  notify = (message, variant) => {
+    this.setState(
+      {
+        snackbarMessage: message,
+        snackbarvariant: variant
+      },
+      () => {
+        this.onSnackbarOpen();
+      }
+    );
+  };
   hasWindowSizeChange = () => {
     this.setState({
       width: window.innerWidth
@@ -100,20 +122,10 @@ class SignIn extends React.Component {
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(`error code ${errorCode} message ${errorMessage}`);
-          if (
-            errorCode === "auth/network-request-failed" ||
-            errorCode === "auth/invalid-credential"
-          ) {
-            // that.setState({networkError: true})
-            toast.error(" An Error has occured Try Again!", {
-              position: "bottom-right",
-              autoClose: 10000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true
-            });
-          }
+          
+          
+            that.notify("Connection Error Try Again!", "error");
+
         });
     }
   };
@@ -163,15 +175,8 @@ class SignIn extends React.Component {
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(`error code ${errorCode} message ${errorMessage}`);
+          that.notify("Connection Error Try Again!", "error");
 
-          toast.error(" An Error has occured Try Again!", {
-            position: "bottom-right",
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true
-          });
           localStorage.setItem("redirected", false);
           that.setState({ loading: false });
         });
@@ -210,14 +215,9 @@ class SignIn extends React.Component {
 
       this.setState({ userExists: true });
 
-      toast.error(" ⚠️ User Already Registered!", {
-        position: "bottom-right",
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      });
+      
+      this.notify(" ⚠️ User Already Registered!", "warning");
+
     } else {
       this.props.history.push({
         pathname: "/complete-signup",
@@ -239,7 +239,6 @@ class SignIn extends React.Component {
         }}
       >
         <AppAppBar />
-        <ToastContainer />
         <main className={classes.main}>
           <CssBaseline />
           <div
@@ -307,6 +306,15 @@ class SignIn extends React.Component {
             </Paper>
           </div>
         </main>
+        <CustomSnackbar
+          snackbarOpen={this.state.snackbarOpen}
+          variant={this.state.snackbarvariant}
+          message={this.state.snackbarMessage}
+          onSnackbarOpen={this.onSnackbarOpen}
+          onSnackbarClose={this.onSnackbarClose}
+          horizontal={this.state.horizontal}
+          vertical={this.state.vertical}
+        />
         <AppFooter />
       </div>
     );
@@ -317,7 +325,6 @@ SignIn.propTypes = {
   auth: PropTypes.object.isRequired,
   signIn: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
-  checkTotalGainedAction: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -328,7 +335,7 @@ export default withRouter(
   withStyles(styles)(
     connect(
       mapStateToProps,
-      { signIn, setUserData,  checkTotalGainedAction }
+      { signIn, setUserData }
     )(SignIn)
   )
 );

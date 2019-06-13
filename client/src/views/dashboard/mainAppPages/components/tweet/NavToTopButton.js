@@ -22,14 +22,14 @@ export const NavToTopButton = props => {
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
     position: "fixed",
     bottom: "5%",
     right: "5%",
     zIndex: 5000
   },
   navIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing()
   }
 });
 

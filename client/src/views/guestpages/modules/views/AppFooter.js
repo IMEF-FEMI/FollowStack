@@ -13,7 +13,7 @@ class AppFooter extends Component {
       <div className={classes.root}>
         <Grid
           container
-          spacing={16}
+          spacing={4}
           className={classNames(classes.footerText, classes.footerSections)}
         >
           <Grid item xs={12}>

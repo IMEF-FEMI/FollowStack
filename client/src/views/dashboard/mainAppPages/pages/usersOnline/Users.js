@@ -37,7 +37,7 @@ class Users extends React.Component {
           <div>
             <Grid
               container
-              spacing={16}
+              spacing={4}
               justify="center"
               style={{
                 width: 0.82 * window.innerWidth
@@ -92,7 +92,7 @@ class Users extends React.Component {
         {this.state.showAll && (
           <Grid
             container
-            spacing={16}
+            spacing={4}
             justify="center"
             style={{
               width: 0.83 * window.innerWidth

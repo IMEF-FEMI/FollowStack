@@ -22,12 +22,11 @@ class RenderTweetsMain extends Component {
     return (
       <Grid
         className={classes.gridContainer}
-        classes={{ "spacing-xs-24": classes.spacingXs24 }}
+        // classes={{ "spacing-xs-24": classes.spacingXs24 }}
         direction="row"
         wrap="wrap"
         justify={"center"}
         container
-        spacing={24}
       >
         {data.map(item => {
           if (
@@ -122,12 +121,12 @@ const styles = theme => ({
   gridContainer: {
     minHeight: "100vh"
   },
-  spacingXs24: {
-    width: "100%",
-    margin: 0,
-  },
+  // spacingXs24: {
+  //   width: "100%",
+  //   margin: 0,
+  // },
   fab: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
     position: "fixed",
     bottom: "5%",
     left: "45%",
@@ -139,8 +138,8 @@ const styles = theme => ({
     justifyContent: "space-between"
   },
   profileHeaderRoot: {
-    padding: `${theme.spacing.unit}px`,
-    marginBottom: `${theme.spacing.unit}px`
+    padding: `${theme.spacing()}px`,
+    marginBottom: `${theme.spacing()}px`
   },
   profileHeaderAvatarContainer: {
     flexDirection: "column",
@@ -162,7 +161,7 @@ const styles = theme => ({
     alignItems: "center"
   },
   noResultsText: {
-    marginTop: `${theme.spacing.unit * 2}px`
+    marginTop: `${theme.spacing( 2) }px`
   },
   goBackBtn: {
     textTransform: "capitalize"

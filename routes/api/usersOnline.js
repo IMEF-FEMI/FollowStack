@@ -76,6 +76,7 @@ router.post(
     });
 
     await UsersOnline.findOne({ user_id: req.body.userid }).then(user => {
+
       if (user.following.length !== 0) {
         var arr = user.following;
         // arrange the id's as a coma seperated list
@@ -172,7 +173,7 @@ router.post(
             // get those accts with "connections": ["following","followed_by"]
             // they are the ones that followed back
             arr.map(i => {
-              if (i.connections[1] !== "followed_by" ) {
+              if (i.connections[1] !== "followed_by") {
                 // get original data from our following list
                 user.following.map(j => {
                   if (i.id_str === j.user_id) {
@@ -198,46 +199,91 @@ router.post(
 );
 
 router.post(
-  "/follow",
+  "/follow/:key",
   requireAuth,
   asyncHandler(async (req, res, next) => {
-    var userObj = {
+    console.log("following");
+    const random = TWITTER_KEYS[req.params.key];
+
+    var client = new Twitter({
+      consumer_key: random.consumerKey,
+      consumer_secret: random.consumerSecret,
+      access_token_key: req.body.userData.accessToken,
+      access_token_secret: req.body.userData.secret
+    });
+    var params = {
       user_id: req.body.newUser.user_id,
-      name: req.body.newUser.name,
-      screen_name: req.body.newUser.screen_name,
-      photo: req.body.newUser.photo
+      follow: true
     };
-    UsersOnline.findOneAndUpdate(
-      { user_id: req.body.userData.userid },
-      { $addToSet: { following: userObj } },
-      { new: true }
-    )
-      .then(user => {
-        res.status(200).send({ res: "user followed" });
-      })
-      .catch(err => console.log(err));
+    client.post("friendships/create", params, async function(
+      error,
+      tweet,
+      response
+    ) {
+      if (!error && response.statusCode === 200) {
+        var userObj = {
+          user_id: req.body.newUser.user_id,
+          name: req.body.newUser.name,
+          screen_name: req.body.newUser.screen_name,
+          photo: req.body.newUser.photo
+        };
+        UsersOnline.findOneAndUpdate(
+          { user_id: req.body.userData.userid },
+          { $addToSet: { following: userObj } },
+          { new: true }
+        )
+          .then(user => {
+            res.status(200).send({ res: "user followed" });
+          })
+          .catch(err => console.log(err));
+      } else {
+        console.log(error);
+        res.status(200).send({ res: error });
+      }
+    });
   })
 );
 
 router.post(
-  "/unfollow",
+  "/unfollow/:key",
   requireAuth,
   asyncHandler(async (req, res, next) => {
-    var userObj = {
-      user_id: req.body.newUser.user_id,
-      name: req.body.newUser.name,
-      screen_name: req.body.newUser.screen_name,
-      photo: req.body.newUser.photo
+    const random = TWITTER_KEYS[req.params.key];
+
+    var client = new Twitter({
+      consumer_key: random.consumerKey,
+      consumer_secret: random.consumerSecret,
+      access_token_key: req.body.userData.accessToken,
+      access_token_secret: req.body.userData.secret
+    });
+    var params = {
+      user_id: req.body.newUser.user_id
     };
-    UsersOnline.findOneAndUpdate(
-      { user_id: req.body.userData.userid },
-      { $pull: { following: userObj } },
-      { new: true }
-    )
-      .then(user => {
-        res.status(200).send({ res: "user unfollowed" });
-      })
-      .catch(err => console.log(err));
+    client.post("friendships/destroy", params, async function(
+      error,
+      tweet,
+      response
+    ) {
+      if (!error && response.statusCode === 200) {
+        var userObj = {
+          user_id: req.body.newUser.user_id,
+          name: req.body.newUser.name,
+          screen_name: req.body.newUser.screen_name,
+          photo: req.body.newUser.photo
+        };
+        UsersOnline.findOneAndUpdate(
+          { user_id: req.body.userData.userid },
+          { $pull: { following: userObj } },
+          { new: true }
+        )
+          .then(user => {
+            res.status(200).send({ res: "user unfollowed" });
+          })
+          .catch(err => console.log(err));
+      } else {
+        res.status(200).send({ res: error });
+      }
+    });
   })
 );
 
@@ -248,9 +294,11 @@ router.post(
     UsersOnline.findOneAndUpdate(
       { user_id: req.body.userData.userid },
       { $set: { following: [] } }
-    ).then(user=>{
-      res.status(200).json({res: "done"})
-    }).catch(err => console.log(err));
+    )
+      .then(user => {
+        res.status(200).json({ res: "done" });
+      })
+      .catch(err => console.log(err));
   })
 );
 
@@ -258,6 +306,7 @@ router.post(
   "/get/:key",
   requireAuth,
   asyncHandler(async (req, res, next) => {
+    console.log("getting online users");
     const random = TWITTER_KEYS[req.params.key];
     var client = new Twitter({
       consumer_key: random.consumerKey,
@@ -285,6 +334,7 @@ router.post(
               screen_name: tweets[i].user.screen_name
             };
             lastHourTweetsArrayIndex++;
+            if (i === 9) break;
           }
         }
         if (lastHourTweets.length === 0) {
@@ -408,7 +458,7 @@ getOnline = (req, res, userArray, client) => {
       for (var i = 0; i < toBeFollowed.length; i++) {
         userz[i] = toBeFollowed[i];
         // console.log(userz[i]);
-        if (i === 39) {
+        if (i === 29) {
           break;
         }
       }

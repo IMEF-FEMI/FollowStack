@@ -1,37 +1,25 @@
 import React from "react";
-import { Route, Redirect, Switch, withRouter } from "react-router-dom";
+import { Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import dashboardRoutes from "../../dashboardRoutes";
+// import dashboardRoutes from "../../dashboardRoutes";
+// import NotFound from "../guestpages/404/NotFound";
 
-const PrivateDashBoardRoute = ({ auth }) => {
-
+const PrivateDashBoardRoute = ({ auth, path, Layout, Component }) => {
   return (
-    <div>
-      {dashboardRoutes.map((route, index) => {
-        return (
-          <Switch key={index + `${Math.random() * 10}`}>
-            <Route
-              path={
-                route.path === "/user"
-                  ? `/${auth.userProfile.screen_name}`
-                  : route.path
-              }
-              exact={route.exact}
-              render={props =>
-                auth.isAuthenticated === true ? (
-                  <route.layout {...props}>
-                    <route.component {...props} />
-                  </route.layout>
-                ) : (
-                  <Redirect to="/sign-in" />
-                )
-              }
-            />
-          </Switch>
-        );
-      })}
-    </div>
+    <Route
+      path={path}
+      exact
+      render={props =>
+        auth.isAuthenticated === true ? (
+          <Layout {...props}>
+            <Component {...props} />
+          </Layout>
+        ) : (
+          <Redirect to="/sign-in" />
+        )
+      }
+    />
   );
 };
 

@@ -19,7 +19,10 @@ import {
   unPostRetweet
 } from "../../../../../../async/post";
 import {setPoints} from '../../../../../../actions/authActions'
-import toast from "toasted-notes";
+import CustomSnackbar from "../../../../../../components/CustomSnackbar";
+import { addNotificationAction } from "../../../../../../actions/notificationAction";
+
+
 
 class Footer extends React.Component {
 
@@ -27,7 +30,12 @@ class Footer extends React.Component {
     expanded: false,
     favoriteColor: this.props.data.favorited ? "#ff3366" : "#657786",
     RtColor: this.props.data.retweeted ? "#17bf63" : "#657786",
-    comment: ""
+    comment: "",
+    snackbarOpen: false,
+    snackbarMessage: "",
+    snackbarvariant: "success",
+    vertical: window.innerWidth >= 600? "bottom":"top",
+    horizontal: "right"
   };
 
   
@@ -54,8 +62,7 @@ class Footer extends React.Component {
       this.props.auth.keyInUse
     );
     if (res.data.success || res.data.error) {
-      toast.notify(res.data.success ? res.data.success : res.data.error);
-      this.props.setPoints(res.data.points)
+      this.notify(res)
     }
 
     this.setState({ comment: "" }); 
@@ -72,17 +79,20 @@ class Footer extends React.Component {
       // this.forceUpdate();
       // post fav only if only tweet wasnt favorited
       res = await postLike(userData, tweet, keyInUse);
+      if (res.data.success || res.data.error) {
+        this.notify(res, "pointsGained")
+      }
     } else {
       tweet.favorited = false;
       tweet.favorite_count -= 1;
       this.setState({ favoriteColor: "#657786" });
       // this.forceUpdate();
       res = await unPostLike(userData, tweet, keyInUse);
+      if (res.data.success || res.data.error) {
+        this.notify(res, "pointsDeducted")
+      }
     }
-    if (res.data.success || res.data.error) {
-      toast.notify(res.data.success ? res.data.success : res.data.error);
-      this.props.setPoints(res.data.points)
-    }
+    
   };
 
   retweetPost = async () => {
@@ -96,6 +106,9 @@ class Footer extends React.Component {
       // this.forceUpdate();
       // post fav only if only tweet wasnt favorited
       res = await postRetweet(userData, tweet, keyInUse);
+      if (res.data.success || res.data.error) {
+        this.notify(res, "pointsGained")
+      }
     } else {
       tweet.retweeted = false;
       tweet.retweet_count -= 1;
@@ -103,11 +116,38 @@ class Footer extends React.Component {
       // this.forceUpdate();
       // post fav only if only tweet wasnt favorited
       res = await unPostRetweet(userData, tweet, keyInUse);
+      if (res.data.success || res.data.error) {
+        this.notify(res, "pointsDeducted")
+      }
     }
-    if (res.data.success || res.data.error) {
-      toast.notify(res.data.success ? res.data.success : res.data.error);
-      this.props.setPoints(res.data.points)
-    }
+  };
+
+  notify = (res, type)=>{
+    this.setState(
+      {
+        snackbarMessage: res.data.success ? res.data.success : res.data.error,
+        snackbarvariant: res.data.success ? "success": "error"
+      },
+      () => {
+        this.onSnackbarOpen();
+      }
+    );
+    this.props.addNotificationAction({
+      id: Date.now(),
+      title: res.data.success,
+      when: Date.now(),
+      type: res.data.success ? type: "error",
+      to: "#"
+    });
+    this.props.setPoints(res.data.points)
+  }
+  onSnackbarOpen = () => {
+    this.setState({ snackbarOpen: true }, () => {});
+    
+  };
+
+  onSnackbarClose = () => {
+    this.setState({ snackbarOpen: false }, () => {});
   };
 
   formatCount(count) {
@@ -125,20 +165,30 @@ class Footer extends React.Component {
 
     return (
       <div>
-        <CardActions disableActionSpacing>
-          <div className="footer" style={styles.footer}>
+     
+        <CardActions>
+        <CustomSnackbar
+          snackbarOpen={this.state.snackbarOpen}
+          variant={this.state.snackbarvariant}
+          message={this.state.snackbarMessage}
+          onSnackbarOpen={this.onSnackbarOpen}
+          onSnackbarClose={this.onSnackbarClose}
+          horizontal={this.state.horizontal}
+          vertical={this.state.vertical}
+        />
+          <div 
+           style={styles.footer}>
             <div
-              className="ProfileTweet-action"
               style={styles.ProfileTweetAction}
             >
               {/* comment */}
               <Tooltip title="Comment = 10 Points" aria-label="comment">
                 <button
-                  className="ProfileTweet-actionButton"
                   style={styles.ProfileTweetActionBtn}
                   onClick={this.handleExpandClick}
                 >
-                  <div className="IconContainer" style={styles.IconContainer}>
+                  <div
+                    style={styles.IconContainer}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -156,17 +206,16 @@ class Footer extends React.Component {
               </Tooltip>
             </div>
             <div
-              className="ProfileTweet-action"
               style={styles.ProfileTweetAction}
             >
               {/* retweets */}
               <Tooltip title="Retweet = 20 Points" aria-label="Retweet">
                 <button
-                  className="ProfileTweet-actionButton"
                   style={styles.ProfileTweetActionBtn}
                   onClick={this.retweetPost}
                 >
-                  <div className="IconContainer" style={styles.IconContainer}>
+                  <div 
+                   style={styles.IconContainer}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -182,15 +231,12 @@ class Footer extends React.Component {
                 </button>
               </Tooltip>
               <button
-                className="ProfileTweet-actionButton"
                 style={styles.ProfileTweetActionBtn}
               >
                 <div
-                  className="IconTextContainer"
                   style={styles.IconTextContainer}
                 >
                   <div
-                    className="ProfileTweet-actionCount"
                     style={styles.ProfileTweetActionCount}
                   >
                     {data.retweet_count > 0
@@ -201,17 +247,16 @@ class Footer extends React.Component {
               </button>
             </div>
             <div
-              className="ProfileTweet-action"
               style={styles.ProfileTweetAction}
             >
               <Tooltip title="Like Post = 5 Points" aria-label="Like">
                 <button
-                  className="ProfileTweet-actionButton"
                   style={styles.ProfileTweetActionBtn}
                   onClick={this.favPost}
                 >
                   {/* favs */}
-                  <div className="IconContainer" style={styles.IconContainer}>
+                  <div
+                  style={styles.IconContainer}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -237,15 +282,12 @@ class Footer extends React.Component {
                 </button>
               </Tooltip>
               <button
-                className="ProfileTweet-actionButton"
                 style={styles.ProfileTweetActionBtn}
               >
                 <div
-                  className="IconTextContainer"
                   style={styles.IconTextContainer}
                 >
                   <div
-                    className="ProfileTweet-actionCount"
                     style={styles.ProfileTweetActionCount}
                   >
                     {data.favorite_count > 0
@@ -277,12 +319,12 @@ class Footer extends React.Component {
             />
           </CardContent>
         </Collapse>
+       
       </div>
     );
   }
 }
 
-Footer.displayName = "Footer";
 Footer.propTypes = {
   auth: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
@@ -293,5 +335,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps,
-  {setPoints}
+  {setPoints, addNotificationAction}
   )(Footer);

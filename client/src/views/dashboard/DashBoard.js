@@ -2,12 +2,12 @@ import React, { Component } from "react";
 
 import theme from "./mainAppPages/theme/instapaper/theme";
 import withTheme from "./mainAppPages/theme/withTheme";
-import { unstable_Box as Box } from "@material-ui/core/Box";
+import Box from "@material-ui/core/Box";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withRouter } from "react-router-dom";
-
+import { Typography } from "@material-ui/core";
 const welcome_user = {
   color: "#fff",
   fontFamily: "Nunito, sans-serif",
@@ -18,7 +18,6 @@ const welcome_user = {
   marginLeft: "auto",
   marginRight: "auto"
 };
-
 
 const twitter_icon_index = {
   display: "block",
@@ -34,11 +33,14 @@ const twitter_icon_index = {
   borderRadius: "15px"
 };
 const category_text = {
+  // color: "#66788A",
+  fontWeight: "500",
+  fontSize: "20px",
+  letterSpacing: "-0.06px",
+  lineHeight: "24px",
   color: "#fff",
   textAlign: "center",
   fontFamily: "Nunito, sans-serif",
-  fontSize: "20px",
-  fontWeight: "400",
   marginBottom: "0",
   paddingTop: "10px",
   display: "block",
@@ -60,7 +62,7 @@ class DashBoard extends Component {
   componentWillUnmount() {
     window.addEventListener("resize", this.hasWindowSizeChange);
   }
-  
+
   hasWindowSizeChange = () => {
     this.setState({
       width: window.innerWidth
@@ -83,7 +85,7 @@ class DashBoard extends Component {
           backgroundPosition: "center"
         }}
       >
-        <Box mb="44px">
+        <Box mb="44px" style={{paddingTop: "50px"}}>
           <div>
             <Grid
               item
@@ -94,9 +96,9 @@ class DashBoard extends Component {
                 className="mb-3 welcome-block"
                 style={{ paddingTop: "40px" }}
               >
-                <p style={welcome_user}>
+                <Typography style={welcome_user} variant="h3">
                   Welcome {this.props.auth.userData.username}
-                </p>
+                </Typography>
               </div>
             </Grid>
           </div>
@@ -117,7 +119,8 @@ class DashBoard extends Component {
                   </span>
                 </div>
                 {
-                  <p
+                  <Typography
+                    variant="h4"
                     style={category_text}
                     className="tooltip-bottom"
                     data-tooltip={
@@ -126,7 +129,7 @@ class DashBoard extends Component {
                   >
                     {" "}
                     Gain Followers
-                  </p>
+                  </Typography>
                 }
               </Grid>
             }
@@ -145,13 +148,14 @@ class DashBoard extends Component {
                   </span>
                 </div>
                 {
-                  <p
+                  <Typography
+                    variant="h4"
                     style={category_text}
                     className="tooltip-bottom"
                   >
                     {" "}
                     Users Online
-                  </p>
+                  </Typography>
                 }
               </Grid>
             }
@@ -170,7 +174,8 @@ class DashBoard extends Component {
                   </span>
                 </div>
                 {
-                  <p
+                  <Typography
+                    variant="h4"
                     style={category_text}
                     className="tooltip-bottom"
                     data-tooltip={
@@ -179,7 +184,7 @@ class DashBoard extends Component {
                   >
                     {" "}
                     View Tweets
-                  </p>
+                  </Typography>
                 }
               </Grid>
             }
@@ -190,7 +195,7 @@ class DashBoard extends Component {
                   style={twitter_icon_index}
                   id="icon-box-twitter"
                   onClick={() => {
-                    this.push(`/${this.props.auth.userProfile.screen_name}`);
+                    this.push(`/profile`);
                   }}
                 >
                   <span>
@@ -198,16 +203,15 @@ class DashBoard extends Component {
                   </span>
                 </div>
                 {
-                  <p
+                  <Typography
+                    variant="h4"
                     style={category_text}
                     className="tooltip-bottom"
-                    data-tooltip={
-                      "My Profile"
-                    }
+                    data-tooltip={"My Profile"}
                   >
                     {" "}
-                   My Profile
-                  </p>
+                    My Profile
+                  </Typography>
                 }
               </Grid>
             }

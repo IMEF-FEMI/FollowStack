@@ -157,7 +157,7 @@ class Tweet extends React.Component {
             <Footer
               data={data}
               linkProps={linkProps}
-              // setPoints={this.props.setPoints}
+             
             />
           }
         </div>

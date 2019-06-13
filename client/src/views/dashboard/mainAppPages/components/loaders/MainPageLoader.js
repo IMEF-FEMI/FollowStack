@@ -14,7 +14,7 @@ export const MainPageLoader = props => {
       wrap="wrap"
       className={classes.root}
       container
-      spacing={24}
+      spacing={4}
     >
       <Grid item xs={12} sm={8}>
         <PostCardLoader className={classes.gridItem} />

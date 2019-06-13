@@ -107,7 +107,7 @@ class Main extends Component {
           <div>{viewTweets.tweetInitialFetch && <MainPageLoader />}</div>
 
           {!viewTweets.tweetInitialFetch && (
-            <React.Fragment>
+            <div style={{paddingTop: "20px"}}>
               {viewTweets.tweetPages && (
                 <RenderTweetsMain
                   pages={viewTweets.tweetPages}
@@ -115,7 +115,7 @@ class Main extends Component {
                   isFetching={viewTweets.tweetIsFetching}
                 />
               )}
-            </React.Fragment>
+            </div>
           )}
 
           {this.state.showNavToTop && (
@@ -128,14 +128,12 @@ class Main extends Component {
 }
 
 Main.propTypes = {
-  gainFollowers: PropTypes.object.isRequired,
   viewTweets: PropTypes.object.isRequired,
   initialFetchAction: PropTypes.func.isRequired,
   fetchNextAction: PropTypes.func.isRequired
 };
 const mapStateToProps = state => ({
   auth: state.auth,
-  gainFollowers: state.gainFollowers,
   viewTweets: state.viewTweets
 });
 export default connect(

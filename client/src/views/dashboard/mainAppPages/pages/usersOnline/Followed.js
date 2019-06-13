@@ -76,17 +76,16 @@ class Followed extends Component {
     if (linearProgressBarCompleted !== 100) {
       this.timer = setInterval(this.progress, 500);
     }
-    if (this.props.usersOnline.onlineUsers.length === 0) {
+    // if (this.props.usersOnline.onlineUsers.length === 0) {
       this.props.checkFollowingAction(this.props.auth.userData.userid);
-    }
+    // }
   }
   progress = () => {
     const { linearProgressBarCompleted, gettingUsers } = this.props.usersOnline;
     if (linearProgressBarCompleted === 100) {
       clearInterval(this.timer);
-      // this.setState({ linearProgressBarCompleted: 0 });
     } else if (gettingUsers && linearProgressBarCompleted !== 100) {
-      const diff = Math.random() * 2;
+      const diff = Math.random() * 1;
       this.props.setProgress(Math.min(linearProgressBarCompleted + diff, 100));
     }
   };
@@ -109,7 +108,7 @@ class Followed extends Component {
           isUnFollowing === false &&
           onlineUsers.length === 0 && (
             <div style={container}>
-              <Grid container spacing={16} justify="center">
+              <Grid container spacing={4} justify="center">
                 <Grid item>
                   <Button
                     // className={classes.editButton}
@@ -132,7 +131,7 @@ class Followed extends Component {
 
         {hasFollowings === false && checkingFollowings === true && (
           <div style={container}>
-            <Grid container spacing={16} justify="center">
+            <Grid container spacing={4} justify="center">
               <Grid item>
                 <CircularProgress />
               </Grid>
@@ -141,9 +140,9 @@ class Followed extends Component {
         )}
 
         {(gettingUsers === true || isUnFollowing === true) &&
-          checkingFollowings === false && (
+          checkingFollowings === false && onlineUsers.length === 0 && (
             <div style={container}>
-              <Grid container spacing={24} justify="center">
+              <Grid container spacing={4} justify="center">
                 <Grid item xs={6}>
                   <LinearProgress
                     variant="determinate"

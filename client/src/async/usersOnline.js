@@ -9,8 +9,8 @@ export const getOnlineUsers = async (userData, key) => {
   });
   return res;
 };
-export const unFollow = async (newUser,userData) => {
-  const res = await axios.post(`/api/users-online/unfollow`, {newUser, userData});
+export const unFollow = async (newUser,userData, key) => {
+  const res = await axios.post(`/api/users-online/unfollow/${key}`, {newUser, userData});
   return res;
 };
 
@@ -19,8 +19,8 @@ export const finishUnFollow = async (userData)=>{
   return res;
 }
 
-export const follow = async (newUser,userData) => {
-  const res = await axios.post(`/api/users-online/follow`, {newUser, userData});
+export const follow = async (newUser,userData, key) => {
+  const res = await axios.post(`/api/users-online/follow/${key}`, {newUser, userData});
   return res;
 };
 

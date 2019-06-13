@@ -67,7 +67,7 @@ function ProfilePage() {
                 </Grid>
               </Box>
               <Box mb="20px">
-                <Grid container spacing={40}>
+                <Grid container spacing={4}>
                   <Grid item>
                     <Typography variant="subtitle1">
                       <b>132</b> posts

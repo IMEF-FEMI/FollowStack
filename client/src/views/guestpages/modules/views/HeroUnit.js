@@ -109,7 +109,7 @@ export const HeroUnit = props => {
               with just a few clicks
             </Typography>
             <div>
-              <Grid container spacing={16} justify="center">
+              <Grid container spacing={4} justify="center">
                 <Grid item>
                   <Button
                     to={{
@@ -174,7 +174,7 @@ const styles = theme => ({
     }
   },
   icon: {
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing(2)
   },
   heroContent: {
     width: "100%",
@@ -212,9 +212,9 @@ const styles = theme => ({
   },
   layout: {
     width: "auto",
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(1100 + theme.spacing(3* 2) )]: {
       width: 1100,
       marginLeft: "auto",
       marginRight: "auto"

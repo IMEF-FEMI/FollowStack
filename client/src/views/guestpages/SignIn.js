@@ -16,34 +16,35 @@ import { connect } from "react-redux";
 import { TwitterLoginButton } from "react-social-login-buttons";
 
 import { checkUser } from "../../async/auth";
+import CustomSnackbar from "../../components/CustomSnackbar";
+
 import {
   signIn,
   setUserData,
   setUserProfile,
   setKeyInUse
 } from "../../actions/authActions";
-import { checkTotalGainedAction } from "../../actions/gainFollowersAction";
-import { toast, ToastContainer } from "react-toastify";
 
 const styles = theme => ({
   main: {
     width: "auto",
     display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(400 + theme.spacing(3 * 2))]: {
       width: 400,
       marginLeft: "auto",
       marginRight: "auto"
     }
   },
   paper: {
-    marginTop: theme.spacing.unit * 8,
+    marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(
+      3
+    )}px`,
     borderRadius: "10px"
   }
 });
@@ -54,16 +55,39 @@ class SignIn extends React.Component {
     this.state = {
       loading: false,
       user: {},
-      width: window.innerWidth
+      width: window.innerWidth,
+      snackbarOpen: false,
+      snackbarMessage: "",
+      snackbarvariant: "error",
+      vertical: "bottom",
+      horizontal: "right"
     };
     this.handleUserData = this.handleUserData.bind(this);
   }
+  onSnackbarOpen = () => {
+    this.setState({ snackbarOpen: true }, () => {});
+  };
 
+  onSnackbarClose = () => {
+    this.setState({ snackbarOpen: false }, () => {});
+  };
+  notify = (message, variant) => {
+    this.setState(
+      {
+        snackbarMessage: message,
+        snackbarvariant: variant
+      },
+      () => {
+        this.onSnackbarOpen();
+      }
+    );
+  };
   hasWindowSizeChange = () => {
     this.setState({
       width: window.innerWidth
     });
   };
+
   startTwitterAuth = () => {
     const provider = new firebase.auth.TwitterAuthProvider();
     const isMobile = this.state.width <= 500;
@@ -92,9 +116,12 @@ class SignIn extends React.Component {
             userData.userid = user.providerData[0].uid;
             userData.username = user.providerData[0].displayName;
             userData.photo = user.providerData[0].photoURL;
-            await that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
+            await that.props.setUserProfile(
+              userData,
+              localStorage.getItem("keyInUse")
+            );
             // console.log("user from the base" + JSON.stringify(userData));
-            
+
             that.handleUserData(userData);
           }
         })
@@ -103,24 +130,12 @@ class SignIn extends React.Component {
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(`error code ${errorCode} message ${errorMessage}`);
-          if (
-            errorCode === "auth/network-request-failed" ||
-            errorCode === "auth/invalid-credential"
-          ) {
-            // that.setState({networkError: true})
-            toast.error(" An Error has occured Try Again!", {
-              position: "bottom-right",
-              autoClose: 10000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true
-            });
-          }
-          // ...
+
+          that.notify("An Error has occured Try Again!", "error");
         });
     }
   };
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
       this.props.setUserData(this.state.user);
@@ -159,8 +174,11 @@ class SignIn extends React.Component {
             userData.userid = user.providerData[0].uid;
             userData.username = user.providerData[0].displayName;
             userData.photo = user.providerData[0].photoURL;
-            await that.props.setUserProfile(userData, localStorage.getItem("keyInUse"));
-            // console.log("user from the base" + JSON.stringify(userData)); 
+            await that.props.setUserProfile(
+              userData,
+              localStorage.getItem("keyInUse")
+            );
+            // console.log("user from the base" + JSON.stringify(userData));
             that.handleUserData(userData);
             localStorage.setItem("redirected", false);
           } else if (user === null || result.credential === undefined) {
@@ -173,15 +191,7 @@ class SignIn extends React.Component {
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(`error code ${errorCode} message ${errorMessage}`);
-
-          toast.error(" An Error has occured Try Again!", {
-            position: "bottom-right",
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true
-          });
+          that.notify("An Error has occured Try Again!", "error");
           localStorage.setItem("redirected", false);
           that.setState({ loading: false });
         });
@@ -216,41 +226,20 @@ class SignIn extends React.Component {
       if (res.data === false) {
         this.setState({ loading: false });
 
-        toast.error(" ⚠️ User Not Registered! 👨", {
-          position: "bottom-right",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-        });
+        this.notify(" ⚠️ User Not Registered! 👨", "error");
       } else {
         try {
-          this.props.checkTotalGainedAction(userData.userid);
           //sign in
           this.props.signIn(userData);
         } catch (err) {
           this.setState({ loading: false });
-          toast.error(" Error Connecting to Server Try again", {
-            position: "bottom-right",
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true
-          });
+
+          this.notify("Error Connecting to Server Try again", "error");
         }
       }
     } catch (err) {
       this.setState({ loading: false });
-      toast.error(" Error Connecting to Server Try again", {
-        position: "bottom-right",
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      });
+      this.notify("Error Connecting to Server Try again", "error");
     }
   }
   render() {
@@ -265,7 +254,6 @@ class SignIn extends React.Component {
         }}
       >
         <AppAppBar />
-        <ToastContainer />
         <main className={classes.main}>
           <CssBaseline />
           <div
@@ -333,6 +321,15 @@ class SignIn extends React.Component {
             </Paper>
           </div>
         </main>
+        <CustomSnackbar
+          snackbarOpen={this.state.snackbarOpen}
+          variant={this.state.snackbarvariant}
+          message={this.state.snackbarMessage}
+          onSnackbarOpen={this.onSnackbarOpen}
+          onSnackbarClose={this.onSnackbarClose}
+          horizontal={this.state.horizontal}
+          vertical={this.state.vertical}
+        />
         <AppFooter />
       </div>
     );
@@ -344,8 +341,7 @@ SignIn.propTypes = {
   signIn: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
   setUserProfile: PropTypes.func.isRequired,
-  setKeyInUse: PropTypes.func.isRequired,
-  checkTotalGainedAction: PropTypes.func.isRequired
+  setKeyInUse: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -360,7 +356,6 @@ export default withRouter(
         signIn,
         setUserData,
         setUserProfile,
-        checkTotalGainedAction,
         setKeyInUse
       }
     )(SignIn)

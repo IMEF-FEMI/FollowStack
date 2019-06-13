@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import authReducer from "./authReducer";
-import gainFollowersReducer from "./gainFollowersReducer";
+import notificationsReducer from "./notificationsReducer";
 import usersOnlineReducer from "./usersOnlineReducer";
 import profileReducer from "./profileReducer";
 import viewTweetsReducer from "./viewTweetsReducer";
@@ -8,7 +8,7 @@ import errorReducer from "./errorReducer";
 
 export default combineReducers({
   auth: authReducer,
-  gainFollowers: gainFollowersReducer,
+  notifications: notificationsReducer,
   usersOnline: usersOnlineReducer,
   myProfile: profileReducer,
   viewTweets: viewTweetsReducer,

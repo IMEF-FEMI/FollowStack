@@ -2,30 +2,38 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-import { setCurrentUser, logoutUser, setUserProfile, setKeyInUse, setPointsAction  } from "./actions/authActions";
-import { SET_USER_DATA, SET_USER_PROFILE, SET_TOTAL_GAINED} from "./actions/types";
-import {checkTotalGainedAction}from "./actions/gainFollowersAction"
+import {
+  setCurrentUser,
+  logoutUser,
+  setUserProfile,
+  setKeyInUse,
+  setPointsAction
+} from "./actions/authActions";
+import { SET_USER_DATA, SET_USER_PROFILE } from "./actions/types";
 import { Provider } from "react-redux";
 import axios from "axios";
 import store from "./store";
 import LandingPage from "./views/guestpages/LandingPage";
 import SignUp from "./views/guestpages/SignUp";
 import SignIn from "./views/guestpages/SignIn";
+import NotFound from "./views/guestpages/404/NotFound";
 import CompleteRegistration from "./views/guestpages/CompleteRegistration";
 // import Privacy from "./views/guestpages/Privacy";
 import Terms from "./views/guestpages/Terms";
 import LaunchScreen from "./views/dashboard/mainAppPages/components/loaders/LaunchScreen";
 
+import theme from "./theme";
+import { ThemeProvider } from "@material-ui/styles";
+
 import PrivateGuestRoute from "./views/common/PrivateGuestRoute";
 import PrivateDashBoardRoute from "./views/common/PrivateDashBoardRoute";
-import { ToastContainer } from "react-toastify";
+import dashboardRoutes from "./dashboardRoutes";
+
 import { Redirect } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 
 import "./assets/styles/custom.css";
-import "react-toastify/dist/ReactToastify.css";
-import 'toasted-notes/src/styles.css';
 import { firebaseKeys } from "./config";
 // init firebase
 if (
@@ -73,13 +81,8 @@ if (localStorage.jwtToken) {
       localStorage.getItem("keyInUse")
     )
   );
-  store.dispatch({
-    type: SET_TOTAL_GAINED,
-    payload: JSON.parse(localStorage.getItem("total_gained"))
-  });
-  store.dispatch(checkTotalGainedAction(store.getState().auth.user.userid))
 
-  store.dispatch(setPointsAction(store.getState().auth.user._id))
+  store.dispatch(setPointsAction(store.getState().auth.user._id));
   // Check for expired token
   const currentTime = Date.now() / 1000;
   if (decoded.exp < currentTime) {
@@ -135,40 +138,51 @@ class App extends Component {
     var loggedIn = store.getState().auth.isAuthenticated === true;
     return (
       <Provider store={store}>
-        <Router>
-          <div>
-            <ToastContainer />
-            {/* <Route exact path="/" component={LandingPage} /> */}
-            <Switch>
-              {this.state.serverWoke === false ? (
-                <LaunchScreen />
-              ) : (
-                <Route
-                  exact
-                  path="/"
-                  render={() =>
-                    loggedIn === true ? (
-                      <Redirect to="/dashboard" />
-                    ) : (
-                      <LandingPage />
-                    )
-                  }
-                />
-              )}
-              <PrivateGuestRoute exact path="/sign-up" component={SignUp} />
+        <ThemeProvider theme={theme}>
+          <Router>
+            <div>
+              {/* <Route exact path="/" component={LandingPage} /> */}
+              <Switch>
+                {this.state.serverWoke === false ? (
+                  <LaunchScreen />
+                ) : (
+                  <Route
+                    exact
+                    path="/"
+                    render={() =>
+                      loggedIn === true ? (
+                        <Redirect to="/dashboard" />
+                      ) : (
+                        <LandingPage />
+                      )
+                    }
+                  />
+                )}
+                <PrivateGuestRoute exact path="/sign-up" component={SignUp} />
 
-              <PrivateGuestRoute
-                exact
-                path="/complete-signup"
-                component={CompleteRegistration}
-              />
-              <Route exact path="/sign-in" component={SignIn} />
-              {/* <Route exact path="/privacy" component={Privacy} /> */}
-              <Route exact path="/terms" component={Terms} />
-              <PrivateDashBoardRoute />
-            </Switch>
-          </div>
-        </Router>
+                <PrivateGuestRoute
+                  exact
+                  path="/complete-signup"
+                  component={CompleteRegistration}
+                />
+                <Route exact path="/sign-in" component={SignIn} />
+                {/* <Route exact path="/privacy" component={Privacy} /> */}
+                <Route exact path="/terms" component={Terms} />
+                {dashboardRoutes.map((route, index) => {
+                  return (
+                    <PrivateDashBoardRoute
+                      key={index + `${Math.random() * 10}`}
+                      path={route.path}
+                      Layout={route.layout}
+                      Component={route.component}
+                    />
+                  );
+                })}
+                <Route component={NotFound} />
+              </Switch>
+            </div>
+          </Router>
+        </ThemeProvider>
       </Provider>
     );
   }

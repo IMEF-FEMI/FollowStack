@@ -12,3 +12,8 @@
 [0503/201624.440:ERROR:process_info.cc(611)] range at 0x7ff66f99c000, size 0x1788 fully unreadable
 [0514/115953.642:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: The operation completed successfully. (0x0)
 [0517/091047.151:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: The operation completed successfully. (0x0)
+[0609/163102.276:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0609/163102.618:ERROR:exception_snapshot_win.cc(98)] thread ID 8832 not found in process
+[0609/163102.619:ERROR:scoped_process_suspend.cc(40)] NtResumeProcess: An attempt was made to access an exiting process. (0xc000010a)
+[0609/210731.265:ERROR:process_reader_win.cc(151)] SuspendThread: Access is denied. (0x5)
+[0609/210731.715:ERROR:exception_snapshot_win.cc(98)] thread ID 6736 not found in process

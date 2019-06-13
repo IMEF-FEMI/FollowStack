@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import atoms from "../../components/atoms";
 import theme from "../../theme/instapaper/theme";
 import withTheme from "./withTheme";
-import { unstable_Box as Box } from "@material-ui/core/Box";
+import  Box   from "@material-ui/core/Box";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import MainPageLoader from "../../components/loaders/MainPageLoader";
@@ -13,7 +13,10 @@ import Grid from "@material-ui/core/Grid";
 import RenderProfileTweets from "../../components/tweet/RenderProfileTweets";
 import { onScroll } from "../../components/tweet/utils";
 import NavToTopButton from "../../components/tweet/NavToTopButton";
-import {initialFetchAction, fetchNextAction} from"../../../../../actions/myProfileActions"
+import {
+  initialFetchAction,
+  fetchNextAction
+} from "../../../../../actions/myProfileActions";
 const { Avatar, Typography } = atoms;
 
 class Main extends Component {
@@ -37,22 +40,23 @@ class Main extends Component {
   toggleShowNavToTopButton = bool => {
     this.setState({ showNavToTop: bool });
   };
-  fetchNextPage = async() => {
-    const {auth, myProfile, fetchNextAction} = this.props
+  fetchNextPage = async () => {
+    const { auth, myProfile, fetchNextAction } = this.props;
 
-    if (
-      myProfile.initialFetch ||
-      myProfile.isFetching ||
-      !myProfile.hasMore
-    ) {
+    if (myProfile.initialFetch || myProfile.isFetching || !myProfile.hasMore) {
       return;
     }
     //   // quick patches
     //   // append number of already recieved tweets and the database user_id
-    var userData = auth.userData
-      userData.recievedTweets = myProfile.pages.length
-      userData.user_id = auth.user._id
-     await fetchNextAction(userData, auth.keyInUse, myProfile.page, this.signal.token)
+    var userData = auth.userData;
+    userData.recievedTweets = myProfile.pages.length;
+    userData.user_id = auth.user._id;
+    await fetchNextAction(
+      userData,
+      auth.keyInUse,
+      myProfile.page,
+      this.signal.token
+    );
   };
 
   formatCount(count) {
@@ -67,32 +71,32 @@ class Main extends Component {
   async componentDidMount() {
     window.addEventListener("scroll", this.onScroll, false);
 
-    const {auth, myProfile, initialFetchAction} = this.props
-    if(myProfile.initialFetch === true){
-
+    const { auth, myProfile, initialFetchAction } = this.props;
+    if (myProfile.initialFetch === true) {
       // quick patches
       // append number of already recieved tweets and the database user_id
-      var userData = auth.userData
-      userData.recievedTweets = myProfile.pages.length
-      userData.user_id = auth.user._id
-     await initialFetchAction(userData, auth.keyInUse, myProfile.page, this.signal.token)
+      var userData = auth.userData;
+      userData.recievedTweets = myProfile.pages.length;
+      userData.user_id = auth.user._id;
+      await initialFetchAction(
+        userData,
+        auth.keyInUse,
+        myProfile.page,
+        this.signal.token
+      );
     }
-   
   }
   componentWillUnmount() {
     // Remove onScroll event listener
     window.removeEventListener("scroll", this.onScroll, false);
     // Cancel asyncs
     this.signal.cancel("Async call cancelled.");
-    
   }
 
   render() {
     const upSm = window.innerWidth >= 600;
-    const { totalGained } = this.props.gainFollowers;
     const { userProfile } = this.props.auth;
-    const {myProfile} = this.props
-
+    const { myProfile } = this.props;
 
     return (
       <div ref={this.topRef}>
@@ -101,7 +105,7 @@ class Main extends Component {
             <div>
               <Grid
                 container
-                spacing={24}
+                spacing={4}
                 style={{
                   paddingTop: "20px",
                   width: "100%"
@@ -115,6 +119,7 @@ class Main extends Component {
                     src={userProfile.photo}
                   />
                 </Grid>
+
                 <Grid item xs={8}>
                   <Grid container alignItems="center">
                     <Typography variant="subtitle1" bold>
@@ -127,23 +132,25 @@ class Main extends Component {
                     </Typography>
                   </Grid>
                   <Box mb="20px">
-                    <Grid container spacing={40}>
+                    <Grid container spacing={8}>
                       <Grid item>
-                        <Typography variant="subtitle1">
-                          <b>{this.formatCount(userProfile.followers)}</b> followers
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="subtitle1">
-                          <b>{this.formatCount(userProfile.following)}</b> following
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        {totalGained !== 0 && (
+                        {
                           <Typography variant="subtitle1">
-                            <b> {`${totalGained} `}</b>Followers Gained
+                            <b> {`${userProfile.tweets} `}</b>Tweets
                           </Typography>
-                        )}
+                        }
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="subtitle1">
+                          <b>{this.formatCount(userProfile.followers)}</b>{"  "}
+                          followers
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="subtitle1">
+                          <b>{this.formatCount(userProfile.following)}</b>{"  "}
+                          following
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Box>
@@ -167,14 +174,11 @@ class Main extends Component {
             backgroundColor: "#2c3e50"
           }}
         >
-          <div>
-            {(myProfile.initialFetch ) && (
-              <MainPageLoader />
-            )}
-          </div>
+          <div>{myProfile.initialFetch && <MainPageLoader />}</div>
 
           {!myProfile.initialFetch && (
-            <React.Fragment>
+            <div style={{paddingTop: "20px"}}>
+            <Divider style={{color:"#fff"}}/>
               {myProfile.pages && (
                 <RenderProfileTweets
                   pages={myProfile.pages}
@@ -182,13 +186,12 @@ class Main extends Component {
                   isFetching={myProfile.isFetching}
                 />
               )}
-            </React.Fragment>
+            </div>
           )}
 
           {this.state.showNavToTop && (
             <NavToTopButton scrollToTop={this.scrollToTop} />
           )}
-
         </div>
       </div>
     );
@@ -196,16 +199,15 @@ class Main extends Component {
 }
 
 Main.propTypes = {
-  gainFollowers: PropTypes.object.isRequired,
   myProfile: PropTypes.object.isRequired,
   initialFetchAction: PropTypes.func.isRequired,
-  fetchNextAction: PropTypes.func.isRequired,
+  fetchNextAction: PropTypes.func.isRequired
 };
 const mapStateToProps = state => ({
   auth: state.auth,
-  gainFollowers: state.gainFollowers,
   myProfile: state.myProfile
 });
 export default connect(
-  mapStateToProps,{initialFetchAction, fetchNextAction}
+  mapStateToProps,
+  { initialFetchAction, fetchNextAction }
 )(withTheme(theme)(Main));

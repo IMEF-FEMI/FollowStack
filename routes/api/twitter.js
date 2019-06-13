@@ -28,7 +28,7 @@ const TWITTER_KEYS = [
   }
 ];
 // Load User model
-const Follows = require("../../models/Follows");
+
 const User = require("../../models/User");
 
 mongoose.set('useNewUrlParser', true);

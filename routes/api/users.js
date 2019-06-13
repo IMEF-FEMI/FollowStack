@@ -5,9 +5,8 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const keys = require("../../config/keys");
 
-// Load User && Follows model
+// Load User  model
 const User = require("../../models/User");
-const Follows = require("../../models/Follows");
 const UsersOnline = require("../../models/UsersOnline");
 
 var Twitter = require("twitter");
@@ -63,10 +62,7 @@ router.post(
           .save()
           .then(user => {
             Promise.all([
-              new Follows({
-                username: req.body.username,
-                user_id: req.body.userid
-              }).save(),
+             
               new UsersOnline({
                 username: req.body.username,
                 user_id: req.body.userid
@@ -104,13 +100,15 @@ router.post(
     const hour = minute * 60;
     const day = hour * 24;
     const week = day * 7;
-    // await new UsersOnline({
-    //   username: req.body.username,
-    //   user_id: req.body.userid
-    // }).save()
+   
     await User.findOne({ userid: req.body.userid })
       .then(user => {
         if (user) {
+          // new UsersOnline({
+          //   username: req.body.username,
+          //   user_id: req.body.userid
+          // }).save()
+
           const payload = {
             userid: user.userid,
             _id: user._id
@@ -191,7 +189,8 @@ router.post(
           description: profile.description,
           followers: profile.followers_count,
           following: profile.friends_count,
-          photo: profile.profile_image_url.replace("_normal", "")
+          photo: profile.profile_image_url.replace("_normal", ""),
+          tweets: profile.statuses_count
         });
       } else {
         if (

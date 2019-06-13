@@ -1,71 +1,44 @@
-export default ({ attach, theme, nest, ICON, TAB }) => ({
+export default ({ theme }) => ({
   MuiTabs: {
     root: {
-      borderTop: "1px solid #efefef",
-      overflow: "visible"
+      borderTop: '1px solid #efefef',
+      overflow: 'visible',
     },
     fixed: {
-      overflowX: "visible"
+      overflowX: 'visible',
     },
     indicator: {
       height: 1,
-      transform: "translateY(-53px)",
-      backgroundColor: "#262626"
-    }
+      transform: 'translateY(-53px)',
+      backgroundColor: '#262626',
+    },
   },
   MuiTab: {
     root: {
-      lineHeight: "inherit",
+      minHeight: 54,
+      fontWeight: 600,
       minWidth: 0,
-      marginRight: theme.spacing.unit,
-      marginLeft: theme.spacing.unit,
-      [theme.breakpoints.up("md")]: {
+      [theme.breakpoints.up('md')]: {
         minWidth: 0,
-        marginRight: 30,
-        marginLeft: 30
       },
-      [attach(TAB.selected)]: {
-        [nest(TAB.label)]: {
-          fontWeight: 600
-        },
-        "& *": {
-          color: "#262626 !important"
-        }
-      }
     },
     labelIcon: {
-      minHeight: 53,
-      paddingTop: 0,
-      "& .MuiTab-wrapper": {
-        flexDirection: "row"
-      },
-      [nest(ICON.root)]: {
+      minHeight: null,
+      paddingTop: null,
+      '& $wrapper :first-child': {
         fontSize: 16,
-        marginRight: 6
-      }
+        marginBottom: 0,
+        marginRight: 6,
+      },
+    },
+    textColorInherit: {
+      color: '#999',
+      '&$selected': {
+        color: '#262626',
+      },
     },
     wrapper: {
-      flexDirection: "row",
-      "& *": {
-        color: "#999"
-      }
+      flexDirection: 'row',
     },
-    labelContainer: {
-      padding: 0,
-      [theme.breakpoints.up("md")]: {
-        padding: 0,
-        paddingLeft: 0,
-        paddingRight: 0
-      }
-    },
-    label: {
-      letterSpacing: 1,
-      textTransform: "uppercase",
-      [theme.breakpoints.between("xs", "sm")]: {
-        // styles
-
-        fontSize: 10
-      }
-    }
-  }
+  },
 });

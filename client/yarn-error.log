@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add react-admin
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add moment --network-timeout 100000
 
 PATH: 
   c:\program files\graphicsmagick-1.3.31-q16;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\flutter\bin\;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\Java\jre-9.0.1;C:\Users\IMEF\AppData\Roaming\npm;C:\Users\IMEF\AppData\Local\Programs\Microsoft VS Code\bin;C:\flutter\bin;C:\Program Files (x86)\GnuWin32\bin;C:\Program Files\heroku\bin;C:\Users\IMEF\AppData\Local\Yarn\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@material-ui/core/-/core-1.5.1.tgz: ESOCKETTIMEDOUT
+  Error: https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.0.0.tgz: ESOCKETTIMEDOUT
       at ClientRequest.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:130168:19)
       at Object.onceWrapper (events.js:273:13)
       at ClientRequest.emit (events.js:182:13)
@@ -28,24 +28,23 @@ Trace:
 
 npm manifest: 
   {
-    "name": "client",
+    "name": "FollowStackClient",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-      "@material-ui/core": "^3.9.2",
-      "@material-ui/icons": "^3.0.2",
-      "@material-ui/styles": "^3.0.0-alpha.10",
+      "@material-ui/core": "4.0.2",
+      "@material-ui/icons": "4.0.0",
+      "@material-ui/styles": "4.0.0",
       "axios": "^0.18.0",
       "classnames": "^2.2.5",
       "firebase": "^5.9.3",
       "jwt-decode": "^2.2.0",
       "markdown-to-jsx": "^6.9.3",
       "react": "^16.8.4",
+      "react-columns": "^1.2.1",
       "react-component-countdown-timer": "^0.1.1",
       "react-content-loader": "^4.2.1",
       "react-dom": "^16.8.4",
-      "react-infinite-scroll-component": "^4.5.2",
-      "react-infinite-scroller": "^1.2.4",
       "react-redux": "^5.0.7",
       "react-router-dom": "^4.3.1",
       "react-scripts": "2.1.8",
@@ -57,6 +56,7 @@ npm manifest:
       "redux": "^3.7.2",
       "redux-devtools-extension": "^2.13.5",
       "redux-thunk": "^2.2.0",
+      "toasted-notes": "^2.1.5",
       "twemoji": "1.4.1",
       "twitter-text": "1.13.2"
     },
@@ -1160,7 +1160,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.19.tgz#991df31d892a51414e0e544b5cff4216cfb04915"
     integrity sha512-U9e2dCB38mD2AvV/zAjghauwa0UX15Wt98iBgm8IOw8spluDxysx8UZFUhj38fu0iFXORVRBqseyK2wCxZIl5w==
   
-  "@material-ui/core@^3.9.2":
+  "@material-ui/core@3.9.2":
     version "3.9.2"
     resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-3.9.2.tgz#41ed1a470e981d199829eb5d9317a671c66a6f7d"
     integrity sha512-aukR3mSH3g115St2OnqoeMRtmxzxxx+Mch7pFKRV3Tz3URExBlZwOolimjxKZpG4LGec8HlhREawafLsDzjVWQ==
@@ -1193,7 +1193,7 @@ Lockfile:
       recompose "0.28.0 - 0.30.0"
       warning "^4.0.1"
   
-  "@material-ui/icons@^3.0.2":
+  "@material-ui/icons@3.0.2":
     version "3.0.2"
     resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-3.0.2.tgz#d67a6dd1ec8312d3a88ec97944a63daeef24fe10"
     integrity sha512-QY/3gJnObZQ3O/e6WjH+0ah2M3MOgLOzCy8HTUoUx9B6dDrS18vP7Ycw3qrDEKlB6q1KNxy6CZHm5FCauWGy2g==
@@ -1201,7 +1201,7 @@ Lockfile:
       "@babel/runtime" "^7.2.0"
       recompose "0.28.0 - 0.30.0"
   
-  "@material-ui/styles@^3.0.0-alpha.10":
+  "@material-ui/styles@3.0.0-alpha.10":
     version "3.0.0-alpha.10"
     resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-3.0.0-alpha.10.tgz#4c28a6d6dacb1fb71aff4642f92b63232a3f298d"
     integrity sha512-qJ5eiupBPRCNlMCDZ2G5h8auBtBtm8uT/oCUAJ/FqhO5oC7POLmmvDN1Cq1cgAmqQnaL6uN5mAM1Gc90GpKr9A==
@@ -1254,6 +1254,24 @@ Lockfile:
     version "1.1.3"
     resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
     integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
+  
+  "@reach/alert@^0.1.2":
+    version "0.1.5"
+    resolved "https://registry.yarnpkg.com/@reach/alert/-/alert-0.1.5.tgz#4da79add0055fa4295f51e5295ed3b80257e9153"
+    integrity sha512-Ow+SB7rokGWxmm+AdOpf4eo29OaEYDqlJ1Kc9qulVX2cKjYiHQqAvkiCkSaIPkQbbyNmEXJ0c/rVpzPVvCVIAw==
+    dependencies:
+      "@reach/component-component" "^0.1.3"
+      "@reach/visually-hidden" "^0.1.4"
+  
+  "@reach/component-component@^0.1.3":
+    version "0.1.3"
+    resolved "https://registry.yarnpkg.com/@reach/component-component/-/component-component-0.1.3.tgz#5d156319572dc38995b246f81878bc2577c517e5"
+    integrity sha512-a1USH7L3bEfDdPN4iNZGvMEFuBfkdG+QNybeyDv8RloVFgZYRoM+KGXyy2KOfEnTUM8QWDRSROwaL3+ts5Angg==
+  
+  "@reach/visually-hidden@^0.1.4":
+    version "0.1.4"
+    resolved "https://registry.yarnpkg.com/@reach/visually-hidden/-/visually-hidden-0.1.4.tgz#0dc4ecedf523004337214187db70a46183bd945b"
+    integrity sha512-QHbzXjflSlCvDd6vJwdwx16mSB+vUCCQMiU/wK/CgVNPibtpEiIbisyxkpZc55DyDFNUIqP91rSUsNae+ogGDQ==
   
   "@svgr/babel-plugin-add-jsx-attribute@^4.0.0":
     version "4.0.0"
@@ -1383,6 +1401,13 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.1.tgz#48fd98c1561fe718b61733daed46ff115b496e18"
     integrity sha512-eqz8c/0kwNi/OEHQfvIuJVLTst3in0e7uTKeuY+WL/zfKn0xVujOTp42bS/vUUokhK5P2BppLd9JXMOMHcgbjA==
   
+  "@types/react-dom@^16.8.3":
+    version "16.8.4"
+    resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.8.4.tgz#7fb7ba368857c7aa0f4e4511c4710ca2c5a12a88"
+    integrity sha512-eIRpEW73DCzPIMaNBDP5pPIpK1KXyZwNgfxiVagb5iGiz6da+9A5hslSX6GAQKdO7SayVCS/Fr2kjqprgAvkfA==
+    dependencies:
+      "@types/react" "*"
+  
   "@types/react-transition-group@^2.0.8":
     version "2.0.16"
     resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-2.0.16.tgz#2dcb9e396ab385ee19c4af1c9caa469a14cd042f"
@@ -1394,6 +1419,14 @@ Lockfile:
     version "16.8.7"
     resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.7.tgz#7b1c0223dd5494f9b4501ad2a69aa6acb350a29b"
     integrity sha512-0xbkIyrDNKUn4IJVf8JaCn+ucao/cq6ZB8O6kSzhrJub1cVSqgTArtG0qCfdERWKMEIvUbrwLXeQMqWEsyr9dA==
+    dependencies:
+      "@types/prop-types" "*"
+      csstype "^2.2.0"
+  
+  "@types/react@^16.8.10":
+    version "16.8.18"
+    resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.18.tgz#fe66fb748b0b6ca9709d38b87b2d1356d960a511"
+    integrity sha512-lUXdKzRqWR4FebR5tGHkLCqnvQJS4fdXKCBrNGGbglqZg2gpU+J82pMONevQODUotATs9fc9k66bx3/St8vReg==
     dependencies:
       "@types/prop-types" "*"
       csstype "^2.2.0"
@@ -8832,6 +8865,11 @@ Lockfile:
       raf "3.4.1"
       whatwg-fetch "3.0.0"
   
+  react-columns@^1.2.1:
+    version "1.2.1"
+    resolved "https://registry.yarnpkg.com/react-columns/-/react-columns-1.2.1.tgz#6d0c097f91ae279170213bffd5263fcd4d415142"
+    integrity sha512-z0sAMP6pqF0EgJhD4+m8eq67Q4PonqJ17/K+hWZrbMGLj1+aGDomkCTAkupL6v2I5HyDqiQOX/9agzMWcUZwsQ==
+  
   react-component-countdown-timer@^0.1.1:
     version "0.1.1"
     resolved "https://registry.yarnpkg.com/react-component-countdown-timer/-/react-component-countdown-timer-0.1.1.tgz#3192079a0904e682a1f821ae7960e0d26e1d855c"
@@ -8896,18 +8934,6 @@ Lockfile:
       "@babel/runtime" "^7.2.0"
       prop-types "^15.6.0"
       warning "^4.0.1"
-  
-  react-infinite-scroll-component@^4.5.2:
-    version "4.5.2"
-    resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-4.5.2.tgz#ebd16195f34a5f191b259ed53d257378b1001c6d"
-    integrity sha512-fkCOsAYDx0IHv7pTl9BzSTlNoaFccDzJ3gi2qNgp/D2GxKZKhGwDxqOnZyvMo5e5FhniQ9yaXsTxh/xZg8LuFQ==
-  
-  react-infinite-scroller@^1.2.4:
-    version "1.2.4"
-    resolved "https://registry.yarnpkg.com/react-infinite-scroller/-/react-infinite-scroller-1.2.4.tgz#f67eaec4940a4ce6417bebdd6e3433bfc38826e9"
-    integrity sha512-/oOa0QhZjXPqaD6sictN2edFMsd3kkMiE19Vcz5JDgHpzEJVqYcmq+V3mkwO88087kvKGe1URNksHEOt839Ubw==
-    dependencies:
-      prop-types "^15.5.8"
   
   react-input-autosize@^2.2.1:
     version "2.2.1"
@@ -9052,6 +9078,14 @@ Lockfile:
     integrity sha512-UXY1z6i/mxpGEE7g3ay91Z5RQMNT4gvOQDeZM2FjGwshuuCrcX/4OOvMIXqV1skXP2oo5dgYMXKKj2KApPXkvw==
     dependencies:
       prop-types "^15.5.10"
+  
+  react-spring@^8.0.18:
+    version "8.0.20"
+    resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-8.0.20.tgz#e25967f6059364b09cf0339168d73014e87c9d17"
+    integrity sha512-40ZUQ5uI5YHsoQWLPchWNcEUh6zQ6qvcVDeTI2vW10ldoCN3PvDsII9wBH2xEbMl+BQvYmHzGdfLTQxPxJWGnQ==
+    dependencies:
+      "@babel/runtime" "^7.3.1"
+      prop-types "^15.5.8"
   
   react-toastify@5.1.0:
     version "5.1.0"
@@ -10416,6 +10450,16 @@ Lockfile:
       extend-shallow "^3.0.2"
       regex-not "^1.0.2"
       safe-regex "^1.1.0"
+  
+  toasted-notes@^2.1.5:
+    version "2.1.5"
+    resolved "https://registry.yarnpkg.com/toasted-notes/-/toasted-notes-2.1.5.tgz#885236d5d07635da6dd69e648216a9b87679b03a"
+    integrity sha512-bBDlW9KnG+grqhosEIoZ3+Dh/mSSuF7t+P7mT6p9azt8qm1qlusUBcF4/C1JxCedHf5jRGnL4X3wjo5XvASWCQ==
+    dependencies:
+      "@reach/alert" "^0.1.2"
+      "@types/react" "^16.8.10"
+      "@types/react-dom" "^16.8.3"
+      react-spring "^8.0.18"
   
   topo@2.x.x:
     version "2.0.2"

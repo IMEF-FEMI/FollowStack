@@ -47,20 +47,44 @@ class UnFollowed extends Component {
   handleClose = () => {
     this.setState({ open: false });
   };
-  componentDidMount() {
-    this.props.getNotFollowingBackAction(
+  async componentDidMount() {
+    await this.props.getNotFollowingBackAction(
       this.props.auth.userData,
       this.props.auth.keyInUse
     );
+    const {
+      notFollowingBack,
+      onlineUsers,
+      checkingNotFollowedBack
+    } = this.props.usersOnline;
+    if (
+      onlineUsers.length !== 0 &&
+      notFollowingBack.length === 0 &&
+      checkingNotFollowedBack === false
+    ) {
+      this.finishUnfollow();
+    }
   }
 
+  finishUnfollow = async () => {
+    await this.props.finishedUnFollowAction(
+      this.props.auth.userData,
+      this.props.auth.keyInUse
+    );
+    this.handleClickOpen();
+  };
+
   render() {
-    const { notFollowingBack, onlineUsers, checkingNotFollowedBack } = this.props.usersOnline;
+    const {
+      notFollowingBack,
+      onlineUsers,
+      checkingNotFollowedBack
+    } = this.props.usersOnline;
     return (
       <div>
         {checkingNotFollowedBack === true && notFollowingBack.length === 0 && (
           <div style={container}>
-            <Grid container spacing={24} justify="center">
+            <Grid container spacing={4} justify="center">
               <Grid item xs={6}>
                 <LinearProgress color="secondary" />
               </Grid>
@@ -80,32 +104,31 @@ class UnFollowed extends Component {
           notFollowingBack.length === 0 &&
           checkingNotFollowedBack === false && (
             <div style={container}>
-              <Typography variant="h2" gutterBottom align="center">
+              <Typography
+                variant="h2"
+                gutterBottom
+                align="center"
+                style={{ color: "#000" }}
+              >
                 You currently have no Followings! Click on the Follows TAB to
                 start
               </Typography>
             </div>
           )}
 
-        {
+        {notFollowingBack.length !== 0 && (
           <Grid container justify="center">
             <Button
               // className={classes.editButton}
               variant="contained"
               color="primary"
-              onClick={async () => {
-                await this.props.finishedUnFollowAction(
-                  this.props.auth.userData,
-                  this.props.auth.keyInUse
-                );
-                this.handleClickOpen();
-              }}
+              onClick={this.finishUnfollow}
             >
-              Finish
+              Finished Unfollowing
               <PersonAddDisabled />
             </Button>
           </Grid>
-        }
+        )}
 
         {
           <Dialog
@@ -119,7 +142,7 @@ class UnFollowed extends Component {
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                <Grid container spacing={24} justify="center">
+                <Grid container spacing={4} justify="center">
                   <Grid item xs={12} align="center">
                     <DoneOutline />
                   </Grid>
@@ -129,6 +152,7 @@ class UnFollowed extends Component {
                 </Grid>
               </DialogContentText>
             </DialogContent>
+
             <DialogActions>
               <Button onClick={this.handleClose} color="primary" autoFocus>
                 Close

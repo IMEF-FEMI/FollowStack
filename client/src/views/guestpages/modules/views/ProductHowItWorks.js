@@ -12,8 +12,8 @@ const styles = theme => ({
     overflow: "hidden"
   },
   layoutBody: {
-    marginTop: theme.spacing.unit * 10,
-    marginBottom: theme.spacing.unit * 15,
+    marginTop: theme.spacing(10),
+    marginBottom: theme.spacing(15),
     position: "relative",
     display: "flex",
     flexDirection: "column",
@@ -23,10 +23,10 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `0px ${theme.spacing.unit * 5}px`
+    padding: `0px ${theme.spacing(5)}px`
   },
   title: {
-    marginBottom: theme.spacing.unit * 14
+    marginBottom: theme.spacing(14)
   },
   number: {
     fontSize: 24,
@@ -36,8 +36,8 @@ const styles = theme => ({
   },
   image: {
     height: 55,
-    marginTop: theme.spacing.unit * 4,
-    marginBottom: theme.spacing.unit * 4
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4)
   },
   curvyLines: {
     pointerEvents: "none",
@@ -46,7 +46,7 @@ const styles = theme => ({
     opacity: 0.7
   },
   button: {
-    marginTop: theme.spacing.unit * 8
+    marginTop: theme.spacing(8)
   }
 });
 
@@ -74,7 +74,7 @@ function ProductHowItWorks(props) {
           Easy as A-B-C
         </Typography>
         <div>
-          <Grid container spacing={40}>
+          <Grid container spacing={4}>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
                 <div className={classes.number}>1.</div>

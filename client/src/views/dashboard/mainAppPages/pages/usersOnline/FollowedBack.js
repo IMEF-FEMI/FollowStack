@@ -90,7 +90,7 @@ class FollowedBack extends Component {
 
         {checkingFollowedBack === true && followedBack.length === 0 && (
           <div style={container}>
-            <Grid container spacing={24} justify="center">
+            <Grid container spacing={4} justify="center">
               <Grid item xs={6}>
                 <LinearProgress />
               </Grid>
@@ -108,8 +108,8 @@ class FollowedBack extends Component {
           followedBack.length === 0 &&
           checkingFollowedBack === false && (
             <div style={container}>
-              <Typography variant="h2" gutterBottom align="center">
-                No Follow Backs at this time! Check Back Later
+              <Typography variant="h2" style={{color:"#000"}} gutterBottom align="center">
+                No Follow Backs Yet! Check Back Later
               </Typography>
             </div>
           )}
@@ -118,7 +118,7 @@ class FollowedBack extends Component {
           followedBack.length === 0 &&
           checkingFollowedBack === false && (
             <div style={container}>
-              <Typography variant="h2" gutterBottom align="center">
+              <Typography variant="h2" style={{color:"#000"}} gutterBottom align="center">
                 You currently have no Followings! Click on the Follows TAB to
                 start
               </Typography>

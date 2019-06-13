@@ -1,21 +1,19 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
+import  useMediaQuery  from "@material-ui/core/useMediaQuery";
 import atoms from "../../components/atoms";
 import molecules from "../../components/molecules";
 import PersonAddDisabled from "@material-ui/icons/PersonAddDisabled";
 // import Button from "@material-ui/core/Button";
 import theme from "../../theme/instapaper/theme";
 import withTheme from "./withTheme";
-import { unstable_Box as Box } from "@material-ui/core/Box";
 import CountdownTimer from "react-component-countdown-timer";
 import Followed from "./Followed";
 import FollowedBack from "./FollowedBack";
 import UnFollowed from "./UnFollowed";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { beginUnFollowAction } from "../../../../../actions/gainFollowersAction";
 const { Icon, Typography, Button } = atoms;
 const { Tabs, Tab } = molecules;
 
@@ -28,30 +26,26 @@ function Main(props) {
   const { hasFollowingsTime, isUnFollowing } = props.usersOnline;
 
   const beginUnfollow = () => {
-    // start unfollowing, show unfollowed Tab
-    props.beginUnFollowAction(props.auth.userData, props.auth.keyInUse);
-    // clear following list
-
     setTabIndex(3);
   };
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <Box mb="44px">
+      <div mb="44px">
         <Typography
           variant="h6"
           gutterBottom
           align="center"
-          style={{ paddingTop: "30px" }}
+          style={{ paddingTop: "30px" }} 
         >
           Due to twitter follow/ unfollow restrictions, we couldnt make this
-          process an automated one. . we will however show you a list of users
+          process an automated one. we will however get you a list of users
           that are online. so you can manually follow them and we'll keep track
           of those that follow back and those that dont so that you can easily
           unfollow them
         </Typography>
-      </Box>
+      </div>
       <Grid
         container
         style={{
@@ -106,7 +100,7 @@ function Main(props) {
         <Grid container justify="center">
           <Button variant="outlined" fullWidth={!upSm} onClick={beginUnfollow}>
             Begin UnFollow
-            <PersonAddDisabled />
+            <PersonAddDisabled /> 
           </Button>
         </Grid>
       )}
@@ -115,7 +109,6 @@ function Main(props) {
 }
 
 Main.propTypes = {
-  beginUnFollowAction: PropTypes.func.isRequired,
   usersOnline: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
@@ -123,8 +116,5 @@ const mapStateToProps = state => ({
   usersOnline: state.usersOnline
 });
 export default connect(
-  mapStateToProps,
-  {
-    beginUnFollowAction
-  }
+  mapStateToProps
 )(withTheme(theme)(Main));

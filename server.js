@@ -54,7 +54,6 @@ app.get("/wake-up", (req, res) => res.send("👍"));
 
 // Use Routes
 app.use("/api/users", users);
-app.use("/api/twitter", twitter);
 app.use("/api/post", post);
 app.use("/api/users-online", usersOnline);
 

@@ -9,39 +9,89 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import AddBox from "@material-ui/icons/AddBox";
+import Button from "@material-ui/core/Button";
+import Share from "@material-ui/icons/Share";
 import Close from "@material-ui/icons/Close";
 import Launch from "@material-ui/icons/Launch";
 import Tooltip from "@material-ui/core/Tooltip";
 import { addTweetPost, removeTweetPost } from "../../../../../async/post";
 import { setPoints } from "../../../../../actions/authActions";
+import { addNotificationAction } from "../../../../../actions/notificationAction";
 import Tweet from "./Tweet/Tweet";
-import toast from "toasted-notes";
+import CustomSnackbar from "../../../../../components/CustomSnackbar";
+
 
 class RenderProfileTweets extends Component {
+  state = {
+    snackbarOpen: false,
+    snackbarMessage: "",
+    snackbarvariant: "",
+    vertical: window.innerWidth >= 600 ?"bottom":"top",
+    horizontal: "right"
+  };
   addTweet = async tweet => {
     const { auth } = this.props;
+    tweet.added = true;
+    this.forceUpdate();
     const res = await addTweetPost(auth.user._id, tweet);
-    if (res.data.success) {
-      tweet.added = true;
-      toast.notify(res.data.success);
-      this.props.setPoints(res.data.points);
-    } else if (res.data.error) {
-      tweet.added = false;
-      toast.notify(res.data.error);
-    }
+    this.props.setPoints(res.data.points);
+    this.notify(res, "sharedTweet", tweet);
   };
 
+  notify = (res, notificationType, tweet) => {
+    // using material ui custom snackbar instead of a third party library
+    if (res.data.success) {
+      this.setState(
+        {
+          snackbarMessage: res.data.success,
+          snackbarvariant: "success"
+        },
+        () => {
+          this.onSnackbarOpen();
+        }
+      );
+      this.props.addNotificationAction({
+        id: Date.now(),
+        title: res.data.success,
+        when: Date.now(),
+        type: notificationType,
+        to: "#"
+      });
+    } else if (res.data.error) {
+      tweet.added = false;
+      this.forceUpdate();
+      // using material ui custom snackbar instead of a third party library
+      this.setState(
+        {
+          snackbarMessage: res.data.error,
+          snackbarvariant: "error"
+        },
+        () => {
+          this.onSnackbarOpen();
+        }
+      );
+      this.props.addNotificationAction({
+        id: Date.now(),
+        title: res.data.error,
+        when: Date.now(),
+        type: "error",
+        to: "#"
+      });
+    }
+  };
+  onSnackbarOpen = () => {
+    this.setState({ snackbarOpen: true }, () => {});
+  };
+
+  onSnackbarClose = () => {
+    this.setState({ snackbarOpen: false }, () => {});
+  };
   removeTweet = async tweet => {
     const { auth } = this.props;
+    tweet.added = false;
+    this.forceUpdate();
     const res = await removeTweetPost(tweet.id_str, auth.user._id);
-    if (res.data.success) {
-      tweet.added = false;
-      toast.notify(res.data.success);
-    } else if (res.data.error) {
-      tweet.added = true;
-      toast.notify(res.data.error);
-    }
+    this.notify(res, "unsharedTweet", tweet);
   };
 
   render() {
@@ -53,12 +103,11 @@ class RenderProfileTweets extends Component {
     return (
       <Grid
         className={classes.gridContainer}
-        classes={{ "spacing-xs-24": classes.spacingXs24 }}
+        // classes={{ "spacing-xs-24": classes.spacingXs24 }}
         direction="row"
         wrap="wrap"
         justify={"center"}
         container
-        spacing={24}
       >
         {data.map(item => {
           if (
@@ -75,6 +124,8 @@ class RenderProfileTweets extends Component {
                 classes={{
                   item: classes.item
                 }}
+                style={{padding: "0px"}}
+
                 xs={12}
                 sm={10}
                 md={8}
@@ -98,29 +149,33 @@ class RenderProfileTweets extends Component {
                     action={
                       <div>
                         {(!item.added || item.added === false) && (
-                          <Tooltip title="Add to Tweet Feeds" aria-label="Add">
-                            <IconButton
+                          <Tooltip
+                            title="Share to Tweet Feeds"
+                            aria-label="Share"
+                          >
+                            <Button
+                              size="small"
+                              variant="outlined"
                               onClick={async () => {
                                 await this.addTweet(item);
-                                this.forceUpdate();
                               }}
                             >
-                              <AddBox color="primary" />
-                            </IconButton>
+                              <Share color="primary" /> Share
+                            </Button>
                           </Tooltip>
                         )}
                         {item.added && item.added === true && (
                           <Tooltip
-                            title="Remove from Tweet Feeds"
-                            aria-label="Remove"
+                            title="Unshare"
+                            aria-label="UnShare"
                             onClick={async () => {
                               await this.removeTweet(item);
-                              this.forceUpdate();
                             }}
                           >
-                            <IconButton>
+                            <Button size="small" variant="outlined">
                               <Close color="secondary" />
-                            </IconButton>
+                              Remove
+                            </Button>
                           </Tooltip>
                         )}
                         <a
@@ -163,6 +218,15 @@ class RenderProfileTweets extends Component {
             />
           </Grid>
         )}
+        <CustomSnackbar
+          snackbarOpen={this.state.snackbarOpen}
+          variant={this.state.snackbarvariant}
+          message={this.state.snackbarMessage}
+          onSnackbarOpen={this.onSnackbarOpen}
+          onSnackbarClose={this.onSnackbarClose}
+          horizontal={this.state.horizontal}
+          vertical={this.state.vertical}
+        />
       </Grid>
     );
   }
@@ -180,16 +244,16 @@ const styles = theme => ({
   gridContainer: {
     minHeight: "100vh"
   },
-  spacingXs24: {
-    width: "100%",
-    margin: 0
-  },
+  // spacingXs24: {
+  //   width: "100%",
+  //   margin: 0
+  // },
   card: {
     borderRadius: "0px"
   },
-  
+
   fab: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
     position: "fixed",
     bottom: "5%",
     left: "45%",
@@ -201,8 +265,8 @@ const styles = theme => ({
     justifyContent: "space-between"
   },
   profileHeaderRoot: {
-    padding: `${theme.spacing.unit}px`,
-    marginBottom: `${theme.spacing.unit}px`
+    padding: `${theme.spacing()}px`,
+    marginBottom: `${theme.spacing()}px`
   },
   profileHeaderAvatarContainer: {
     flexDirection: "column",
@@ -224,7 +288,7 @@ const styles = theme => ({
     alignItems: "center"
   },
   noResultsText: {
-    marginTop: `${theme.spacing.unit * 2}px`
+    marginTop: `${theme.spacing(2)}px`
   },
   goBackBtn: {
     textTransform: "capitalize"
@@ -244,5 +308,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { setPoints }
+  { setPoints, addNotificationAction }
 )(withStyles(styles)(RenderProfileTweets));

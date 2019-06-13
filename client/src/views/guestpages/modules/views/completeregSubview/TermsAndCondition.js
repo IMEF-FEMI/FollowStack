@@ -7,12 +7,12 @@ import {
   setUserData,
   setUserProfile
 } from "../../../../../actions/authActions";
-import { checkTotalGainedAction } from "../../../../../actions/gainFollowersAction";
-import { toast } from "react-toastify";
 
 import Spinner from "./Spinner";
 
 import Button from "@material-ui/core/Button";
+import CustomSnackbar from "../../../../../components/CustomSnackbar";
+
 
 class TermsAndCondition extends Component {
   constructor() {
@@ -22,11 +22,34 @@ class TermsAndCondition extends Component {
       disabled: true,
       user: {},
       location: "",
-      finished: false
+      finished: false,
+      snackbarOpen: false,
+      snackbarMessage: "",
+      snackbarvariant: "",
+      vertical: "top",
+      horizontal: "right"
     };
     this.handleCheckedChanged = this.handleCheckedChanged.bind(this);
     this.finished = this.finished.bind(this);
   }
+  onSnackbarOpen = () => {
+    this.setState({ snackbarOpen: true }, () => {});
+  };
+
+  onSnackbarClose = () => {
+    this.setState({ snackbarOpen: false }, () => {});
+  };
+  notify = (message, variant) => {
+    this.setState(
+      {
+        snackbarMessage: message,
+        snackbarvariant: variant
+      },
+      () => {
+        this.onSnackbarOpen();
+      }
+    );
+  };
   finished() {
     const userData = this.state.user;
     userData.location = this.props.userLocation;
@@ -47,18 +70,12 @@ class TermsAndCondition extends Component {
     if (nextProps.auth.isAuthenticated) {
       this.props.setUserData(this.state.user);
       this.props.setUserProfile(this.state.user, this.props.auth.keyInUse);
-      this.props.checkTotalGainedAction(this.state.user.userid);
       this.props.nextStep();
       this.props.gotoDashboard();
     } else if (nextProps.errors.userError) {
-      toast.error(nextProps.errors.userError, {
-        position: "bottom-right",
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      });
+     
+      this.notify(nextProps.errors.userError, "error");
+
     }
   }
 
@@ -136,6 +153,15 @@ class TermsAndCondition extends Component {
         )}
 
         {this.state.finished && <Spinner />}
+        <CustomSnackbar
+          snackbarOpen={this.state.snackbarOpen}
+          variant={this.state.snackbarvariant}
+          message={this.state.snackbarMessage}
+          onSnackbarOpen={this.onSnackbarOpen}
+          onSnackbarClose={this.onSnackbarClose}
+          horizontal={this.state.horizontal}
+          vertical={this.state.vertical}
+        />
       </div>
     );
   }
@@ -143,7 +169,6 @@ class TermsAndCondition extends Component {
 TermsAndCondition.propTypes = {
   register: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
-  checkTotalGainedAction: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -156,6 +181,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { register, setUserData, setUserProfile, checkTotalGainedAction }
+    { register, setUserData, setUserProfile }
   )(TermsAndCondition)
 );
