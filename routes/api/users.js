@@ -104,10 +104,7 @@ router.post(
     await User.findOne({ userid: req.body.userid })
       .then(user => {
         if (user) {
-          // new UsersOnline({
-          //   username: req.body.username,
-          //   user_id: req.body.userid
-          // }).save()
+         
 
           const payload = {
             userid: user.userid,
