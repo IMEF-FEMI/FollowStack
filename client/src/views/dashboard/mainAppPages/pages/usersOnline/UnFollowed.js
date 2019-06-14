@@ -84,7 +84,7 @@ class UnFollowed extends Component {
       <div>
         {checkingNotFollowedBack === true && notFollowingBack.length === 0 && (
           <div style={container}>
-            <Grid container spacing={4} justify="center">
+            <Grid container justify="center">
               <Grid item xs={6}>
                 <LinearProgress color="secondary" />
               </Grid>

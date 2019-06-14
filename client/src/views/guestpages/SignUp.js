@@ -19,6 +19,7 @@ import { checkUser } from "../../async/auth";
 import { signIn, setUserData} from "../../actions/authActions";
 import { getUserProfile } from "../../async/auth";
 import CustomSnackbar from "../../components/CustomSnackbar";
+import { initGA, trackPage } from "../../components/Tracking";
 
 
 const styles = theme => ({
@@ -130,6 +131,10 @@ class SignIn extends React.Component {
     }
   };
   componentWillMount() {
+      // TrackPage
+    const page = this.props.location.pathname + this.props.location.search;
+    initGA()
+    trackPage(page)
     const { width } = this.state;
 
     const isMobile = width <= 500;

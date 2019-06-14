@@ -32,19 +32,6 @@ class AppFooter extends Component {
           <Grid item xs={12}>
             <ul style={{ listStyle: "none", margin: 0 }}>
               <Link
-                to="/about"
-                style={{
-                  textDecoration: "none",
-                  color: "black"
-                }}
-              >
-                About
-              </Link>
-            </ul>
-          </Grid>
-          <Grid item xs={12}>
-            <ul style={{ listStyle: "none", margin: 0 }}>
-              <Link
                 style={{
                   textDecoration: "none",
                   color: "black"

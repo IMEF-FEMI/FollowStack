@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import AppAppBar from "./modules/views/AppAppBar";
-import Navbar from "../dashboard/layouts/Navbar";
+import {Topbar} from "../dashboard/layouts/layouts/Dashboard/components"
 
 class Privacy extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class Privacy extends Component {
     return (
       <React.Fragment>
       {this.props.auth.isAuthenticated === false && <AppAppBar />}
-        {this.props.auth.isAuthenticated === true && <Navbar />}
+        {this.props.auth.isAuthenticated === true && <Topbar />}
       <Container>
         <Box mt={7} mb={12}>
           <Typography variant="h3" gutterBottom marked="center" align="center">

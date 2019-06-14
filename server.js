@@ -13,7 +13,7 @@ const usersOnline = require("./routes/api/usersOnline");
 
 // Setup for passport and to accept JSON objects
 app.use(express.json());
-// parse application/x-www-form-urlencoded
+// parse application/x-www-form-urlencoded 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json

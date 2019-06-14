@@ -1,10 +1,17 @@
 import React, { Component } from "react";
 import Profile from "./profile.jpg";
 import { Link, withRouter } from "react-router-dom";
+import { initGA, trackPage } from "../../../components/Tracking";
 
 import "./notFound.css";
 
 class NotFound extends Component {
+  componentDidMount() {
+    // TrackPage
+    const page = "/not-found" + this.props.location.search;
+    initGA();
+    trackPage(page);
+  }
   render() {
     return (
       <div className="land-container">

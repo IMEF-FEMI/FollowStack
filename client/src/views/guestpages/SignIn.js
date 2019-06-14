@@ -17,6 +17,8 @@ import { TwitterLoginButton } from "react-social-login-buttons";
 
 import { checkUser } from "../../async/auth";
 import CustomSnackbar from "../../components/CustomSnackbar";
+import { initGA, trackPage } from "../../components/Tracking";
+
 
 import {
   signIn,
@@ -143,6 +145,11 @@ class SignIn extends React.Component {
     }
   }
   componentWillMount() {
+     // TrackPage
+     const page = this.props.location.pathname + this.props.location.search;
+     initGA();
+     trackPage(page);
+
     const { width } = this.state;
 
     const isMobile = width <= 500;

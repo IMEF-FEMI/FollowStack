@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withRouter } from "react-router-dom";
 import { Typography } from "@material-ui/core";
+
 const welcome_user = {
   color: "#fff",
   fontFamily: "Nunito, sans-serif",
@@ -70,6 +71,7 @@ class DashBoard extends Component {
   }
 
   componentDidMount() {
+    
     window.addEventListener("resize", this.hasWindowSizeChange);
   }
 
@@ -171,7 +173,7 @@ class DashBoard extends Component {
                     }
                   >
                     {" "}
-                    View Tweets
+                    View Shared Tweets
                   </Typography>
                 }
               </Grid>

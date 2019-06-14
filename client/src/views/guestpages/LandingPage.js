@@ -11,6 +11,8 @@ import ProductHow from "./modules/views/ProductHow";
 import AppAppBar from "./modules/views/AppAppBar";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { initGA, trackPage } from "../../components/Tracking";
+
 
 class LandingPage extends Component {
   constructor() {
@@ -21,7 +23,13 @@ class LandingPage extends Component {
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
+    }else{
+        // TrackPage
+    const page = "/landing-page" + this.props.location.search;
+    initGA()
+    trackPage(page)
     }
+
   }
 
   render() {

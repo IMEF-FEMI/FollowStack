@@ -2,10 +2,16 @@
 
 import React, { Component } from "react";
 import { Dashboard as DashboardLayout } from "./layouts";
+import {initGA, trackPage} from '../../../components/Tracking';
+
 
 class Default extends Component {
+  componentDidMount(){
+    const page = this.props.location.pathname + this.props.location.search;
+    initGA()
+    trackPage(page)
+  }
   render() {
-    // console.log(JSON.stringify(this.props.children.state.displayName));
     return (
       <DashboardLayout
         title={`${this.props.location.pathname

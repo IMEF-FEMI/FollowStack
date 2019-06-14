@@ -47,7 +47,7 @@ class Sidebar extends Component {
             <img
               alt="FollowStack logo"
               className={classes.logoImage}
-              src="/images/logos/brainalytica_logo.svg"
+              src="/images/logos/followstack.png"
             />
           </Link>
         </div>

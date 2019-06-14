@@ -7,14 +7,15 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import MuiAppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 class AppBar extends React.Component {
   renderNavButtons() {
     const { classes } = this.props;
     const location = this.props.location.pathname;
-    const MyLink = React.forwardRef((props, ref) => <Link innerRef={ref} {...props} />);
+    const MyLink = React.forwardRef((props, ref) => (
+      <Link innerRef={ref} {...props} />
+    ));
 
     return (
       <div className={classes.nav}>
@@ -46,7 +47,9 @@ class AppBar extends React.Component {
   render() {
     const { classes } = this.props;
     const location = this.props.location.pathname;
-    const MyLink = React.forwardRef((props, ref) => <Link innerRef={ref} {...props} />);
+    const MyLink = React.forwardRef((props, ref) => (
+      <Link innerRef={ref} {...props} />
+    ));
 
     return (
       <div className={classes.root}>
@@ -57,7 +60,7 @@ class AppBar extends React.Component {
           }}
           position="fixed"
         >
-          <Toolbar style={{paddingRight: "10px"}}>
+          <Toolbar style={{ paddingRight: "10px" }}>
             <div>
               <MyLink
                 to="/"
@@ -67,17 +70,12 @@ class AppBar extends React.Component {
                 }}
                 className={classNames(classes.logo, classes.aTag)}
               >
-                <Typography
-                  variant="h6"
-                  color={location !== "/" ? "textPrimary" : "inherit"}
-                  // className={classes.grow}
-                  style={{
-                    textDecoration: "none",
-                    textTransForm: "none"
-                  }}
-                >
-                  FollowStack
-                </Typography>
+                
+                <img
+                  alt="FollowStack logo"
+                  className={classes.logoImage}
+                  src={location !== "/" ?"/images/logos/followstack.png":"/images/logos/followstack_white.png"}
+                />
               </MyLink>
             </div>
 
@@ -109,6 +107,10 @@ const styles = theme => ({
   logo: {
     display: "flex"
   },
+  logoImage: {
+    cursor: "pointer",
+    height: "55px"
+  },
   nav: {
     display: "flex",
     marginLeft: "auto",
@@ -128,7 +130,7 @@ const styles = theme => ({
       color: "white",
       background: "rgba(0,0,0,.125)"
     }
-  },
+  }
 });
 
 export default compose(
