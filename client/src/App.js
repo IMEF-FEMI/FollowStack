@@ -42,12 +42,10 @@ if (
   !firebase.apps.length
 ) {
   const randomNumber = Math.floor(Math.random() * 4);
-  console.log(JSON.stringify(firebaseKeys[randomNumber]));
   firebase.initializeApp(firebaseKeys[randomNumber]);
   localStorage.setItem("keyInUse", randomNumber);
   store.dispatch(setKeyInUse(randomNumber));
 
-  console.log("Key in use " + randomNumber);
 } else if (!firebase.apps.length) {
   const key = localStorage.getItem("keyInUse");
   store.dispatch(setKeyInUse(key));
