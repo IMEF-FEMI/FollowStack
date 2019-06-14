@@ -66,6 +66,7 @@ function ProductHowItWorks(props) {
           marked="center"
           className={classes.title}
           component="h2"
+          align="center"
         >
           Easy as A-B-C
         </Typography>

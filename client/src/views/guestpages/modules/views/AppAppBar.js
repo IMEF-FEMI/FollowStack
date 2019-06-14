@@ -19,27 +19,27 @@ class AppBar extends React.Component {
 
     return (
       <div className={classes.nav}>
-        <Button
-          to="/sign-in"
-          component={MyLink}
-          variant="text"
-          color={location !== "/" ? "default" : "inherit"}
-          className={classes.button}
-        >
-          &nbsp;Sign In
-        </Button>
-        <Button
-          to="/sign-up"
-          component={MyLink}
-          variant="contained"
-          color="secondary"
-          // style={{
-          //   color: "#ff3366"
-          // }}
-          className={classes.button}
-        >
-          &nbsp;Sign Up
-        </Button>
+          <Button
+            to="/sign-in"
+            component={MyLink}
+            variant="text"
+            color={location !== "/" ? "default" : "inherit"}
+            className={classes.button}
+          >
+           Sign In
+          </Button>
+
+        {location !== "/" && (
+          <Button
+            to="/sign-up"
+            component={MyLink}
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+          >
+            Sign Up
+          </Button>
+        )}
       </div>
     );
   }
@@ -60,7 +60,7 @@ class AppBar extends React.Component {
           }}
           position="fixed"
         >
-          <Toolbar style={{ paddingRight: "10px" }}>
+          <Toolbar style={{ paddingRight: "10px", paddingLeft: "5px" }}>
             <div>
               <MyLink
                 to="/"
@@ -70,11 +70,14 @@ class AppBar extends React.Component {
                 }}
                 className={classNames(classes.logo, classes.aTag)}
               >
-                
                 <img
                   alt="FollowStack logo"
                   className={classes.logoImage}
-                  src={location !== "/" ?"/images/logos/followstack.png":"/images/logos/followstack_white.png"}
+                  src={
+                    location !== "/"
+                      ? "/images/logos/followstack.png"
+                      : "/images/logos/followstack_white.png"
+                  }
                 />
               </MyLink>
             </div>
@@ -109,7 +112,8 @@ const styles = theme => ({
   },
   logoImage: {
     cursor: "pointer",
-    height: "55px"
+    height: "55px",
+    maxWidth: `${0.5 * window.innerWidth}px`
   },
   nav: {
     display: "flex",

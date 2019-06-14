@@ -59,6 +59,7 @@ function ProductHow(props) {
           className={classes.title}
           component="h2"
           style={{ color: "#fff" }}
+          align="center"
         >
           How you get followers!
         </Typography>
@@ -72,10 +73,10 @@ function ProductHow(props) {
                   style={{ color: "#fff" }}
                 >
                   {`Getting followers on followstack is very simple. 
-                  we use a method already familiar to you - the follow back Method. 
+                  we use a method already familiar to you - The FOLLOW FOR FOLLOW Method. 
                   It entails following a number of accounts, waiting for them to follow Back 
-                  and unfollowing ONLY those that didnt follow back after a specified time. This is on of the most
-                  efficient ways of growing your account quickly as the followers you get are REAL twitter followers. `}
+                  and unfollowing those that didnt follow back after a specified time. This is one of the most
+                  efficient ways of growing your account quickly and the followers you get are REAL and active. `}
                 </Typography>
               </div>
             </Grid>

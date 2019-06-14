@@ -70,7 +70,7 @@ function ProductValues(props) {
                 {`You could make a lot of money when you have much followers on your social media
                   account by using Platforms like `}
                 {<a href="https://famebit.com" style={{textDecoration: "none"}}>FameBit</a>}
-                {` or by posting adverts for independent marketters looking 
+                {` or by posting ads for Individuals looking 
                   for ways to make their product and services known`}
               </Typography>
             </div>
@@ -101,7 +101,8 @@ function ProductValues(props) {
                   height: "55px"
                 }}
               />
-              <Typography align="center"
+              <Typography 
+              align="center"
                 variant="h6"
                 className={classes.title}
                 style={{ color: "#fff" }}
