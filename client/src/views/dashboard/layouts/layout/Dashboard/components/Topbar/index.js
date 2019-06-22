@@ -104,7 +104,6 @@ class Topbar extends Component {
       onToggleSidebar
     } = this.props;
     const { notifications, notificationsCount, notificationsEl } = this.state;
-
     const rootClassName = classNames(classes.root, className);
     const showNotifications = Boolean(notificationsEl);
 

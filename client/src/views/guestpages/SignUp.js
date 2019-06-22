@@ -16,35 +16,39 @@ import { connect } from "react-redux";
 import { TwitterLoginButton } from "react-social-login-buttons";
 
 import { checkUser } from "../../async/auth";
-import { signIn, setUserData} from "../../actions/authActions";
+import { signIn, setUserData } from "../../actions/authActions";
 import { getUserProfile } from "../../async/auth";
-import CustomSnackbar from "../../components/CustomSnackbar";
 import { initGA, trackPage } from "../../components/Tracking";
+import {
+  onSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarVariant
+} from "../../actions/snackbarAction";
 
 
 const styles = theme => ({
   main: {
     width: "auto",
     display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing(3)  ,
-    marginRight: theme.spacing(3)  ,
-    [theme.breakpoints.up(400 + theme.spacing(3 * 2) )]: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(400 + theme.spacing(3 * 2))]: {
       width: 400,
       marginLeft: "auto",
       marginRight: "auto"
     }
   },
   paper: {
-    marginTop: theme.spacing(8) ,
+    marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing(2) }px ${theme.spacing(3)}px ${theme
-      .spacing(3)}px`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(
+      3
+    )}px`,
     borderRadius: "10px"
   }
 });
-
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -62,23 +66,11 @@ class SignIn extends React.Component {
     };
     this.handleUserData = this.handleUserData.bind(this);
   }
-  onSnackbarOpen = () => {
-    this.setState({ snackbarOpen: true }, () => {});
-  };
 
-  onSnackbarClose = () => {
-    this.setState({ snackbarOpen: false }, () => {});
-  };
   notify = (message, variant) => {
-    this.setState(
-      {
-        snackbarMessage: message,
-        snackbarvariant: variant
-      },
-      () => {
-        this.onSnackbarOpen();
-      }
-    );
+    this.props.setSnackbarMessage(message);
+    this.props.setSnackbarVariant(variant);
+    this.props.onSnackbarOpen();
   };
   hasWindowSizeChange = () => {
     this.setState({
@@ -123,18 +115,16 @@ class SignIn extends React.Component {
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(`error code ${errorCode} message ${errorMessage}`);
-          
-          
-            that.notify("Connection Error Try Again!", "error");
 
+          that.notify("Connection Error Try Again!", "error");
         });
     }
   };
   componentWillMount() {
-      // TrackPage
+    // TrackPage
     const page = this.props.location.pathname + this.props.location.search;
-    initGA()
-    trackPage(page)
+    initGA();
+    trackPage(page);
     const { width } = this.state;
 
     const isMobile = width <= 500;
@@ -169,7 +159,6 @@ class SignIn extends React.Component {
             // console.log("we here"+JSON.stringify(userData))
             that.handleUserData(userData);
             localStorage.setItem("redirected", false);
-
           } else if (user === null || result.credential === undefined) {
             that.setState({ loading: false });
             localStorage.setItem("redirected", false);
@@ -198,7 +187,10 @@ class SignIn extends React.Component {
     window.addEventListener("resize", this.hasWindowSizeChange);
   }
   async handleUserData(userData) {
-    const res = await getUserProfile(userData, localStorage.getItem("keyInUse"));
+    const res = await getUserProfile(
+      userData,
+      localStorage.getItem("keyInUse")
+    );
     if (res !== undefined) {
       userData.photo = res.data.photo;
     }
@@ -220,9 +212,7 @@ class SignIn extends React.Component {
 
       this.setState({ userExists: true });
 
-      
       this.notify(" ⚠️ User Already Registered!", "warning");
-
     } else {
       this.props.history.push({
         pathname: "/complete-signup",
@@ -283,7 +273,7 @@ class SignIn extends React.Component {
                     }}
                   >
                     <TwitterLoginButton onClick={this.startTwitterAuth}>
-                    <Typography
+                      <Typography
                         align="center"
                         style={{ marginTop: 1, marginBottom: 1 }}
                       >
@@ -302,24 +292,16 @@ class SignIn extends React.Component {
               />
 
               <React.Fragment>
-              <Typography align="center" >
+                <Typography align="center">
                   by clicking the sign up button, you agree to our
-                  <Link to="/terms" >Terms of service </Link>and 
-                  <Link to="/privacy" > Privacy Policy</Link>
+                  <Link to="/terms">Terms of service </Link>and
+                  <Link to="/privacy"> Privacy Policy</Link>
                 </Typography>
               </React.Fragment>
             </Paper>
           </div>
         </main>
-        <CustomSnackbar
-          snackbarOpen={this.state.snackbarOpen}
-          variant={this.state.snackbarvariant}
-          message={this.state.snackbarMessage}
-          onSnackbarOpen={this.onSnackbarOpen}
-          onSnackbarClose={this.onSnackbarClose}
-          horizontal={this.state.horizontal}
-          vertical={this.state.vertical}
-        />
+
         <AppFooter />
       </div>
     );
@@ -329,7 +311,7 @@ class SignIn extends React.Component {
 SignIn.propTypes = {
   auth: PropTypes.object.isRequired,
   signIn: PropTypes.func.isRequired,
-  setUserData: PropTypes.func.isRequired,
+  setUserData: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -340,7 +322,13 @@ export default withRouter(
   withStyles(styles)(
     connect(
       mapStateToProps,
-      { signIn, setUserData }
+      {
+        signIn,
+        setUserData,
+        onSnackbarOpen,
+        setSnackbarMessage,
+        setSnackbarVariant
+      }
     )(SignIn)
   )
 );

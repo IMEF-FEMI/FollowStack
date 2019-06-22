@@ -1,15 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import jwt_decode from "jwt-decode";
-import setAuthToken from "./utils/setAuthToken";
-import {
-  setCurrentUser,
-  logoutUser,
-  setUserProfile,
-  setKeyInUse,
-  setPointsAction
-} from "./actions/authActions";
-import { SET_USER_DATA, SET_USER_PROFILE } from "./actions/types";
+
 import { Provider } from "react-redux";
 import axios from "axios";
 import store from "./store";
@@ -29,73 +20,26 @@ import PrivateGuestRoute from "./views/common/PrivateGuestRoute";
 import PrivateDashBoardRoute from "./views/common/PrivateDashBoardRoute";
 import dashboardRoutes from "./dashboardRoutes";
 
+
 import { Redirect } from "react-router-dom";
-import firebase from "firebase/app";
-import "firebase/auth";
-
 import "./assets/styles/custom.css";
-import { firebaseKeys } from "./config";
-// init firebase
-if (
-  (localStorage.getItem("keyInUse") === undefined ||
-    localStorage.getItem("keyInUse") === null) &&
-  !firebase.apps.length
-) {
-  const randomNumber = Math.floor(Math.random() * 4);
-  firebase.initializeApp(firebaseKeys[randomNumber]);
-  localStorage.setItem("keyInUse", randomNumber);
-  store.dispatch(setKeyInUse(randomNumber));
 
-} else if (!firebase.apps.length) {
-  const key = localStorage.getItem("keyInUse");
-  store.dispatch(setKeyInUse(key));
+// initialize app settings and socket
+import socketIO from "socket.io-client";
+import { SocketContext } from "./components/SocketContext";
+import { initApp } from "./components/Init";
+import { CustomSnackbar } from "./components/CustomSnackbar/index";
 
-  // console.log("key in sign in pge ", key)
-  // console.log("we here", key);
-  firebase.initializeApp(firebaseKeys[key]);
-}
+const socket = socketIO("http://localhost:8080");
 
-// localStorage.clear();
-// Check for token
-if (localStorage.jwtToken) {
-  // Set auth token header auth
-  setAuthToken(localStorage.jwtToken);
-  // Decode token and get user info and exp
-  const decoded = jwt_decode(localStorage.jwtToken);
-  // Set user and isAuthenticated
-  store.dispatch(setCurrentUser(decoded));
-  store.dispatch({
-    type: SET_USER_DATA,
-    payload: JSON.parse(localStorage.getItem("userData"))
-  });
-
-  store.dispatch({
-    type: SET_USER_PROFILE,
-    payload: JSON.parse(localStorage.getItem("userProfile"))
-  });
-  store.dispatch(
-    setUserProfile(
-      store.getState().auth.userData,
-      localStorage.getItem("keyInUse")
-    )
-  );
-
-  store.dispatch(setPointsAction(store.getState().auth.user._id));
-  // Check for expired token
-  const currentTime = Date.now() / 1000;
-  if (decoded.exp < currentTime) {
-    // Logout user
-    store.dispatch(logoutUser());
-  }
-}
+// initialize initial app settings
+// includes user profile, points etc.
+initApp(socket);
 
 class App extends Component {
   state = {
     serverWoke: false
   };
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
 
   async componentDidMount() {
     try {
@@ -105,79 +49,68 @@ class App extends Component {
       this.setState({
         serverWoke: true
       });
-      // console.log(!!res);
     } catch (e) {
       this.setState({
         serverWoke: true
       });
       console.log(e);
     }
-    if (store.getState().auth.isAuthenticated === true) {
-      // update profile every 10 mins
-      this.timer = setInterval(this.updateProfile, 10 * 60 * 1000);
-    }
   }
 
-  updateProfile = () => {
-    if (store.getState().auth.isAuthenticated === false) {
-      return;
-    }
-    store.dispatch(
-      setUserProfile(
-        store.getState().auth.userData,
-        localStorage.getItem("keyInUse")
-      )
-    );
-  };
   render() {
     var loggedIn = store.getState().auth.isAuthenticated === true;
+    
     return (
       <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Router>
-            <div>
-             
-              <Switch>
-                {this.state.serverWoke === false ? (
-                  <LaunchScreen />
-                ) : (
-                  <Route
-                    exact
-                    path="/"
-                    render={() =>
-                      loggedIn === true ? (
-                        <Redirect to="/dashboard" />
-                      ) : (
-                        <LandingPage />
-                      )
-                    }
-                  />
-                )}
-                <PrivateGuestRoute exact path="/sign-up" component={SignUp} />
-
-                <PrivateGuestRoute
-                  exact
-                  path="/complete-signup"
-                  component={CompleteRegistration}
-                />
-                <Route exact path="/sign-in" component={SignIn} />
-                <Route exact path="/privacy" component={Privacy} />
-                <Route exact path="/terms" component={Terms} />
-                {dashboardRoutes.map((route, index) => {
-                  return (
-                    <PrivateDashBoardRoute
-                      key={index + `${Math.random() * 10}`}
-                      path={route.path}
-                      Layout={route.layout}
-                      Component={route.component}
+        <SocketContext.Provider value={socket}>
+          <div>
+            <CustomSnackbar/>
+          </div>
+          <ThemeProvider theme={theme}>
+            <Router>
+              <div>
+                <Switch>
+                  {this.state.serverWoke === false ? (
+                    <LaunchScreen />
+                  ) : (
+                    <Route
+                      exact
+                      path="/"
+                      render={() =>
+                        loggedIn === true ? (
+                          <Redirect to="/dashboard" />
+                        ) : (
+                          <LandingPage />
+                        )
+                      }
                     />
-                  );
-                })}
-                <Route component={NotFound} />
-              </Switch>
-            </div>
-          </Router>
-        </ThemeProvider>
+                  )}
+                  <PrivateGuestRoute exact path="/sign-up" component={SignUp} />
+
+                  <PrivateGuestRoute
+                    exact
+                    path="/complete-signup"
+                    component={CompleteRegistration}
+                  />
+                  <Route exact path="/sign-in" component={SignIn} />
+                  <Route exact path="/privacy" component={Privacy} />
+                  <Route exact path="/terms" component={Terms} />
+                  {dashboardRoutes.map((route, index) => {
+                    return (
+                      <PrivateDashBoardRoute
+                        key={index + `${Math.random() * 10}`}
+                        path={route.path}
+                        Layout={route.layout}
+                        Component={route.component}
+                      />
+                    );
+                  })}
+                  <Route component={NotFound} />
+                </Switch>
+              </div>
+            </Router>
+          </ThemeProvider>
+        </SocketContext.Provider>
       </Provider>
     );
   }

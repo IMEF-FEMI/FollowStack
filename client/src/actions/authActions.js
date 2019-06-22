@@ -121,6 +121,7 @@ export const setUserProfile = (userData, key) => async dispatch => {
 export const setPointsAction = user_id => async dispatch => {
   try {
     const { data: points } = await getPoints(user_id);
+    localStorage.setItem("points", points)
     dispatch(setPoints(points))
   } catch (err) {
     console.log(err);
@@ -139,6 +140,7 @@ export const logoutUser = () => dispatch => {
   localStorage.removeItem("jwtToken");
   localStorage.removeItem("userData");
   localStorage.removeItem("userProfile");
+  localStorage.removeItem("points")
 
   firebase
     .auth()

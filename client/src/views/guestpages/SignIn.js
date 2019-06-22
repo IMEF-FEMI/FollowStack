@@ -16,9 +16,12 @@ import { connect } from "react-redux";
 import { TwitterLoginButton } from "react-social-login-buttons";
 
 import { checkUser } from "../../async/auth";
-import CustomSnackbar from "../../components/CustomSnackbar";
 import { initGA, trackPage } from "../../components/Tracking";
-
+import {
+  onSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarVariant
+} from "../../actions/snackbarAction";
 
 import {
   signIn,
@@ -58,31 +61,14 @@ class SignIn extends React.Component {
       loading: false,
       user: {},
       width: window.innerWidth,
-      snackbarOpen: false,
-      snackbarMessage: "",
-      snackbarvariant: "error",
-      vertical: "bottom",
-      horizontal: "right"
+      
     };
     this.handleUserData = this.handleUserData.bind(this);
   }
-  onSnackbarOpen = () => {
-    this.setState({ snackbarOpen: true }, () => {});
-  };
-
-  onSnackbarClose = () => {
-    this.setState({ snackbarOpen: false }, () => {});
-  };
   notify = (message, variant) => {
-    this.setState(
-      {
-        snackbarMessage: message,
-        snackbarvariant: variant
-      },
-      () => {
-        this.onSnackbarOpen();
-      }
-    );
+    this.props.setSnackbarMessage(message);
+    this.props.setSnackbarVariant(variant);
+    this.props.onSnackbarOpen();
   };
   hasWindowSizeChange = () => {
     this.setState({
@@ -328,15 +314,6 @@ class SignIn extends React.Component {
             </Paper>
           </div>
         </main>
-        <CustomSnackbar
-          snackbarOpen={this.state.snackbarOpen}
-          variant={this.state.snackbarvariant}
-          message={this.state.snackbarMessage}
-          onSnackbarOpen={this.onSnackbarOpen}
-          onSnackbarClose={this.onSnackbarClose}
-          horizontal={this.state.horizontal}
-          vertical={this.state.vertical}
-        />
         <AppFooter />
       </div>
     );
@@ -363,7 +340,9 @@ export default withRouter(
         signIn,
         setUserData,
         setUserProfile,
-        setKeyInUse
+        setKeyInUse,onSnackbarOpen,
+        setSnackbarMessage,
+        setSnackbarVariant
       }
     )(SignIn)
   )

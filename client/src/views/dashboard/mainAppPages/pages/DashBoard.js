@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 
-import theme from "./mainAppPages/theme/instapaper/theme";
-import withTheme from "./mainAppPages/theme/withTheme";
+import theme from "../theme/instapaper/theme";
+import withTheme from "../theme/withTheme";
 import Box from "@material-ui/core/Box";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
+import { logoutUser } from "../../../../actions/authActions";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withRouter } from "react-router-dom";
@@ -88,7 +88,7 @@ class DashBoard extends Component {
     this.props.history.push(url);
   };
   render() {
-    const bgimage = require("./assets/img/green.jpg");
+    const bgimage = require("../../assets/img/green.jpg");
     return (
       <div
         style={{

@@ -36,6 +36,7 @@ mongoose.set("useCreateIndex", true);
 // @access  Public
 router.get(
   "/test",
+  requireAuth,
   asyncHandler(async (req, res, next) => {
     res.json({ msg: req.user });
   })
@@ -494,7 +495,7 @@ router.post(
            for(var i = 0; i<posts.length; i++){
             for(var j = 0; j<tweet.length; j++){
               if(posts[i].post_id === tweet[j].id_str){
-                posts[i] = tweet[j]
+                posts[i] = tweet[j] 
               }
             }
           }

@@ -1,7 +1,7 @@
 
 
 import React, { Component } from "react";
-import { Dashboard as DashboardLayout } from "./layouts";
+import { Dashboard as DashboardLayout } from "./layout";
 import {initGA, trackPage} from '../../../components/Tracking';
 
 

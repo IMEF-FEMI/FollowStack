@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import AppAppBar from "./modules/views/AppAppBar";
-import {Topbar} from "../dashboard/layouts/layouts/Dashboard/components"
+import {Topbar} from "../dashboard/layouts/layout/Dashboard/components"
 
 class Privacy extends Component {
   constructor(props) {

@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button/Button";
 import { connect } from "react-redux";
-import { follow, unFollow } from "../../../../../async/usersOnline"; 
-import CustomSnackbar from "../../../../../components/CustomSnackbar";
+import { follow, unFollow } from "../../../../../async/usersOnline";
+import {
+  onSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarVariant
+} from "../../../../../actions/snackbarAction";
 
 class FollowButton extends Component {
   state = {
     disabled: false,
-    snackbarOpen: false,
-    snackbarMessage: "",
-    snackbarvariant: "",
-    vertical: "bottom",
-    horizontal: "left"
   };
 
   // checkFollowPopup() {
@@ -82,21 +81,15 @@ class FollowButton extends Component {
     }
   };
   unfollowUser = async () => {
-
-    if(this.props.usersOnline.hasFollowingsTime >=1){
-      this.setState(
-        {
-          snackbarMessage: "Can't unfollow yet. wait for countdown to complete",
-          snackbarvariant: "warning",
-          vertical: "top",
-          horizontal: "right"
-        },
-        () => {
-          this.onSnackbarOpen();
-        }
+    if (this.props.usersOnline.hasFollowingsTime >= 1) {
+   
+      this.props.setSnackbarMessage(
+        "Can't unfollow yet. wait for countdown to complete",
       );
-    }else{
-
+      this.props.setSnackbarVariant("warning");
+      this.props.onSnackbarOpen();
+      
+    } else {
       this.setState({ disabled: true });
 
       const res = await unFollow(
@@ -107,14 +100,7 @@ class FollowButton extends Component {
       this.setState({ disabled: false });
       this.props.user.following = res.data.res !== "user unfollowed";
       this.forceUpdate();
-      }
-  };
-  onSnackbarOpen = () => {
-    this.setState({ snackbarOpen: true }, () => {});
-  };
-
-  onSnackbarClose = () => {
-    this.setState({ snackbarOpen: false }, () => {});
+    }
   };
   render() {
     const { context, user } = this.props;
@@ -162,17 +148,11 @@ class FollowButton extends Component {
             }}
             disabled={this.state.disabled}
             onClick={() => {
-              this.setState(
-                {
-                  snackbarMessage: "Click the Unfollow Tab to Unfollow Users",
-                  snackbarvariant: "info",
-                  vertical: "top",
-                  horizontal: "right"
-                },
-                () => {
-                  this.onSnackbarOpen();
-                }
+              this.props.setSnackbarMessage(
+                "Click the Unfollow Tab to Unfollow Users"
               );
+              this.props.setSnackbarVariant("info");
+              this.props.onSnackbarOpen();
             }}
           >
             {"Follows you"}
@@ -212,20 +192,7 @@ class FollowButton extends Component {
         button = <Button />;
         break;
     }
-    return (
-      <div>
-        {button}
-        <CustomSnackbar
-          snackbarOpen={this.state.snackbarOpen}
-          variant={this.state.snackbarvariant}
-          message={this.state.snackbarMessage}
-          onSnackbarOpen={this.onSnackbarOpen}
-          onSnackbarClose={this.onSnackbarClose}
-          horizontal={this.state.horizontal}
-          vertical={this.state.vertical}
-        />
-      </div>
-    );
+    return <div>{button}</div>;
   }
 }
 const mapStateToProps = state => ({
@@ -233,4 +200,7 @@ const mapStateToProps = state => ({
   usersOnline: state.usersOnline
 });
 
-export default connect(mapStateToProps)(FollowButton);
+export default connect(
+  mapStateToProps,
+  { onSnackbarOpen, setSnackbarMessage, setSnackbarVariant }
+)(FollowButton);

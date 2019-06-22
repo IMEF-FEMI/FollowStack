@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
-const keys = require("../../config/keys");
+const keys = require("../../../config/keys");
 
 // Load User  model
 const User = require("../../models/User");

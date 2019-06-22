@@ -9,8 +9,11 @@ import {
 } from "../../../../../actions/usersOnlineAction";
 import { connect } from "react-redux";
 import Users from "./Users";
-import CustomSnackbar from "../../../../../components/CustomSnackbar"
-
+import {
+  onSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarVariant
+} from "../../../../../actions/snackbarAction";
 
 const containerFluid = {
   paddingRight: "15px",
@@ -39,36 +42,18 @@ class FollowedBack extends Component {
   };
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors.newFollowersError) {
-      this.setState(
-        {
-          snackbarMessage: nextProps.errors.newFollowersError,
-          snackbarvariant: "error"
-        },
-        () => {
-          this.onSnackbarOpen();
-        }
-      );
+    
+      this.props.setSnackbarMessage(nextProps.errors.newFollowersError);
+      this.props.setSnackbarVariant("error");
+      this.props.onSnackbarOpen();
       this.props.clearError();
     } else if (nextProps.errors.serverError) {
-      this.setState(
-        {
-          snackbarMessage: nextProps.errors.serverError,
-          snackbarvariant: "error"
-        },
-        () => {
-          this.onSnackbarOpen();
-        }
-      );
+      this.props.setSnackbarMessage(nextProps.errors.serverError);
+      this.props.setSnackbarVariant("error");
+      this.props.onSnackbarOpen();
       this.props.clearError();
     }
   }
-  onSnackbarOpen = () => {
-    this.setState({ snackbarOpen: true }, () => {});
-  };
-
-  onSnackbarClose = () => {
-    this.setState({ snackbarOpen: false }, () => {});
-  };
   componentDidMount() {
     this.props.checkFollowedBackAction(
       this.props.auth.userData,
@@ -124,15 +109,6 @@ class FollowedBack extends Component {
               </Typography>
             </div>
           )}
-        <CustomSnackbar
-          snackbarOpen={this.state.snackbarOpen}
-          variant={this.state.snackbarvariant}
-          message={this.state.snackbarMessage}
-          onSnackbarOpen={this.onSnackbarOpen}
-          onSnackbarClose={this.onSnackbarClose}
-          horizontal={this.state.horizontal}
-          vertical={this.state.vertical}
-        />
       </div>
     );
   }
@@ -154,6 +130,9 @@ export default connect(
   mapStateToProps,
   {
     checkFollowedBackAction,
-    clearError
+    clearError,
+    onSnackbarOpen,
+    setSnackbarMessage,
+    setSnackbarVariant
   }
 )(FollowedBack);

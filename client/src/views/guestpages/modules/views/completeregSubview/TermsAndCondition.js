@@ -11,8 +11,11 @@ import {
 import Spinner from "./Spinner";
 
 import Button from "@material-ui/core/Button";
-import CustomSnackbar from "../../../../../components/CustomSnackbar";
-
+import {
+  onSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarVariant
+} from "../../../../../actions/snackbarAction";
 
 class TermsAndCondition extends Component {
   constructor() {
@@ -22,33 +25,15 @@ class TermsAndCondition extends Component {
       disabled: true,
       user: {},
       location: "",
-      finished: false,
-      snackbarOpen: false,
-      snackbarMessage: "",
-      snackbarvariant: "",
-      vertical: "top",
-      horizontal: "right"
+      finished: false
     };
     this.handleCheckedChanged = this.handleCheckedChanged.bind(this);
     this.finished = this.finished.bind(this);
   }
-  onSnackbarOpen = () => {
-    this.setState({ snackbarOpen: true }, () => {});
-  };
-
-  onSnackbarClose = () => {
-    this.setState({ snackbarOpen: false }, () => {});
-  };
   notify = (message, variant) => {
-    this.setState(
-      {
-        snackbarMessage: message,
-        snackbarvariant: variant
-      },
-      () => {
-        this.onSnackbarOpen();
-      }
-    );
+    this.props.setSnackbarMessage(message);
+    this.props.setSnackbarVariant(variant);
+    this.props.onSnackbarOpen();
   };
   finished() {
     const userData = this.state.user;
@@ -73,9 +58,7 @@ class TermsAndCondition extends Component {
       this.props.nextStep();
       this.props.gotoDashboard();
     } else if (nextProps.errors.userError) {
-     
       this.notify(nextProps.errors.userError, "error");
-
     }
   }
 
@@ -153,15 +136,6 @@ class TermsAndCondition extends Component {
         )}
 
         {this.state.finished && <Spinner />}
-        <CustomSnackbar
-          snackbarOpen={this.state.snackbarOpen}
-          variant={this.state.snackbarvariant}
-          message={this.state.snackbarMessage}
-          onSnackbarOpen={this.onSnackbarOpen}
-          onSnackbarClose={this.onSnackbarClose}
-          horizontal={this.state.horizontal}
-          vertical={this.state.vertical}
-        />
       </div>
     );
   }
@@ -181,6 +155,13 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { register, setUserData, setUserProfile }
+    {
+      register,
+      setUserData,
+      setUserProfile,
+      onSnackbarOpen,
+      setSnackbarMessage,
+      setSnackbarVariant
+    }
   )(TermsAndCondition)
 );

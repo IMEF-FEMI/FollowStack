@@ -18,17 +18,15 @@ import { addTweetPost, removeTweetPost } from "../../../../../async/post";
 import { setPoints } from "../../../../../actions/authActions";
 import { addNotificationAction } from "../../../../../actions/notificationAction";
 import Tweet from "./Tweet/Tweet";
-import CustomSnackbar from "../../../../../components/CustomSnackbar";
+import {
+  onSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarVariant,
+} from "../../../../../actions/snackbarAction";
 
 
 class RenderProfileTweets extends Component {
-  state = {
-    snackbarOpen: false,
-    snackbarMessage: "",
-    snackbarvariant: "",
-    vertical: "top",
-    horizontal: "right"
-  };
+  
   addTweet = async tweet => {
     const { auth } = this.props;
     tweet.added = true;
@@ -39,17 +37,12 @@ class RenderProfileTweets extends Component {
   };
 
   notify = (res, notificationType, tweet) => {
-    // using material ui custom snackbar instead of a third party library
+    // just istart replacing with redux actons here no questions lol..
     if (res.data.success) {
-      this.setState(
-        {
-          snackbarMessage: res.data.success,
-          snackbarvariant: "success"
-        },
-        () => {
-          this.onSnackbarOpen();
-        }
-      );
+     
+      this.props.setSnackbarMessage(res.data.success)
+      this.props.setSnackbarVariant("success")
+      this.props.onSnackbarOpen()
       this.props.addNotificationAction({
         id: Date.now(),
         title: res.data.success,
@@ -61,15 +54,10 @@ class RenderProfileTweets extends Component {
       tweet.added = false;
       this.forceUpdate();
       // using material ui custom snackbar instead of a third party library
-      this.setState(
-        {
-          snackbarMessage: res.data.error,
-          snackbarvariant: "error"
-        },
-        () => {
-          this.onSnackbarOpen();
-        }
-      );
+     
+      this.props.setSnackbarMessage(res.data.error)
+      this.props.setSnackbarVariant("error")
+      this.props.onSnackbarOpen()
       this.props.addNotificationAction({
         id: Date.now(),
         title: res.data.error,
@@ -78,13 +66,6 @@ class RenderProfileTweets extends Component {
         to: "#"
       });
     }
-  };
-  onSnackbarOpen = () => {
-    this.setState({ snackbarOpen: true }, () => {});
-  };
-
-  onSnackbarClose = () => {
-    this.setState({ snackbarOpen: false }, () => {});
   };
   removeTweet = async tweet => {
     const { auth } = this.props;
@@ -218,15 +199,6 @@ class RenderProfileTweets extends Component {
             />
           </Grid>
         )}
-        <CustomSnackbar
-          snackbarOpen={this.state.snackbarOpen}
-          variant={this.state.snackbarvariant}
-          message={this.state.snackbarMessage}
-          onSnackbarOpen={this.onSnackbarOpen}
-          onSnackbarClose={this.onSnackbarClose}
-          horizontal={this.state.horizontal}
-          vertical={this.state.vertical}
-        />
       </Grid>
     );
   }
@@ -308,5 +280,7 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { setPoints, addNotificationAction }
+  { setPoints, addNotificationAction,onSnackbarOpen ,
+    setSnackbarMessage,
+    setSnackbarVariant, }
 )(withStyles(styles)(RenderProfileTweets));
