@@ -13,12 +13,13 @@ io.sockets.on("connection", socket => {
     console.log(userInfo);
     users.push(userInfo);
     console.log("current users length " + users.length);
-    socket.emit("users", users);
+    // socket.emit("users", users.slice(0, 10));
   });
 
-  socket.on("get-users", info => {
-    socket.emit("users", users.slice(info.currentUsers, 10 * info.page));
+  socket.on("get-users", (info, callback) => {
+    callback(users.slice(info.currentUsers, 10 * (info.page + 1)));
   });
+
   socket.on("disconnect", () => {
     console.log("disconnected");
     users.splice(users.indexOf(socket.userInfo));
