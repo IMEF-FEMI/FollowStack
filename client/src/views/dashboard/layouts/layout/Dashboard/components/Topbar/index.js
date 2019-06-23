@@ -29,13 +29,16 @@ import {
 import { connect } from "react-redux";
 import { logoutUser } from "../../../../../../../actions/authActions";
 // Shared services
-import {getNotifications} from "./services/notification";
+import { getNotifications } from "./services/notification";
 
 // Custom components
 import { NotificationList } from "./components";
 
 // Component styles
 import styles from "./styles";
+
+//sockets
+import { SocketContext } from "../../../../../../../components/SocketContext";
 
 class Topbar extends Component {
   signal = true;
@@ -76,14 +79,15 @@ class Topbar extends Component {
   }
 
   handleSignOut = () => {
-    const { history, logoutUser } = this.props;
+    const { history, logoutUser, socket } = this.props;
 
     history.push("/sign-in");
     logoutUser();
+    socket.emit("disconnect");
   };
 
   handleShowNotifications = event => {
-    this.getNotifications()
+    this.getNotifications();
     this.setState({
       notificationsEl: event.currentTarget
     });
@@ -177,6 +181,11 @@ Topbar.defaultProps = {
   onToggleSidebar: () => {}
 };
 
+const TopbarWithSocket = props => (
+  <SocketContext.Consumer>
+    {socket => <Topbar {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
 export default connect(
   null,
   { logoutUser }
@@ -184,5 +193,5 @@ export default connect(
   compose(
     withRouter,
     withStyles(styles)
-  )(Topbar)
+  )(TopbarWithSocket)
 );

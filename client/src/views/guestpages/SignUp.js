@@ -25,7 +25,6 @@ import {
   setSnackbarVariant
 } from "../../actions/snackbarAction";
 
-
 const styles = theme => ({
   main: {
     width: "auto",
@@ -50,7 +49,7 @@ const styles = theme => ({
   }
 });
 
-class SignIn extends React.Component {
+class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -308,7 +307,7 @@ class SignIn extends React.Component {
   }
 }
 
-SignIn.propTypes = {
+SignUp.propTypes = {
   auth: PropTypes.object.isRequired,
   signIn: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired
@@ -329,6 +328,6 @@ export default withRouter(
         setSnackbarMessage,
         setSnackbarVariant
       }
-    )(SignIn)
+    )(SignUp)
   )
 );

@@ -16,6 +16,9 @@ import {
   setSnackbarMessage,
   setSnackbarVariant
 } from "../../../../../actions/snackbarAction";
+import { initSignIn } from "../../../../../components/Init";
+import { SocketContext } from "../../../../../components/SocketContext";
+
 
 class TermsAndCondition extends Component {
   constructor() {
@@ -55,6 +58,7 @@ class TermsAndCondition extends Component {
     if (nextProps.auth.isAuthenticated) {
       this.props.setUserData(this.state.user);
       this.props.setUserProfile(this.state.user, this.props.auth.keyInUse);
+      initSignIn(this.props.sockt)
       this.props.nextStep();
       this.props.gotoDashboard();
     } else if (nextProps.errors.userError) {
@@ -152,6 +156,11 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
+const TermsAndConditionWithSocket = props => (
+  <SocketContext.Consumer>
+    {socket => <TermsAndCondition {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
 export default withRouter(
   connect(
     mapStateToProps,
@@ -163,5 +172,5 @@ export default withRouter(
       setSnackbarMessage,
       setSnackbarVariant
     }
-  )(TermsAndCondition)
+  )(TermsAndConditionWithSocket)
 );

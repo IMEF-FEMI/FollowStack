@@ -21,25 +21,7 @@ import { firebaseKeys } from "../../config";
 import store from "../../store";
 
 export const initApp = socket => {
-  // init firebase
-  if (
-    (localStorage.getItem("keyInUse") === undefined ||
-      localStorage.getItem("keyInUse") === null) &&
-    !firebase.apps.length
-  ) {
-    const randomNumber = Math.floor(Math.random() * 4);
-    firebase.initializeApp(firebaseKeys[randomNumber]);
-    localStorage.setItem("keyInUse", randomNumber);
-    store.dispatch(setKeyInUse(randomNumber));
-  } else if (!firebase.apps.length) {
-    const key = localStorage.getItem("keyInUse");
-    store.dispatch(setKeyInUse(key));
-
-    // console.log("key in sign in pge ", key)
-    // console.log("we here", key);
-    firebase.initializeApp(firebaseKeys[key]);
-  }
-
+  initFirebase();
   // localStorage.clear();
   // Check for token
   if (localStorage.jwtToken) {
@@ -99,8 +81,35 @@ export const initSocket = socket => {
 
   socket.on("greet-from-server", message => {
     console.log(message);
-    store.dispatch(setSnackbarMessage(message.screen_name));
-    store.dispatch(setSnackbarVariant("success"));
+    store.dispatch(setSnackbarMessage(message));
+    store.dispatch(setSnackbarVariant("followed"));
     store.dispatch(onSnackbarOpen());
   });
+};
+export const initSignIn = socket => {
+  initFirebase();
+
+  // go-online using socketIO
+  initSocket(socket);
+  store.dispatch(setPointsAction(store.getState().auth.user._id));
+};
+export const initFirebase = () => {
+  // init firebase
+  if (
+    (localStorage.getItem("keyInUse") === undefined ||
+      localStorage.getItem("keyInUse") === null) &&
+    !firebase.apps.length
+  ) {
+    const randomNumber = Math.floor(Math.random() * 4);
+    firebase.initializeApp(firebaseKeys[randomNumber]);
+    localStorage.setItem("keyInUse", randomNumber);
+    store.dispatch(setKeyInUse(randomNumber));
+  } else if (!firebase.apps.length) {
+    const key = localStorage.getItem("keyInUse");
+    store.dispatch(setKeyInUse(key));
+
+    // console.log("key in sign in pge ", key)
+    // console.log("we here", key);
+    firebase.initializeApp(firebaseKeys[key]);
+  }
 };

@@ -11,16 +11,21 @@ import SnackbarContent from "@material-ui/core/SnackbarContent";
 import WarningIcon from "@material-ui/icons/Warning";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import Avatar from "@material-ui/core/Avatar";
 
 const variantIcon = {
   success: CheckCircleIcon,
   warning: WarningIcon,
   error: ErrorIcon,
-  info: InfoIcon
+  info: InfoIcon,
+  followed: Avatar
 };
 
 const styles = theme => ({
   success: {
+    backgroundColor: green[600]
+  },
+  followed: {
     backgroundColor: green[600]
   },
   error: {
@@ -47,7 +52,7 @@ const styles = theme => ({
 
 function MySnackbarContent(props) {
   const { classes, className, message, onClose, variant, ...other } = props;
-  const Icon = variantIcon[variant];
+  var Icon = variantIcon[variant];
 
   return (
     <SnackbarContent
@@ -55,8 +60,13 @@ function MySnackbarContent(props) {
       aria-describedby="client-snackbar"
       message={
         <span id="client-snackbar" className={classes.message}>
-          <Icon className={classNames(classes.icon, classes.iconVariant)} />
-          {message}
+          <Icon
+            src={variant === "followed" ? message.photo : undefined}
+            className={classNames(classes.icon, classes.iconVariant)}
+          />
+          {variant === "followed"
+            ? message.screen_name + " Just followed you"
+            : message}
         </span>
       }
       action={[
@@ -78,9 +88,9 @@ function MySnackbarContent(props) {
 MySnackbarContent.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
-  message: PropTypes.node,
   onClose: PropTypes.func,
-  variant: PropTypes.oneOf(["success", "warning", "error", "info"]).isRequired
+  variant: PropTypes.oneOf(["success", "warning", "error", "info", "followed"])
+    .isRequired
 };
 
 export default withStyles(styles)(MySnackbarContent);

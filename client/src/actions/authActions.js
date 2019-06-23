@@ -98,7 +98,7 @@ export const setUserProfile = (userData, key) => async dispatch => {
   try {
     const profile = await getUserProfile(userData, key);
     // Save to localStorage
-    localStorage.removeItem("userProfile");
+    // localStorage.removeItem("userProfile");
     localStorage.setItem("userProfile", JSON.stringify(profile.data));
     // Set current user
     dispatch({
@@ -111,7 +111,10 @@ export const setUserProfile = (userData, key) => async dispatch => {
       err.response.data !== undefined &&
       err.response.data.errorCode !== undefined
     ) {
-      if (parseInt(err.response.data.errorCode) === 89 || parseInt(err.response.data.errorCode) === 32) {
+      if (
+        parseInt(err.response.data.errorCode) === 89 ||
+        parseInt(err.response.data.errorCode) === 32
+      ) {
         dispatch(logoutUser());
       }
     }
@@ -121,8 +124,8 @@ export const setUserProfile = (userData, key) => async dispatch => {
 export const setPointsAction = user_id => async dispatch => {
   try {
     const { data: points } = await getPoints(user_id);
-    localStorage.setItem("points", points)
-    dispatch(setPoints(points))
+    localStorage.setItem("points", points);
+    dispatch(setPoints(points));
   } catch (err) {
     console.log(err);
   }
@@ -137,10 +140,11 @@ export const setPoints = points => dispatch => {
 // Log user out
 export const logoutUser = () => dispatch => {
   // Remove token from localStorage
-  localStorage.removeItem("jwtToken");
-  localStorage.removeItem("userData");
-  localStorage.removeItem("userProfile");
-  localStorage.removeItem("points")
+  // localStorage.removeItem("jwtToken");
+  // localStorage.removeItem("userData");
+  // localStorage.removeItem("userProfile");
+  // localStorage.removeItem("points")
+  localStorage.clear();
 
   firebase
     .auth()
@@ -149,7 +153,7 @@ export const logoutUser = () => dispatch => {
       try {
         // Sign-out successful.
         firebase.apps.length = 0;
-        localStorage.removeItem("keyInUse");
+        // localStorage.removeItem("keyInUse");
 
         const randomNumber = Math.floor(Math.random() * 4);
         await firebase.app("[DEFAULT]").delete();
@@ -162,7 +166,7 @@ export const logoutUser = () => dispatch => {
     })
     .catch(function(error) {
       // An error happened
-      console.log(error)
+      console.log(error);
     });
 
   // Remove auth header for future requests

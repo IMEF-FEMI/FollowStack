@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withRouter } from "react-router-dom";
 import { Typography } from "@material-ui/core";
+import {SocketContext} from '../../../../components/SocketContext'
 
 const welcome_user = {
   color: "#fff",
@@ -48,7 +49,6 @@ const twitter_icon_index = {
   borderRadius: "15px"
 };
 const category_text = {
-  // color: "#66788A",
   fontWeight: "500",
   fontSize: "20px",
   letterSpacing: "-0.06px",
@@ -213,6 +213,7 @@ class DashBoard extends Component {
                   id="logout-icon-box"
                   onClick={() => {
                     this.props.logoutUser();
+                    this.props.socket.emit("disconnect")
                   }}
                 >
                   <span>
@@ -242,10 +243,17 @@ class DashBoard extends Component {
 DashBoard.propTypes = {
   auth: PropTypes.object.isRequired
 };
+
+const DashBoardWithSocket = props => (
+  <SocketContext.Consumer>
+    {socket => <DashBoard {...props} socket={socket} />}
+  </SocketContext.Consumer>
+)
 const mapStateToProps = state => ({
   auth: state.auth
 });
+
 export default connect(
   mapStateToProps,
   { logoutUser }
-)(withRouter(withTheme(theme)(DashBoard)));
+)(withRouter(withTheme(theme)(DashBoardWithSocket)));

@@ -29,6 +29,8 @@ import {
   setUserProfile,
   setKeyInUse
 } from "../../actions/authActions";
+import { SocketContext } from "../../components/SocketContext";
+import { initSignIn } from "../../components/Init";
 
 const styles = theme => ({
   main: {
@@ -60,8 +62,7 @@ class SignIn extends React.Component {
     this.state = {
       loading: false,
       user: {},
-      width: window.innerWidth,
-      
+      width: window.innerWidth
     };
     this.handleUserData = this.handleUserData.bind(this);
   }
@@ -131,10 +132,10 @@ class SignIn extends React.Component {
     }
   }
   componentWillMount() {
-     // TrackPage
-     const page = this.props.location.pathname + this.props.location.search;
-     initGA();
-     trackPage(page);
+    // TrackPage
+    const page = this.props.location.pathname + this.props.location.search;
+    initGA();
+    trackPage(page);
 
     const { width } = this.state;
 
@@ -224,6 +225,7 @@ class SignIn extends React.Component {
         try {
           //sign in
           this.props.signIn(userData);
+          initSignIn(this.props.socket)
         } catch (err) {
           this.setState({ loading: false });
 
@@ -265,7 +267,7 @@ class SignIn extends React.Component {
                   Sign In
                 </Typography>
                 <Typography variant="body2" align="center">
-                  <Link to="/sign-up" underline="always" >
+                  <Link to="/sign-up" underline="always">
                     Dont have an account?
                   </Link>
                 </Typography>
@@ -305,10 +307,10 @@ class SignIn extends React.Component {
               />
 
               <React.Fragment>
-                <Typography align="center" >
+                <Typography align="center">
                   by clicking the sign in button, you agree to our
-                  <Link to="/terms" >Terms of service </Link>and 
-                  <Link to="/privacy" > Privacy Policy</Link>
+                  <Link to="/terms">Terms of service </Link>and
+                  <Link to="/privacy"> Privacy Policy</Link>
                 </Typography>
               </React.Fragment>
             </Paper>
@@ -332,6 +334,11 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
+const SignInWithSocket = props => (
+  <SocketContext.Consumer>
+    {socket => <SignIn {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
 export default withRouter(
   withStyles(styles)(
     connect(
@@ -340,10 +347,11 @@ export default withRouter(
         signIn,
         setUserData,
         setUserProfile,
-        setKeyInUse,onSnackbarOpen,
+        setKeyInUse,
+        onSnackbarOpen,
         setSnackbarMessage,
         setSnackbarVariant
       }
-    )(SignIn)
+    )(SignInWithSocket)
   )
 );
