@@ -4,6 +4,7 @@ const app = require("./server/app");
 const server = http.createServer(app);
 const socketIO = require("socket.io");
 const io = socketIO(server);
+const { follow, unFollow, lookup } = require("./server/routes/api/usersUtil");
 users = [];
 io.sockets.on("connection", socket => {
   console.log("Socket connected ", socket.id);
@@ -17,7 +18,13 @@ io.sockets.on("connection", socket => {
   });
 
   socket.on("get-users", (info, callback) => {
-    callback(users.slice(info.currentUsers, 10 * (info.page + 1)));
+    lookup(users.slice(info.currentUsers, 10 * (info.page + 1)), callback);
+  });
+  socket.on("follow", (info, callback) => {
+    follow(info, callback);
+  });
+  socket.on("unFollow", (info, callback) => {
+    unFollow(info, callback);
   });
 
   socket.on("disconnect", () => {

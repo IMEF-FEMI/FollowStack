@@ -8,6 +8,8 @@ import {
   fetchNextAction
 } from "../../../../../actions/usersAction";
 import { onScroll } from "../../components/tweet/utils";
+import Typography from "@material-ui/core/Typography";
+
 
 const containerFluid = {
   paddingRight: "15px",
@@ -52,7 +54,7 @@ class Online extends Component {
     window.removeEventListener("scroll", this.onScroll, false);
   }
   render() {
-    const { initialFetch } = this.props.users;
+    const { users, initialFetch, hasMore } = this.props.users;
     return (
       <React.Fragment>
         {initialFetch && (
@@ -62,6 +64,18 @@ class Online extends Component {
                 <CircularProgress />
               </Grid>
             </Grid>
+          </div>
+        )}
+        {users.length === 0 && !hasMore && (
+          <div style={container}>
+            <Typography
+              variant="h2"
+              style={{ color: "#000" }}
+              gutterBottom
+              align="center"
+            >
+              There's Nobody Online! Check Back Later
+            </Typography>
           </div>
         )}
       </React.Fragment>

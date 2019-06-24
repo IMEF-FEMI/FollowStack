@@ -38,7 +38,7 @@ export const fetchNextAction = (
       } else {
         dispatch(setIsFetching(false));
         dispatch(setPage(page + 1));
-        dispatch(setUsers(data));
+        dispatch(setUsers(users));
       }
     }
   );

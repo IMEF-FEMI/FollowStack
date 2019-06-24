@@ -21,6 +21,7 @@ export const onScroll = function(cb) {
       const currentInnerHeight = innerHeight;
       const currentDocOffsetHeight = docOffsetHeight;
 
+      if(this.state){
       if (
         this.state.showNavToTop === false &&
         currentPageYOffset > currentInnerHeight
@@ -33,6 +34,7 @@ export const onScroll = function(cb) {
       ) {
         this.setState({ showNavToTop: false });
       }
+    }
       if (currentInnerHeight + currentPageYOffset >= currentDocOffsetHeight) {
         cb();
       }
