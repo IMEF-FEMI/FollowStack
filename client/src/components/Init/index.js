@@ -53,7 +53,9 @@ export const initApp = socket => {
     if (localStorage.getItem("points")) {
       store.dispatch(setPoints(localStorage.getItem("points")));
     }
-    store.dispatch(setPointsAction(store.getState().auth.user._id));
+    setTimeout(() => {
+      store.dispatch(setPointsAction(store.getState().auth.user._id));
+    }, 5000);
     // Check for expired token
     const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
@@ -63,25 +65,19 @@ export const initApp = socket => {
   }
 };
 
-export const goOffline = socket => {
-  const userInfo = store.getState().auth;
-  socket.emit("go-offline", {
-    user_id: userInfo.user.userid,
-    photo: userInfo.userData.photo,
-    screen_name: userInfo.userProfile.screen_name
-  });
-};
 export const initSocket = socket => {
   const userInfo = store.getState().auth;
-  socket.emit("go-online", {
-    user_id: userInfo.user.userid,
-    photo: userInfo.userData.photo,
-    screen_name: userInfo.userProfile.screen_name
+  socket.on("get-user-info", (info, callback) => {
+    callback({
+      user_id: userInfo.user.userid,
+      photo: userInfo.userData.photo,
+      screen_name: userInfo.userProfile.screen_name
+    });
   });
 
-  socket.on("greet-from-server", message => {
-    console.log(message);
-    store.dispatch(setSnackbarMessage(message));
+  socket.on("followed", res => {
+    console.log(res.user);
+    store.dispatch(setSnackbarMessage(res.user));
     store.dispatch(setSnackbarVariant("followed"));
     store.dispatch(onSnackbarOpen());
   });

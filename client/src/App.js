@@ -30,7 +30,7 @@ import { SocketContext } from "./components/SocketContext";
 import { initApp } from "./components/Init";
 import { CustomSnackbar } from "./components/CustomSnackbar/index";
 
-const socket = socketIO("http://localhost:8080");
+const socket = socketIO("http://localhost:8080", {transports: ['websocket']});
 
 // initialize initial app settings
 // includes user profile, points etc.

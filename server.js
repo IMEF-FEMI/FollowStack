@@ -6,30 +6,39 @@ const socketIO = require("socket.io");
 const io = socketIO(server);
 const { follow, unFollow, lookup } = require("./server/routes/api/usersUtil");
 users = [];
+
 io.sockets.on("connection", socket => {
   console.log("Socket connected ", socket.id);
-
-  socket.on("go-online", userInfo => {
+  socket.emit("get-user-info", {}, userInfo => {
+    userInfo.socketId = socket.id;
     socket.userInfo = userInfo;
+    users.unshift(userInfo);
     console.log(userInfo);
-    users.push(userInfo);
     console.log("current users length " + users.length);
-    // socket.emit("users", users.slice(0, 10));
   });
 
   socket.on("get-users", (info, callback) => {
-    lookup(users.slice(info.currentUsers, 10 * (info.page + 1)), callback);
+    lookup(
+      info,
+      users.slice(info.currentUsers, 10 * (info.page + 1)),
+      callback
+    );
   });
-  socket.on("follow", (info, callback) => {
-    follow(info, callback);
+  socket.on("follow", async (info, callback) => {
+    await follow(info, callback);
+    io.to(`${info.newUser.socketId}`).emit("followed", {
+      user: socket.userInfo
+    });
   });
-  socket.on("unFollow", (info, callback) => {
+  socket.on("unfollow", (info, callback) => {
     unFollow(info, callback);
   });
 
   socket.on("disconnect", () => {
     console.log("disconnected");
-    users.splice(users.indexOf(socket.userInfo));
+    if (socket.userInfo) {
+      users.splice(users.indexOf(socket.userInfo));
+    }
     console.log("remaining users length " + users.length);
   });
 });

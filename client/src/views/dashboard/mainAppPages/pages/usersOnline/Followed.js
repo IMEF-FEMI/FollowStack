@@ -4,6 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import PersonAdd from "@material-ui/icons/PersonAdd";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { withStyles } from "@material-ui/core";
+
 
 import {
   getOnlineUsersAction,
@@ -37,6 +39,38 @@ const container = {
   paddingBottom: "20vh",
   color: "#FFFFFF"
 };
+const styles = theme => ({
+  "@global": {
+    body: {
+      backgroundColor: theme.palette.common.white
+    },
+    ul: {
+      margin: 0,
+      padding: 0
+    },
+    li: {
+      listStyle: "none"
+    }
+  },
+  link: {
+    margin: theme.spacing(1, 1.5)
+  },
+  content: {
+    padding: theme.spacing(8, 0, 6)
+  },
+  cardHeader: {
+    backgroundColor: theme.palette.grey[200]
+  },
+  cardPricing: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "baseline",
+    marginBottom: theme.spacing(2)
+  },
+  logoDivider: {
+    marginBottom: theme.spacing(2)
+  }
+});
 
 class Followed extends Component {
   state = {
@@ -164,7 +198,7 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
+export default withStyles(styles)(connect(
   mapStateToProps,
   {
     getOnlineUsersAction,
@@ -175,4 +209,4 @@ export default connect(
     setSnackbarMessage,
     setSnackbarVariant
   }
-)(Followed);
+)(Followed));

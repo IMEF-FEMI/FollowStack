@@ -9,7 +9,7 @@ import {
 } from "../../../../../actions/usersAction";
 import { onScroll } from "../../components/tweet/utils";
 import Typography from "@material-ui/core/Typography";
-
+import Users from "./Users";
 
 const containerFluid = {
   paddingRight: "15px",
@@ -33,20 +33,32 @@ class Online extends Component {
     this.onScroll = onScroll.call(this, this.fetchNextPage);
   }
   fetchNextPage = async () => {
-    const { socket, users, fetchNextAction } = this.props;
+    const { socket, users, fetchNextAction, auth } = this.props;
 
     if (users.initialFetch || users.isFetching || !users.hasMore) {
       return;
     }
-    await fetchNextAction(socket, users.users.length, users.page);
+    await fetchNextAction(
+      socket,
+      users.users.length,
+      users.page,
+      auth.userData,
+      auth.keyInUse
+    );
   };
 
   async componentDidMount() {
     window.addEventListener("scroll", this.onScroll, false);
 
-    const { socket, users, initialFetchAction } = this.props;
+    const { socket, users, initialFetchAction, auth } = this.props;
     if (users.initialFetch === true) {
-      await initialFetchAction(socket, users.users.length, users.page);
+      await initialFetchAction(
+        socket,
+        users.users.length,
+        users.page,
+        auth.userData,
+        auth.keyInUse
+      );
     }
   }
   componentWillUnmount() {
@@ -54,7 +66,9 @@ class Online extends Component {
     window.removeEventListener("scroll", this.onScroll, false);
   }
   render() {
-    const { users, initialFetch, hasMore } = this.props.users;
+    const { users, initialFetch, isFetching } = this.props.users;
+    const check =
+      users.length === 1 && users[0].user_id === this.props.auth.user.userid;
     return (
       <React.Fragment>
         {initialFetch && (
@@ -66,7 +80,7 @@ class Online extends Component {
             </Grid>
           </div>
         )}
-        {users.length === 0 && !hasMore && (
+        {!initialFetch && (users.length === 0 || check) && (
           <div style={container}>
             <Typography
               variant="h2"
@@ -74,9 +88,25 @@ class Online extends Component {
               gutterBottom
               align="center"
             >
-              There's Nobody Online! Check Back Later
+              There are no users Online! Check Back Later
             </Typography>
           </div>
+        )}
+        {users.length !== 0 && (
+          <Grid container justify="center">
+            <Users users={users} />
+          </Grid>
+        )}
+        {isFetching && (
+          <Grid item xs={12}>
+            <CircularProgress
+              style={{
+                margin: "16px auto",
+                display: "block"
+              }}
+              size={50}
+            />
+          </Grid>
         )}
       </React.Fragment>
     );

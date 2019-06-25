@@ -9,11 +9,13 @@ import {
 export const initialFetchAction = (
   socket,
   currentUsers,
-  page
+  page,
+  userData,
+  key
 ) => async dispatch => {
   socket.emit(
     "get-users",
-    { currentUsers: currentUsers, page: page },
+    { currentUsers: currentUsers, page: page, userData: userData, key: key },
     users => {
       dispatch(setUsers(users));
       dispatch(setPage(1));
@@ -25,12 +27,14 @@ export const initialFetchAction = (
 export const fetchNextAction = (
   socket,
   currentUsers,
-  page
+  page,
+  userData,
+  key
 ) => async dispatch => {
   dispatch(setIsFetching(true));
   socket.emit(
     "get-users",
-    { currentUsers: currentUsers, page: page },
+    { currentUsers: currentUsers, page: page, userData: userData, key: key },
     users => {
       if (!users.length) {
         dispatch(setHasMore(false));

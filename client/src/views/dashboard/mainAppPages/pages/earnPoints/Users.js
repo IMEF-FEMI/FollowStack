@@ -5,16 +5,13 @@ import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider/Divider";
 import List from "@material-ui/core/List/List";
 import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import FollowButton from "./FollowButton";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 
 class Users extends React.Component {
   render() {
     const { users } = this.props;
-    // first ten users in the array
 
     return (
       <List>

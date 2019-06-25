@@ -403,6 +403,9 @@ getOnline = (req, res, userArray, client) => {
         screen_name: userArray[i][j].screen_name,
         photo: userArray[i][j].photo
       });
+      if(users.length === 100){
+        break
+      }
     }
   }
   // first get the unique ones from the users Array

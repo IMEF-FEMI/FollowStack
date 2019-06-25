@@ -23,11 +23,10 @@ const TWITTER_KEYS = [
   {
     consumerKey: process.env.TWITTER_APP_TWO_KEY,
     consumerSecret: process.env.TWITTER_APP_TWO_SECRET
-  } 
+  }
 ];
 
- const follow = (info, callback) => {
-  console.log("following");
+const follow = (info, callback) => {
   const random = TWITTER_KEYS[info.key];
 
   var client = new Twitter({
@@ -58,7 +57,7 @@ const TWITTER_KEYS = [
         }
       ).then(user => {
         if (user) {
-          callback(user);
+          callback(user.points);
         }
       });
     } else {
@@ -67,8 +66,7 @@ const TWITTER_KEYS = [
   });
 };
 
- const unFollow = (info, callback) => {
-  console.log("following");
+const unFollow = (info, callback) => {
   const random = TWITTER_KEYS[info.key];
 
   var client = new Twitter({
@@ -98,7 +96,7 @@ const TWITTER_KEYS = [
         }
       ).then(user => {
         if (user) {
-          callback(user);
+          callback(user.points);
         }
       });
     } else {
@@ -107,8 +105,7 @@ const TWITTER_KEYS = [
   });
 };
 
- const lookup = (info, users, callback) => {
-  
+const lookup = (info, users, callback) => {
   const random = TWITTER_KEYS[info.key];
 
   var client = new Twitter({
@@ -137,20 +134,22 @@ const TWITTER_KEYS = [
       // get those accts with "connections": ["following","followed_by"]
       // they are the ones that followed back
       arr.map(i => {
-        if (
-          i.connections[0] === "following" ||
-          i.connections[1] === "following"
-        ) {
-          // get original data from our following list
-          users.following.map(j => {
-            if (i.id_str === j.user_id) {
-              j.following = true
+        // get original data from our following list
+        users.map(j => {
+          if (i.id_str === j.user_id) {
+            if (
+              i.connections[0] === "following" ||
+              i.connections[1] === "following"
+            ) {
+              j.following = true;
+            } else {
+              j.following = false;
             }
-          });
-        }
+          }
+        });
       });
       client = null;
-      callback(users)
+      callback(users);
     } else {
       // either has an error or returned status code not equals 200
       console.log(error);
@@ -158,4 +157,4 @@ const TWITTER_KEYS = [
   });
 };
 
-module.exports = {follow, unFollow, lookup}
+module.exports = { follow, unFollow, lookup };
