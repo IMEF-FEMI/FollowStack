@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 var Twitter = require("twitter");
 
-const User = require("../../models/User");
+const User = require("../models/User");
+const { addNotification } = require("./NotificationsUtil");
 
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
@@ -26,7 +27,7 @@ const TWITTER_KEYS = [
   }
 ];
 
-const follow = (info, callback) => {
+const follow = (info, callback, socket) => {
   const random = TWITTER_KEYS[info.key];
 
   var client = new Twitter({
@@ -45,6 +46,27 @@ const follow = (info, callback) => {
     response
   ) {
     if (!error && response.statusCode === 200) {
+      // add new notification the the person following
+      const followingNotif = {
+        _id: mongoose.Types.ObjectId(socket.userInfo.user_id),
+        title: "👍 Follow Successful +40 Points ",
+        when: Date.now(),
+        type: "pointsGained",
+        to: "#"
+      };
+      addNotification(socket.userInfo.user_id, followingNotif);
+
+      // add new notification the the person bieng followed
+      const followedNotif = {
+        _id: mongoose.Types.ObjectId(info.newUser.user_id),
+        title: `${socket.userInfo.screen_name} just Followed you`,
+        when: Date.now(),
+        type: "followed",
+        to: "#"
+      };
+
+      addNotification(info.newUser.user_id, followedNotif);
+
       await User.findOneAndUpdate(
         { userid: info.userData.userid },
         {
@@ -84,6 +106,16 @@ const unFollow = (info, callback) => {
     response
   ) {
     if (!error && response.statusCode === 200) {
+      // add notification
+      const unfollowNotif = {
+        _id: mongoose.Types.ObjectId(socket.userInfo.user_id),
+        title: "👍 user unFollowed - 40 Points ",
+        when: Date.now(),
+        type: "pointsDeducted",
+        to: "#"
+      };
+      addNotification(socket.userInfo.user_id, unfollowNotif);
+
       await User.findOneAndUpdate(
         { userid: info.userData.userid },
         {
@@ -131,10 +163,8 @@ const lookup = (info, users, callback) => {
       //  const users =  Object.values(tweet)
       const arr = Object.keys(tweet).map(i => tweet[i]);
 
-      // get those accts with "connections": ["following","followed_by"]
-      // they are the ones that followed back
+      // identify those already followed
       arr.map(i => {
-        // get original data from our following list
         users.map(j => {
           if (i.id_str === j.user_id) {
             if (

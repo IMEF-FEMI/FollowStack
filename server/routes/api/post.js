@@ -53,7 +53,7 @@ router.post(
     // console.log("addTweet  called == user ", req.body.tweet.user);
     await User.findOneAndUpdate(
       {
-        _id: mongoose.Types.ObjectId(req.body.user_id),
+        _id: mongoosemongoose.Types.ObjectId(req.body.user_id),
         points: { $gte: 50 }
       },
       {

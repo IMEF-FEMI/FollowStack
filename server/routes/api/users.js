@@ -8,6 +8,7 @@ const keys = require("../../../config/keys");
 // Load User  model
 const User = require("../../models/User");
 const UsersOnline = require("../../models/UsersOnline");
+const Notifications = require("../../models/Notifications");
 
 var Twitter = require("twitter");
 const TWITTER_KEYS = [
@@ -62,9 +63,11 @@ router.post(
           .save()
           .then(user => {
             Promise.all([
-             
               new UsersOnline({
                 username: req.body.username,
+                user_id: req.body.userid
+              }).save(),
+              new Notifications({
                 user_id: req.body.userid
               }).save()
             ]);
@@ -100,12 +103,10 @@ router.post(
     const hour = minute * 60;
     const day = hour * 24;
     const week = day * 7;
-   
+
     await User.findOne({ userid: req.body.userid })
       .then(user => {
         if (user) {
-         
-
           const payload = {
             userid: user.userid,
             _id: user._id
@@ -156,8 +157,7 @@ router.get(
       "points",
       function(err, user) {
         if (err) return handleError(err);
-        res.status(200).json(user.points)
-          
+        res.status(200).json(user.points);
       }
     );
   })

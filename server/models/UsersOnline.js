@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
 
-const Follows = new Schema({
+const UsersOnlineSchema = new Schema({
   username: String,
   user_id: String,
   following: [
@@ -22,4 +22,4 @@ const Follows = new Schema({
   ]
 });
 
-module.exports = User = mongoose.model("UsersOnline", Follows);
+module.exports = UsersOnline = mongoose.model("UsersOnline", UsersOnlineSchema);

@@ -224,7 +224,7 @@ class SignIn extends React.Component {
       } else {
         try {
           //sign in
-          this.props.signIn(userData);
+         await this.props.signIn(userData);
           initSignIn(this.props.socket)
         } catch (err) {
           this.setState({ loading: false });

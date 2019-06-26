@@ -4,7 +4,7 @@ const app = require("./server/app");
 const server = http.createServer(app);
 const socketIO = require("socket.io");
 const io = socketIO(server);
-const { follow, unFollow, lookup } = require("./server/routes/api/usersUtil");
+const { follow, unFollow, lookup } = require("./server/utils/usersUtil");
 users = [];
 
 io.sockets.on("connection", socket => {
@@ -25,7 +25,7 @@ io.sockets.on("connection", socket => {
     );
   });
   socket.on("follow", async (info, callback) => {
-    await follow(info, callback);
+    await follow(info, callback, socket);
     io.to(`${info.newUser.socketId}`).emit("followed", {
       user: socket.userInfo
     });

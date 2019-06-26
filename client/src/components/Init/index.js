@@ -53,9 +53,7 @@ export const initApp = socket => {
     if (localStorage.getItem("points")) {
       store.dispatch(setPoints(localStorage.getItem("points")));
     }
-    setTimeout(() => {
       store.dispatch(setPointsAction(store.getState().auth.user._id));
-    }, 5000);
     // Check for expired token
     const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
