@@ -28,6 +28,8 @@ import {
 
 import { connect } from "react-redux";
 import { logoutUser } from "../../../../../../../actions/authActions";
+import { markAllAsReadAction } from "../../../../../../../actions/notificationAction";
+
 // Shared services
 import { getNotifications } from "./services/notification";
 
@@ -91,6 +93,7 @@ class Topbar extends Component {
     this.setState({
       notificationsEl: event.currentTarget
     });
+    this.props.markAllAsReadAction(this.props.socket, this.props.auth.user.userid)
   };
 
   handleCloseNotifications = () => {
@@ -105,9 +108,9 @@ class Topbar extends Component {
       className,
       title,
       isSidebarOpen,
-      onToggleSidebar
+      onToggleSidebar,
     } = this.props;
-    const { notifications, notificationsCount, notificationsEl } = this.state;
+    const { notifications,  notificationsEl } = this.state;
     const rootClassName = classNames(classes.root, className);
     const showNotifications = Boolean(notificationsEl);
 
@@ -130,9 +133,10 @@ class Topbar extends Component {
               onClick={this.handleShowNotifications}
             >
               <Badge
-                badgeContent={notificationsCount}
-                color="primary"
-                variant="dot"
+                badgeContent={
+                  this.props.notifications.unreadCount >0? this.props.notifications.unreadCount : null
+                }
+                color="secondary"
               >
                 <NotificationsIcon />
               </Badge>
@@ -186,9 +190,13 @@ const TopbarWithSocket = props => (
     {socket => <Topbar {...props} socket={socket} />}
   </SocketContext.Consumer>
 );
+const mapStateToProps = state => ({
+  auth: state.auth,
+  notifications: state.notifications,
+});
 export default connect(
-  null,
-  { logoutUser }
+  mapStateToProps,
+  { logoutUser , markAllAsReadAction}
 )(
   compose(
     withRouter,

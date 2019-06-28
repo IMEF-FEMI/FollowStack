@@ -107,6 +107,7 @@ router.post(
     await User.findOne({ userid: req.body.userid })
       .then(user => {
         if (user) {
+          // new Notifications({ user_id: req.body.userid }).save(); 
           const payload = {
             userid: user.userid,
             _id: user._id

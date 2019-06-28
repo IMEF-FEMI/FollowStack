@@ -440,8 +440,8 @@
         "https://pbs.twimg.com/profile_images/1046054316723904513/CA86ZpFF_bigger.jpg"
     }
   ];
-var seed = () => {
-    // arr.push.apply(arr, seedArr);
-    return seedArr
+var seed = (arr) => {
+    arr.push.apply(arr, seedArr);
+    // return seedArr
 };
 module.exports = {seed}

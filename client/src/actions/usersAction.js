@@ -3,9 +3,15 @@ import {
   SET_USERS,
   SET_USERS_INITIAL_FETCH,
   SET_USERS_IS_FETCHING,
-  SET_USERS_HAS_MORE
+  SET_USERS_HAS_MORE,
+  REFRESH
 } from "./types";
 
+export const refreshAction = () => async dispatch => {
+  dispatch({
+    type: REFRESH
+  });
+};
 export const initialFetchAction = (
   socket,
   currentUsers,
@@ -20,6 +26,9 @@ export const initialFetchAction = (
       dispatch(setUsers(users));
       dispatch(setPage(1));
       dispatch(setInitialFetch(false));
+      if (users.length === 0 || users.length === 1) {
+        dispatch(setHasMore(false));
+      }
     }
   );
 };

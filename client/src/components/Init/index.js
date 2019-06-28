@@ -14,7 +14,7 @@ import {
   setSnackbarMessage,
   setSnackbarVariant
 } from "../../actions/snackbarAction";
-
+import {setNotifications} from "../../actions/notificationAction"
 import firebase from "firebase/app";
 import "firebase/auth";
 import { firebaseKeys } from "../../config";
@@ -64,7 +64,13 @@ export const initApp = socket => {
 };
 
 export const initSocket = socket => {
-  const userInfo = store.getState().auth;
+
+  const userInfo = store.getState().auth
+  socket.emit("get-notifications", userInfo.user.userid, notifications => {
+    // console.log(notifications)
+  store.dispatch(setNotifications(notifications));
+
+  })
   socket.on("get-user-info", (info, callback) => {
     callback({
       user_id: userInfo.user.userid,
@@ -74,7 +80,6 @@ export const initSocket = socket => {
   });
 
   socket.on("followed", res => {
-    console.log(res.user);
     store.dispatch(setSnackbarMessage(res.user));
     store.dispatch(setSnackbarVariant("followed"));
     store.dispatch(onSnackbarOpen());
@@ -83,8 +88,17 @@ export const initSocket = socket => {
 export const initSignIn = socket => {
   initFirebase();
 
+
   // go-online using socketIO
   initSocket(socket);
+  const userInfo = store.getState().auth;
+  socket.emit("push-user-info",{
+      user_id: userInfo.user.userid,
+      photo: userInfo.userData.photo,
+      screen_name: userInfo.userProfile.screen_name
+    }
+  );
+
   store.dispatch(setPointsAction(store.getState().auth.user._id));
 };
 export const initFirebase = () => {

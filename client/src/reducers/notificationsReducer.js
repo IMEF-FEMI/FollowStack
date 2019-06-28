@@ -1,8 +1,8 @@
-import { ADD_NOTIFICATION, MARK_AS_READ } from "../actions/types";
+import { ADD_NOTIFICATION, MARK_ALL_AS_READ,SET_NOTIFICATIONS, CLEAR_NOTIFICATIONS } from "../actions/types";
 
 const initialState = {
   notifications: [],
-  read: true
+  unreadCount: 0
 };
 
 export default function(state = initialState, action) {
@@ -10,14 +10,23 @@ export default function(state = initialState, action) {
     case ADD_NOTIFICATION:
       return {
         notifications: [...state.notifications, action.payload],
-        read: false
+        unreadCount: state.unreadCount + 1
       };
 
-    case MARK_AS_READ:
+case SET_NOTIFICATIONS:
+  return {
+    ...state,
+    notifications: action.payload.notifications,
+    unreadCount: action.payload.unread_count
+  }
+    case MARK_ALL_AS_READ:
       return {
         ...state,
-        read: action.payload
+        unreadCount: 0
       };
+
+      case CLEAR_NOTIFICATIONS:
+      return initialState;
 
     default:
       return state;

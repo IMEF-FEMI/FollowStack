@@ -3,7 +3,8 @@ import {
   SET_USERS,
   SET_USERS_INITIAL_FETCH,
   SET_USERS_IS_FETCHING,
-  SET_USERS_HAS_MORE
+  SET_USERS_HAS_MORE,
+  REFRESH
 } from "../actions/types";
 
 const initialState = {
@@ -42,6 +43,9 @@ export default function(state = initialState, action) {
         ...state,
         hasMore: action.payload
       };
+
+    case REFRESH:
+      return initialState;
 
     default:
       return state;

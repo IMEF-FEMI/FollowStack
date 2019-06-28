@@ -66,7 +66,7 @@ class FollowButton extends Component {
   // }
 
   followUser = async () => {
-    if (!this.state.disabled) {
+    if (!this.state.disabled && this.props.user.following === false) {
       // this.followPopup = this.openPopup();
       // this.checkFollowPopup();
       const {
@@ -84,6 +84,7 @@ class FollowButton extends Component {
         "follow",
         { userData: auth.userData, newUser: user, key: auth.keyInUse },
         points => {
+          // callback to show notification when follow is successful
           setSnackbarMessage("👍 Follow successful +40 points earned");
           setSnackbarVariant("success");
           onSnackbarOpen();
@@ -97,7 +98,7 @@ class FollowButton extends Component {
     }
   };
   unfollowUser = async () => {
-    if (!this.state.disabled) {
+    if (!this.state.disabled && this.props.user.following === true ) {
       // this.followPopup = this.openPopup();
       // this.checkFollowPopup();
       const {
@@ -114,6 +115,8 @@ class FollowButton extends Component {
         "unfollow",
         { userData: auth.userData, newUser: user, key: auth.keyInUse },
         points => {
+          // callback to show notification when unfollow is successful
+
           setSnackbarMessage("👎 User Unfollowed successful -40 points");
           setSnackbarVariant("warning");
           onSnackbarOpen();

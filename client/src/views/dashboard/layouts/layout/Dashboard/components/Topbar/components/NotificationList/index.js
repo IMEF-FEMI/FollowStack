@@ -15,7 +15,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 
 // Material icons
@@ -26,8 +27,13 @@ import {
 } from "@material-ui/icons";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import moment from "moment";
+import { connect } from "react-redux";
+
 // Component styles
 import styles from "./styles";
+import { clearNotificationsAction } from "../../../../../../../../../actions/notificationAction";
+import { SocketContext } from "../../../../../../../../../components/SocketContext";
+
 
 const icons = {
   pointsDeducted: {
@@ -75,6 +81,10 @@ const icons = {
 };
 
 class NotificationList extends Component {
+  clearNotification = ()=>{
+  // clear notifications on backend too using websockets
+  this.props.clearNotificationsAction(this.props.socket, this.props.auth.user.userid)
+}
   render() {
     const { className, classes, notifications, onSelect } = this.props;
 
@@ -94,7 +104,7 @@ class NotificationList extends Component {
               <List component="div">
                 {notifications.map(notification => (
                   <Link
-                    key={notification.id}
+                    key={notification.id? notification.id:notification._id}
                     to="#"
                     style={{ textDecoration: "none" }}
                   >
@@ -105,9 +115,9 @@ class NotificationList extends Component {
                     >
                       <ListItemIcon
                         className={classes.listItemIcon}
-                        style={{ color: icons[notification.type].color }}
+                        style={{ color: icons[notification.type? notification.type: notification.notificationType].color }}
                       >
-                        {icons[notification.type].icon}
+                        {icons[notification.type? notification.type: notification.notificationType].icon}
                       </ListItemIcon>
                       <ListItemText
                         classes={{ secondary: classes.listItemTextSecondary }}
@@ -120,6 +130,18 @@ class NotificationList extends Component {
                   </Link>
                 ))}
               </List>
+              <div className={classes.footer}>
+                <Button
+                  color="secondary"
+                  component={Link}
+                  size="small"
+                  to="#"
+                  variant="contained"
+                  onClick={this.clearNotification}
+                >
+                  Clear All
+                </Button>
+            </div>
             </div>
           </Fragment>
         ) : (
@@ -150,5 +172,12 @@ NotificationList.defaultProps = {
   notifications: [],
   onSelect: () => {}
 };
-
-export default withStyles(styles)(NotificationList);
+const NotificationListWithSocket = props => (
+  <SocketContext.Consumer>
+    {socket => <NotificationList {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+export default connect(mapStateToProps,{clearNotificationsAction})(withStyles(styles)(NotificationListWithSocket));

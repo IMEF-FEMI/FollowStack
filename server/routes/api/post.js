@@ -5,6 +5,8 @@ const asyncHandler = require("express-async-handler");
 const requireAuth = require("../../middlewares/requireAuth");
 var Twitter = require("twitter");
 
+const {addNotification} = require("../../utils/NotificationsUtil")
+
 const TWITTER_KEYS = [
   {
     consumerKey: process.env.TWITTER_KEY,
@@ -53,7 +55,7 @@ router.post(
     // console.log("addTweet  called == user ", req.body.tweet.user);
     await User.findOneAndUpdate(
       {
-        _id: mongoosemongoose.Types.ObjectId(req.body.user_id),
+        _id: mongoose.Types.ObjectId(req.body.user_id),
         points: { $gte: 50 }
       },
       {
@@ -83,6 +85,7 @@ router.post(
                 error: "Could Not share tweet. Try again"
               });
             } else {
+              addNotification(req.body.user_id, {title: "Tweet Shared Successfully! ", notificationType: "sharedTweet"})
               res.status(200).send({
                 success: "Tweet Shared Successfully! ",
                 points: user.points
@@ -91,8 +94,9 @@ router.post(
           });
         } else {
           // user did not meet search criteria i.e not enough points
+              addNotification(req.body.user_id, {title: "Not enough Points! Go blow up some tweets", notificationType: "error"})
           res.status(200).send({
-            error: "Not enough Points! 50 Points required"
+            error: "Not enough Points! Go blow up some tweets"
           });
         }
       })
@@ -116,6 +120,8 @@ router.delete(
         post_id: req.params.post_id
       })
         .then(post => {
+              addNotification(req.body.user_id, {title: "Tweet removed", notificationType: "error"})
+
           res.json({ success: "Tweet removed" });
         })
         .catch(e => {
@@ -126,7 +132,7 @@ router.delete(
       console.log(e);
 
       res.status(200).send({
-        error: "Could not delete post. try again"
+        error: "Could not remove post. try again"
       });
     }
   })
@@ -169,6 +175,8 @@ router.post(
           }
         ).then(user => {
           if (user) {
+              addNotification(req.body.user_id, {title: "👍 +10 Points Earned ", notificationType: "pointsGained"})
+
             res.status(200).send({
               success: "👍 +10 Points Earned ",
               points: user.points
@@ -218,6 +226,9 @@ router.post(
           }
         ).then(user => {
           if (user) {
+
+              addNotification(req.body.user_id, {title: "👍 +5 Points Earned ", notificationType: "pointsGained"})
+
             res.status(200).send({
               success: "👍 +5 Points Earned ",
               points: user.points
@@ -267,6 +278,8 @@ router.post(
           }
         ).then(user => {
           if (user) {
+              addNotification(req.body.user_id, {title: "👍 +5 Points Earned ", notificationType: "pointsGained"})
+
             res.status(200).send({
               success: "👎 5 Points Deducted",
               points: user.points
@@ -316,6 +329,8 @@ router.post(
           }
         ).then(user => {
           if (user) {
+              addNotification(req.body.user_id, {title: "👍 +20 Points Earned ", notificationType: "pointsGained"})
+
             res.status(200).send({
               success: "👍 +20 Points Earned",
               points: user.points
@@ -365,6 +380,8 @@ router.post(
           }
         ).then(user => {
           if (user) {
+              addNotification(req.body.user_id, {title: "👎 20 Points Deducted", notificationType: "pointsGained"})
+
             res.status(200).send({
               success: "👎 20 Points Deducted",
               points: user.points

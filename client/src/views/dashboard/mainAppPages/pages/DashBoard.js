@@ -173,7 +173,7 @@ class DashBoard extends Component {
                     }
                   >
                     {" "}
-                    View Shared Tweets
+                    Blow Up Some Tweets
                   </Typography>
                 }
               </Grid>
@@ -201,7 +201,7 @@ class DashBoard extends Component {
                     data-tooltip={"My Profile"}
                   >
                     {" "}
-                    My Profile
+                    Blow Up My Wall
                   </Typography>
                 }
               </Grid>

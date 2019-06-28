@@ -16,7 +16,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
+  ListSubheader
 } from "@material-ui/core";
 
 // Material icons
@@ -145,7 +146,13 @@ class Sidebar extends Component {
           </ListItem>
         </List>
         <Divider className={classes.listDivider} />
-        <List component="div" disablePadding>
+        <List component="div" disablePadding
+subheader={
+            <ListSubheader className={classes.listSubheader}>
+              Points
+            </ListSubheader>
+          }
+        >
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.listItemIcon}>
               <InfoIcon />

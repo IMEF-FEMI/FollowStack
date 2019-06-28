@@ -48,21 +48,15 @@ const follow = (info, callback, socket) => {
     if (!error && response.statusCode === 200) {
       // add new notification the the person following
       const followingNotif = {
-        _id: mongoose.Types.ObjectId(socket.userInfo.user_id),
         title: "👍 Follow Successful +40 Points ",
-        when: Date.now(),
-        type: "pointsGained",
-        to: "#"
+        notificationType: "pointsGained",
       };
       addNotification(socket.userInfo.user_id, followingNotif);
-
+      
       // add new notification the the person bieng followed
       const followedNotif = {
-        _id: mongoose.Types.ObjectId(info.newUser.user_id),
         title: `${socket.userInfo.screen_name} just Followed you`,
-        when: Date.now(),
         type: "followed",
-        to: "#"
       };
 
       addNotification(info.newUser.user_id, followedNotif);
@@ -79,6 +73,7 @@ const follow = (info, callback, socket) => {
         }
       ).then(user => {
         if (user) {
+          // callback notification on client side
           callback(user.points);
         }
       });
@@ -88,7 +83,7 @@ const follow = (info, callback, socket) => {
   });
 };
 
-const unFollow = (info, callback) => {
+const unFollow = (info, callback, socket) => {
   const random = TWITTER_KEYS[info.key];
 
   var client = new Twitter({
@@ -108,11 +103,8 @@ const unFollow = (info, callback) => {
     if (!error && response.statusCode === 200) {
       // add notification
       const unfollowNotif = {
-        _id: mongoose.Types.ObjectId(socket.userInfo.user_id),
         title: "👍 user unFollowed - 40 Points ",
-        when: Date.now(),
         type: "pointsDeducted",
-        to: "#"
       };
       addNotification(socket.userInfo.user_id, unfollowNotif);
 
@@ -128,6 +120,7 @@ const unFollow = (info, callback) => {
         }
       ).then(user => {
         if (user) {
+          // callback notification on client side
           callback(user.points);
         }
       });

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const { Schema } = require("mongoose");
+const { Schema } = mongoose;
+
 
 const NotificationsSchema = new Schema({
   user_id: String,
@@ -9,14 +10,14 @@ const NotificationsSchema = new Schema({
   },
   notifications: [
     {
-      _id: { type: Schema.Types.ObjectId },
+      _id: { type: Schema.Types.ObjectId, default: new mongoose.Types.ObjectId() },
       title: String,
       when: {
         type: Number,
         default: Date.now()
       },
-      type: String,
-      to: String
+      notificationType: String,
+      to: { type: String, default: "#" }
     }
   ]
 });
