@@ -6,32 +6,27 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 // Material helpers
-import { withStyles } from "@material-ui/core";
+import withStyles from "@material-ui/core/makeStyles";
 
 // Material components
-import {
-  Avatar,
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  ListSubheader
-} from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar"
+import Divider from "@material-ui/core/Divider"
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemIcon from "@material-ui/core/ListItemIcon"
+import ListItemText from "@material-ui/core/ListItemText"
+import Typography from "@material-ui/core/Typography"
+import ListSubheader from "@material-ui/core/ListSubheader"
+import SvgIcon from "@material-ui/core/SvgIcon"
 
 // Material icons
-import {
-  DashboardOutlined as DashboardIcon,
-  PeopleOutlined as PeopleIcon,
-  InfoOutlined as InfoIcon,
-  AccountBoxOutlined as AccountBoxIcon,
-  Star as StarIcon
-} from "@material-ui/icons";
 
-import { connect } from "react-redux";
-
-import SvgIcon from "@material-ui/core/SvgIcon";
+import DashboardIcon from "@material-ui/icons/DashboardOutlined"
+import PeopleIcon from "@material-ui/icons/PeopleOutlined"
+import InfoIcon from "@material-ui/icons/InfoOutlined"
+import AccountBoxIcon from "@material-ui/icons/AccountBoxOutlined"
+import StarIcon from "@material-ui/icons/Star"
+import connect  from "react-redux";
 
 // Component styles
 import styles from "./styles";
@@ -146,8 +141,10 @@ class Sidebar extends Component {
           </ListItem>
         </List>
         <Divider className={classes.listDivider} />
-        <List component="div" disablePadding
-subheader={
+        <List
+          component="div"
+          disablePadding
+          subheader={
             <ListSubheader className={classes.listSubheader}>
               Points
             </ListSubheader>

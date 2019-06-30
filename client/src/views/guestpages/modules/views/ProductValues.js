@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import LayoutBody from "../components/LayoutBody";
 import Typography from "../components/Typography";
@@ -69,7 +69,14 @@ function ProductValues(props) {
               <Typography variant="h5" align="center" style={{ color: "#fff" }}>
                 {`You could make a lot of money when you have much followers on your social media
                   account by using Platforms like `}
-                {<a href="https://famebit.com" style={{textDecoration: "none"}}>FameBit</a>}
+                {
+                  <a
+                    href="https://famebit.com"
+                    style={{ textDecoration: "none" }}
+                  >
+                    FameBit
+                  </a>
+                }
                 {` or by posting ads for Individuals looking 
                   for ways to make their product and services known`}
               </Typography>
@@ -78,7 +85,11 @@ function ProductValues(props) {
           <Grid item xs={12} md={4}>
             <div className={classes.item}>
               <Face
-                style={{ color: "rgb(28, 136, 204)", width: "55px", height: "55px" }}
+                style={{
+                  color: "rgb(28, 136, 204)",
+                  width: "55px",
+                  height: "55px"
+                }}
               />
               <Typography align="center" variant="h6" className={classes.title}>
                 More clients for your business
@@ -101,8 +112,8 @@ function ProductValues(props) {
                   height: "55px"
                 }}
               />
-              <Typography 
-              align="center"
+              <Typography
+                align="center"
                 variant="h6"
                 className={classes.title}
                 style={{ color: "#fff" }}

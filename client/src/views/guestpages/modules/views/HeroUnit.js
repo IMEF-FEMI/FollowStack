@@ -1,6 +1,5 @@
-
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
@@ -134,7 +133,7 @@ const styles = theme => ({
     }
   },
   icon: {
-    marginRight: theme.spacing( 2)
+    marginRight: theme.spacing(2)
   },
   heroContent: {
     width: "90%",
@@ -168,8 +167,8 @@ const styles = theme => ({
   },
   layout: {
     width: "auto",
-    marginLeft: theme.spacing( 3),
-    marginRight: theme.spacing( 3),
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
     [theme.breakpoints.up(1100 + theme.spacing(3 * 2))]: {
       width: 1100,
       marginLeft: "auto",

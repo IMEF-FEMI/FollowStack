@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import { capitalize } from '@material-ui/core/utils/helpers';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import withStyles from "@material-ui/core/styles/withStyles";
+import capitalize from "@material-ui/core/utils/helpers/capitalize";
 
 function round(value) {
   return Math.round(value * 1e4) / 1e4;
@@ -10,69 +10,69 @@ function round(value) {
 
 const styles = theme => ({
   margin: {
-    margin: theme.spacing( 7),
+    margin: theme.spacing(7)
   },
   marginBottom: {
-    marginBottom: theme.spacing( 12),
+    marginBottom: theme.spacing(12)
   },
   widthSmall: {
-    width: 'auto',
-    marginLeft: theme.spacing( 3),
-    marginRight: theme.spacing( 3),
-    [theme.breakpoints.up(660 + theme.spacing( 6))]: {
+    width: "auto",
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(660 + theme.spacing(6))]: {
       width: 660,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
+      marginLeft: "auto",
+      marginRight: "auto"
+    }
   },
   widthMedium: {
-    width: 'auto',
-    marginLeft: theme.spacing( 3),
-    marginRight: theme.spacing( 3),
-    [theme.breakpoints.up(850 + theme.spacing( 6))]: {
+    width: "auto",
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(850 + theme.spacing(6))]: {
       width: 850,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
+      marginLeft: "auto",
+      marginRight: "auto"
+    }
   },
   widthLarge: {
-    width: 'auto',
-    marginLeft: theme.spacing( 3),
-    marginRight: theme.spacing( 3),
-    [theme.breakpoints.up('md')]: {
+    width: "auto",
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up("md")]: {
       width: 880,
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      marginLeft: "auto",
+      marginRight: "auto"
     },
     [theme.breakpoints.up(round(880 / 0.7777))]: {
-      width: '77.7777%',
+      width: "77.7777%"
     },
     [theme.breakpoints.up(round(1400 / 0.7777))]: {
-      width: 1400,
-    },
+      width: 1400
+    }
   },
   widthXlarge: {
-    width: 'auto',
-    marginLeft: theme.spacing( 3),
-    marginRight: theme.spacing( 3),
-    [theme.breakpoints.up('md')]: {
+    width: "auto",
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up("md")]: {
       width: 900,
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      marginLeft: "auto",
+      marginRight: "auto"
     },
     [theme.breakpoints.up(round(900 / 0.9))]: {
-      width: '90%',
+      width: "90%"
     },
     [theme.breakpoints.up(round(1800 / 0.9))]: {
-      width: 1800,
-    },
+      width: 1800
+    }
   },
   widthFull: {
-    width: '100%',
+    width: "100%"
   },
   fullHeight: {
-    height: '100%',
-  },
+    height: "100%"
+  }
 });
 
 function LayoutBody(props) {
@@ -98,9 +98,9 @@ function LayoutBody(props) {
           [classes[`width${capitalize(width)}`]]: !fullWidth,
           [classes.fullHeight]: fullHeight,
           [classes.margin]: margin,
-          [classes.marginBottom]: marginBottom,
+          [classes.marginBottom]: marginBottom
         },
-        className,
+        className
       )}
       style={style}
       {...other}
@@ -120,16 +120,16 @@ LayoutBody.propTypes = {
   margin: PropTypes.bool,
   marginBottom: PropTypes.bool,
   style: PropTypes.object,
-  width: PropTypes.oneOf(['small', 'medium', 'large', 'xlarge', 'full']),
+  width: PropTypes.oneOf(["small", "medium", "large", "xlarge", "full"])
 };
 
 LayoutBody.defaultProps = {
-  component: 'div',
+  component: "div",
   fullHeight: false,
   fullWidth: false,
   margin: false,
   marginBottom: false,
-  width: 'medium',
+  width: "medium"
 };
 
 export default withStyles(styles)(LayoutBody);

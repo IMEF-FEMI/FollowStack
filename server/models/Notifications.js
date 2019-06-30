@@ -10,7 +10,7 @@ const NotificationsSchema = new Schema({
   },
   notifications: [
     {
-      _id: { type: Schema.Types.ObjectId, default: new mongoose.Types.ObjectId() },
+      _id: { type: mongoose.Types.ObjectId},
       title: String,
       when: {
         type: Number,

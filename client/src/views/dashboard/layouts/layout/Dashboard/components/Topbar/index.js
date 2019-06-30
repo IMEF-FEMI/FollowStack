@@ -7,24 +7,20 @@ import compose from "recompose/compose";
 import PropTypes from "prop-types";
 
 // Material helpers
-import { withStyles } from "@material-ui/core";
+import withStyles  from "@material-ui/core/withStyles";
 
 // Material components
-import {
-  Badge,
-  IconButton,
-  Popover,
-  Toolbar,
-  Typography
-} from "@material-ui/core";
+import Badge from "@material-ui/core/Badge";
+import IconButton from "@material-ui/core/IconButton";
+import Popover from "@material-ui/core/Popover";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 
 // Material icons
-import {
-  Menu as MenuIcon,
-  Close as CloseIcon,
-  NotificationsOutlined as NotificationsIcon,
-  Input as InputIcon
-} from "@material-ui/icons";
+import MenuIcon from "@material-ui/icons/Menu";
+import CloseIcon from "@material-ui/icons/Close";
+import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
+import InputIcon from "@material-ui/icons/Input";
 
 import { connect } from "react-redux";
 import { logoutUser } from "../../../../../../../actions/authActions";

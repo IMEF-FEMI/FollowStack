@@ -85,7 +85,7 @@ router.post(
                 error: "Could Not share tweet. Try again"
               });
             } else {
-              addNotification(req.body.user_id, {title: "Tweet Shared Successfully! ", notificationType: "sharedTweet"})
+              addNotification(req.user.userid, {title: "Tweet Shared Successfully! ", notificationType: "sharedTweet"})
               res.status(200).send({
                 success: "Tweet Shared Successfully! ",
                 points: user.points
@@ -94,7 +94,7 @@ router.post(
           });
         } else {
           // user did not meet search criteria i.e not enough points
-              addNotification(req.body.user_id, {title: "Not enough Points! Go blow up some tweets", notificationType: "error"})
+          addNotification(req.user.userid, {title: "Not enough Points! Go blow up some tweets", notificationType: "error"})
           res.status(200).send({
             error: "Not enough Points! Go blow up some tweets"
           });
@@ -120,7 +120,7 @@ router.delete(
         post_id: req.params.post_id
       })
         .then(post => {
-              addNotification(req.body.user_id, {title: "Tweet removed", notificationType: "error"})
+          addNotification(req.user.userid, {title: "Tweet removed", notificationType: "error"})
 
           res.json({ success: "Tweet removed" });
         })
@@ -167,7 +167,7 @@ router.post(
           { userid: req.body.userData.userid },
           {
             $inc: {
-              points: +10
+              points: +20
             }
           },
           {
@@ -175,10 +175,11 @@ router.post(
           }
         ).then(user => {
           if (user) {
-              addNotification(req.body.user_id, {title: "👍 +10 Points Earned ", notificationType: "pointsGained"})
+            console.log("bout adding new notification details==> ", req.body)  
+            addNotification(req.user.userid, {title: "👍 +20 Points Earned ", notificationType: "pointsGained"})
 
             res.status(200).send({
-              success: "👍 +10 Points Earned ",
+              success: "👍 +20 Points Earned ",
               points: user.points
             });
           }
@@ -218,7 +219,7 @@ router.post(
           { userid: req.body.userData.userid },
           {
             $inc: {
-              points: +5
+              points: +10
             }
           },
           {
@@ -227,10 +228,11 @@ router.post(
         ).then(user => {
           if (user) {
 
-              addNotification(req.body.user_id, {title: "👍 +5 Points Earned ", notificationType: "pointsGained"})
+            console.log("bout adding new notification details==> ", req.body)  
+            addNotification(req.user.userid, {title: "👍 +10 Points Earned ", notificationType: "pointsGained"})
 
             res.status(200).send({
-              success: "👍 +5 Points Earned ",
+              success: "👍 +10 Points Earned ",
               points: user.points
             });
           }
@@ -270,7 +272,7 @@ router.post(
           { userid: req.body.userData.userid },
           {
             $inc: {
-              points: -5
+              points: -10
             }
           },
           {
@@ -278,10 +280,10 @@ router.post(
           }
         ).then(user => {
           if (user) {
-              addNotification(req.body.user_id, {title: "👍 +5 Points Earned ", notificationType: "pointsGained"})
+            addNotification(req.user.userid, {title: "👎 10 Points Deducted", notificationType: "pointsGained"})
 
             res.status(200).send({
-              success: "👎 5 Points Deducted",
+              success: "👎 10 Points Deducted",
               points: user.points
             });
           }
@@ -321,7 +323,7 @@ router.post(
           { userid: req.body.userData.userid },
           {
             $inc: {
-              points: +20
+              points: +30
             }
           },
           {
@@ -329,10 +331,10 @@ router.post(
           }
         ).then(user => {
           if (user) {
-              addNotification(req.body.user_id, {title: "👍 +20 Points Earned ", notificationType: "pointsGained"})
+            addNotification(req.user.userid, {title: "👍 +30 Points Earned ", notificationType: "pointsGained"})
 
             res.status(200).send({
-              success: "👍 +20 Points Earned",
+              success: "👍 +30 Points Earned",
               points: user.points
             });
           }
@@ -372,7 +374,7 @@ router.post(
           { userid: req.body.userData.userid },
           {
             $inc: {
-              points: -20
+              points: -30
             }
           },
           {
@@ -380,10 +382,11 @@ router.post(
           }
         ).then(user => {
           if (user) {
-              addNotification(req.body.user_id, {title: "👎 20 Points Deducted", notificationType: "pointsGained"})
+            console.log("bout adding new notification details==> ", req.body)  
+            addNotification(req.user.userid, {title: "👎 30 Points Deducted", notificationType: "pointsGained"})
 
             res.status(200).send({
-              success: "👎 20 Points Deducted",
+              success: "👎 30 Points Deducted",
               points: user.points
             });
           }

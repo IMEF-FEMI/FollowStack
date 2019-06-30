@@ -14,12 +14,11 @@ import Terms from "./views/guestpages/Terms";
 import LaunchScreen from "./views/dashboard/mainAppPages/components/loaders/LaunchScreen";
 
 import theme from "./theme";
-import { ThemeProvider } from "@material-ui/styles";
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
 import PrivateGuestRoute from "./views/common/PrivateGuestRoute";
 import PrivateDashBoardRoute from "./views/common/PrivateDashBoardRoute";
 import dashboardRoutes from "./dashboardRoutes";
-
 
 import { Redirect } from "react-router-dom";
 import "./assets/styles/custom.css";
@@ -30,7 +29,7 @@ import { SocketContext } from "./components/SocketContext";
 import { initApp } from "./components/Init";
 import { CustomSnackbar } from "./components/CustomSnackbar/index";
 
-const socket = socketIO("http://localhost:8080", {transports: ['websocket']});
+const socket = socketIO("http://localhost:8080", { transports: ["websocket"] });
 
 // initialize initial app settings
 // includes user profile, points etc.
@@ -59,12 +58,12 @@ class App extends Component {
 
   render() {
     var loggedIn = store.getState().auth.isAuthenticated === true;
-    
+
     return (
       <Provider store={store}>
         <SocketContext.Provider value={socket}>
           <div>
-            <CustomSnackbar/>
+            <CustomSnackbar />
           </div>
           <ThemeProvider theme={theme}>
             <Router>

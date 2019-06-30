@@ -9,22 +9,18 @@ import classNames from "classnames";
 import { withStyles } from "@material-ui/core";
 
 // Material components
-import {
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  Button
-} from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
 // Material icons
-import {
-  ArrowForwardIos as ArrowForwardIosIcon,
-  AddAlert,
-  PersonAdd
-} from "@material-ui/icons";
+import AddAlert from "@material-ui/icons/AddAlert";
+import PersonAdd from "@material-ui/icons/PersonAdd";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import moment from "moment";
 import { connect } from "react-redux";
@@ -33,7 +29,6 @@ import { connect } from "react-redux";
 import styles from "./styles";
 import { clearNotificationsAction } from "../../../../../../../../../actions/notificationAction";
 import { SocketContext } from "../../../../../../../../../components/SocketContext";
-
 
 const icons = {
   pointsDeducted: {
@@ -71,7 +66,7 @@ const icons = {
     color: "green"
   },
   followed: {
-    icon: <PersonAdd/>,
+    icon: <PersonAdd />,
     color: "green"
   },
   error: {
@@ -81,10 +76,14 @@ const icons = {
 };
 
 class NotificationList extends Component {
-  clearNotification = ()=>{
-  // clear notifications on backend too using websockets
-  this.props.clearNotificationsAction(this.props.socket, this.props.auth.user.userid)
-}
+  clearNotification = () => {
+    // clear notifications on backend too using websockets
+    this.props.onSelect();
+    this.props.clearNotificationsAction(
+      this.props.socket,
+      this.props.auth.user.userid
+    );
+  };
   render() {
     const { className, classes, notifications, onSelect } = this.props;
 
@@ -104,7 +103,11 @@ class NotificationList extends Component {
               <List component="div">
                 {notifications.map(notification => (
                   <Link
-                    key={notification.id? notification.id:notification._id}
+                    key={
+                      notification.id
+                        ? notification.id + `${Math.random() * 4}`
+                        : notification._id + `${Math.random() * 4}`
+                    }
                     to="#"
                     style={{ textDecoration: "none" }}
                   >
@@ -115,9 +118,22 @@ class NotificationList extends Component {
                     >
                       <ListItemIcon
                         className={classes.listItemIcon}
-                        style={{ color: icons[notification.type? notification.type: notification.notificationType].color }}
+                        style={{
+                          color:
+                            icons[
+                              notification.type
+                                ? notification.type
+                                : notification.notificationType
+                            ].color
+                        }}
                       >
-                        {icons[notification.type? notification.type: notification.notificationType].icon}
+                        {
+                          icons[
+                            notification.type
+                              ? notification.type
+                              : notification.notificationType
+                          ].icon
+                        }
                       </ListItemIcon>
                       <ListItemText
                         classes={{ secondary: classes.listItemTextSecondary }}
@@ -141,7 +157,7 @@ class NotificationList extends Component {
                 >
                   Clear All
                 </Button>
-            </div>
+              </div>
             </div>
           </Fragment>
         ) : (
@@ -180,4 +196,7 @@ const NotificationListWithSocket = props => (
 const mapStateToProps = state => ({
   auth: state.auth
 });
-export default connect(mapStateToProps,{clearNotificationsAction})(withStyles(styles)(NotificationListWithSocket));
+export default connect(
+  mapStateToProps,
+  { clearNotificationsAction }
+)(withStyles(styles)(NotificationListWithSocket));

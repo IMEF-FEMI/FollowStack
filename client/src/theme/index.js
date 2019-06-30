@@ -1,8 +1,8 @@
 // Material helpers
-import { createMuiTheme } from '@material-ui/core';
+import createMuiTheme from "@material-ui/core/createMuiTheme";
 
-import palette from './palette';
-import overrides from './overrides';
+import palette from "./palette";
+import overrides from "./overrides";
 
 const theme = createMuiTheme({
   palette,

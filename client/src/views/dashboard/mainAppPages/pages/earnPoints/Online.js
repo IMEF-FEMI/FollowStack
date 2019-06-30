@@ -90,7 +90,6 @@ class Online extends Component {
     const { users, initialFetch, isFetching } = this.props.users;
     return (
       <React.Fragment>
-        {/* <div style={reFreshBtn}> */}
         <Grid container justify="center">
           <Grid item>
             <Button variant="outlined" onClick={this.refresh}>
@@ -99,7 +98,6 @@ class Online extends Component {
             </Button>
           </Grid>
         </Grid>
-        {/* </div> */}
 
         {initialFetch && (
           <div style={container}>

@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import PersonAdd from "@material-ui/icons/PersonAdd";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { withStyles } from "@material-ui/core";
+import withStyles  from "@material-ui/core/withStyles";
 
 
 import {

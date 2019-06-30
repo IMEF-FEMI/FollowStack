@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import green from "@material-ui/core/colors/green";
 import grey from "@material-ui/core/colors/grey";
 import red from "@material-ui/core/colors/red";
@@ -28,11 +28,8 @@ const rawTheme = createMuiTheme({
       xLight: green[50],
       dark: green[700]
     }
-  },
-  
+  }
 });
-
-
 
 const theme = {
   ...rawTheme,
@@ -43,8 +40,7 @@ const theme = {
       default: rawTheme.palette.common.white,
       placeholder: grey[200]
     }
-  },
-  
+  }
 };
 
 export default theme;

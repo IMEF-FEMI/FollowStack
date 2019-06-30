@@ -8,8 +8,8 @@ import { logoutUser } from "../../../../actions/authActions";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withRouter } from "react-router-dom";
-import { Typography } from "@material-ui/core";
-import {SocketContext} from '../../../../components/SocketContext'
+import Typography from "@material-ui/core/Typography";
+import { SocketContext } from "../../../../components/SocketContext";
 
 const welcome_user = {
   color: "#fff",
@@ -71,7 +71,6 @@ class DashBoard extends Component {
   }
 
   componentDidMount() {
-    
     window.addEventListener("resize", this.hasWindowSizeChange);
   }
 
@@ -213,7 +212,7 @@ class DashBoard extends Component {
                   id="logout-icon-box"
                   onClick={() => {
                     this.props.logoutUser();
-                    this.props.socket.emit("disconnect")
+                    this.props.socket.emit("disconnect");
                   }}
                 >
                   <span>
@@ -248,7 +247,7 @@ const DashBoardWithSocket = props => (
   <SocketContext.Consumer>
     {socket => <DashBoard {...props} socket={socket} />}
   </SocketContext.Consumer>
-)
+);
 const mapStateToProps = state => ({
   auth: state.auth
 });

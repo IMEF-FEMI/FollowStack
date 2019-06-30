@@ -6,10 +6,11 @@ import compose from "recompose/compose";
 import PropTypes from "prop-types";
 
 // Material helpers
-import { withStyles, withWidth } from "@material-ui/core";
+import withStyles  from "@material-ui/core/withStyles";
+import withWidth  from "@material-ui/core/withWidth";
 
 // Material components
-import { Drawer } from "@material-ui/core";
+import Drawer  from "@material-ui/core/Drawer";
 
 // Custom components
 import { Sidebar, Topbar, Footer } from "./components";

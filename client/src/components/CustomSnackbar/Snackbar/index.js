@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Snackbar from "@material-ui/core/Snackbar";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles  from "@material-ui/core/styles/withStyles";
 import { onSnackbarClose } from "../../../actions/snackbarAction";
-import { connect } from "react-redux";
+import connect  from "react-redux";
 import MySnackbarContentWrapper from "./MySnackbarContentWrapper";
 
 const styles = theme => ({
