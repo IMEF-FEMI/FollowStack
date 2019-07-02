@@ -1,20 +1,23 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 
-import FacebookShareButton from "react-share";
-import GooglePlusShareButton from "react-share";
-import TwitterShareButton from "react-share";
-import TelegramShareButton from "react-share";
-import WhatsappShareButton from "react-share";
-import ViberShareButton from "react-share";
-import EmailShareButton from "react-share";
-import FacebookIcon from "react-share";
-import TwitterIcon from "react-share";
-import TelegramIcon from "react-share";
-import WhatsappIcon from "react-share";
-import GooglePlusIcon from "react-share";
-import ViberIcon from "react-share";
-import EmailIcon from "react-share";
+import {
+  FacebookShareButton,
+  GooglePlusShareButton,
+  TwitterShareButton,
+  TelegramShareButton,
+  WhatsappShareButton,
+  ViberShareButton,
+  EmailShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  TelegramIcon,
+  WhatsappIcon,
+  GooglePlusIcon,
+  ViberIcon,
+  EmailIcon
+} from "react-share";
+
 import Button from "@material-ui/core/Button";
 
 class ShareSocial extends Component {

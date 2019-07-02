@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
-import capitalize from "@material-ui/core/utils/helpers/capitalize";
+import { capitalize } from "@material-ui/core/utils/helpers";
 import MuiTypography from "@material-ui/core/Typography";
 
 const styles = theme => ({

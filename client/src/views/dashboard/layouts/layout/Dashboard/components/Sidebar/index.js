@@ -6,27 +6,26 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 // Material helpers
-import withStyles from "@material-ui/core/makeStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 // Material components
-import Avatar from "@material-ui/core/Avatar"
-import Divider from "@material-ui/core/Divider"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemIcon from "@material-ui/core/ListItemIcon"
-import ListItemText from "@material-ui/core/ListItemText"
-import Typography from "@material-ui/core/Typography"
-import ListSubheader from "@material-ui/core/ListSubheader"
-import SvgIcon from "@material-ui/core/SvgIcon"
+import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 // Material icons
 
-import DashboardIcon from "@material-ui/icons/DashboardOutlined"
-import PeopleIcon from "@material-ui/icons/PeopleOutlined"
-import InfoIcon from "@material-ui/icons/InfoOutlined"
-import AccountBoxIcon from "@material-ui/icons/AccountBoxOutlined"
-import StarIcon from "@material-ui/icons/Star"
-import connect  from "react-redux";
+import DashboardIcon from "@material-ui/icons/DashboardOutlined";
+import PeopleIcon from "@material-ui/icons/PeopleOutlined";
+import AccountBoxIcon from "@material-ui/icons/AccountBoxOutlined";
+import Payment from "@material-ui/icons/Payment";
+import { connect } from "react-redux";
 
 // Component styles
 import styles from "./styles";
@@ -139,6 +138,21 @@ class Sidebar extends Component {
               primary="Profile"
             />
           </ListItem>
+          <ListItem
+            activeClassName={classes.activeListItem}
+            className={classes.listItem}
+            component={MyLink}
+            to="/earn-points"
+          >
+            <ListItemIcon className={classes.listItemIcon}>
+             
+              <Payment color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              classes={{ primary: classes.listItemText }}
+              primary="Earn points"
+            />
+          </ListItem>
         </List>
         <Divider className={classes.listDivider} />
         <List
@@ -152,7 +166,12 @@ class Sidebar extends Component {
         >
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.listItemIcon}>
-              <InfoIcon />
+              <i
+                className="fas fa-coins"
+                style={{
+                  color: "#17bf63"
+                }}
+              />{" "}
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
@@ -163,25 +182,7 @@ class Sidebar extends Component {
               }}
             />
           </ListItem>
-          <Divider className={classes.listDivider} />
-          <ListItem
-            activeClassName={classes.activeListItem}
-            className={classes.listItem}
-            component={MyLink}
-            to="/earn-points"
-          >
-            <ListItemIcon className={classes.listItemIcon}>
-              <StarIcon
-                style={{
-                  color: "rgb(144, 138, 22)"
-                }}
-              />
-            </ListItemIcon>
-            <ListItemText
-              classes={{ primary: classes.listItemText }}
-              primary="Earn points"
-            />
-          </ListItem>
+         
         </List>
       </nav>
     );

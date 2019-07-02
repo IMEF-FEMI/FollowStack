@@ -6,7 +6,7 @@ import compose from "recompose/compose";
 import PropTypes from "prop-types";
 
 // Material helpers
-import withStyles  from "@material-ui/core/withStyles";
+import withStyles  from "@material-ui/core/styles/withStyles";
 import withWidth  from "@material-ui/core/withWidth";
 
 // Material components

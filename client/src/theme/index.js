@@ -1,5 +1,6 @@
 // Material helpers
-import createMuiTheme from "@material-ui/core/createMuiTheme";
+// import {createMuiTheme} from "@material-ui/core";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 import palette from "./palette";
 import overrides from "./overrides";

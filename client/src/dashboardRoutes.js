@@ -6,6 +6,7 @@ import Tweets from "./views/dashboard/mainAppPages/pages/viewTweets/Main";
 import Profile from "./views/dashboard/mainAppPages/pages/userProfile/Main";
 import UsersOnline from "./views/dashboard/mainAppPages/pages/usersOnline/Main";
 import EarnPoints from "./views/dashboard/mainAppPages/pages/earnPoints/Main";
+import BuyPoints from "./views/dashboard/mainAppPages/pages/earnPoints/BuyPoints";
 
 export default [
   {
@@ -32,5 +33,9 @@ export default [
     path: "/earn-points",
     layout: DefaultLayout,
     component: EarnPoints
+  },{
+    path: "/buy-points",
+    layout: DefaultLayout,
+    component: BuyPoints
   }
 ];

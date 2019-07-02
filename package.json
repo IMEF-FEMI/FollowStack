@@ -11,9 +11,23 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "followers",
+    "Gain Followers",
+    "More Followers",
+    "Follow",
+    "Gain",
+    "Followstack",
+    "Followtrain",
+    "likeforlike",
+    "followforfollow",
+    "following",
+    "follows",
+    "followers",
+    "unfollow"
+  ],
+  "author": "IMEF",
+  "license": "MIT",
   "dependencies": {
     "async": "^2.6.2",
     "axios": "^0.18.0",

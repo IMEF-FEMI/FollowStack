@@ -7,7 +7,7 @@ import compose from "recompose/compose";
 import PropTypes from "prop-types";
 
 // Material helpers
-import withStyles  from "@material-ui/core/withStyles";
+import withStyles  from "@material-ui/core/styles/withStyles";
 
 // Material components
 import Badge from "@material-ui/core/Badge";
