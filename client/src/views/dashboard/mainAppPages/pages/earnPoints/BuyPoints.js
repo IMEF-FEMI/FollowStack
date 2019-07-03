@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { ArrowBack as ArrowBackIcon } from "@material-ui/icons";
 
-import { PayPalButton } from "react-paypal-button-v2";
+// import { PayPalButton } from "react-paypal-button-v2";
 
 const CLIENT = {
   sandbox:
@@ -50,9 +50,14 @@ class BuyPoints extends Component {
   pay = amount => {
     this.setState({ step: "pay", total: amount });
   };
-  handleBack = () => {};
+  handleBack = () => {
+    this.props.history.goBack();
+  };
   render() {
-    // paypal button function
+    const { step, total } = this.state;
+    const {classes} = this.props
+
+    // paypal button functions
     const onSuccess = payment => console.log("Successful payment!", payment);
 
     const onError = error =>
@@ -60,7 +65,6 @@ class BuyPoints extends Component {
 
     const onCancel = data => console.log("Cancelled payment!", data);
 
-    const { step, total } = this.state;
     switch (step) {
       case "section":
         return <BuyPointsSection pay={this.pay} />;
@@ -83,7 +87,7 @@ class BuyPoints extends Component {
                     <Typography className={classes.title} variant="h2">
                       Payment
                     </Typography>
-                    <PayPalButton
+                    {/* <PayPalButton
                       commit={true}
                       currency={"USD"}
                       amount={total}
@@ -93,7 +97,7 @@ class BuyPoints extends Component {
                       options={{
                         clientId: CLIENT_ID
                       }}
-                    />
+                    /> */}
                   </div>
                 </div>
               </Grid>
