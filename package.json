@@ -24,14 +24,19 @@
     "following",
     "follows",
     "followers",
-    "unfollow"
+    "unfollow",
+    "realers",
+    "twitter",
+    "twitterrealers",
+    "twitter realers"
   ],
   "author": "IMEF",
   "license": "MIT",
   "dependencies": {
+    "@paypal/checkout-server-sdk": "^1.0.1",
     "async": "^2.6.2",
     "axios": "^0.18.0",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",

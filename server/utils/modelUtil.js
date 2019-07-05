@@ -1,4 +1,5 @@
 const Notifications = require("../models/Notifications");
+const Transactions = require("../models/Transactions");
 
 const modelPatch = (type, params, callback) => {
     console.log("trying to notify modelPatch")
@@ -11,6 +12,11 @@ const modelPatch = (type, params, callback) => {
       	
       });
       break;
+      case "TRANSACTIONS":
+new Transactions(params).save().then(transact=>{
+        console.log("Transaction model done")
+      callback();
+      });
   }
 };
 

@@ -181,9 +181,8 @@ class Main extends Component {
         </Container>
 
         <Container maxWidth="md" component="main">
-          <Grid container spacing={5} alignItems="flex-end">
+          <Grid container spacing={2} alignItems="flex-end">
             {sections.map(section => (
-              // Enterprise card is full width at sm breakpoint
               <Grid
                 item
                 key={section.title}

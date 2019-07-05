@@ -5,10 +5,8 @@ const addNotification = async (user_id, newNotif) => {
   await Notifications.findOne({
     user_id: user_id
   }).then(notification => {
-    console.log("Notification ? ", !!notification);
     console.log(notification);
     if (!notification) {
-      console.log(" no notification");
       modelPatch("NOTIFICATIONS", { user_id: user_id }, () => {
         Notifications.findOneAndUpdate(
           {
@@ -22,11 +20,11 @@ const addNotification = async (user_id, newNotif) => {
           },
           { new: true }
         )
-          // .then(notification => {
-          //   if (notification) {
-          //     console.log("Notification added");
-          //   }
-          // })
+          .then(notification => {
+            if (notification) {
+              console.log("Notification added new");
+            }
+          })
           .catch(err => {
             console.log(err);
           });
@@ -45,11 +43,11 @@ const addNotification = async (user_id, newNotif) => {
         },
         { new: true }
       )
-        // .then(notification => {
-        //   if (notification) {
-        //     console.log("Notification added with old model");
-        //   }
-        // })
+        .then(notification => {
+          if (notification) {
+            console.log("Notification added old");
+          }
+        })
         .catch(err => {
           console.log(err);
         });
@@ -93,5 +91,6 @@ const getNotifications = (user_id, callback) => {
     }
   });
 };
+
 
 module.exports = { addNotification, markAsRead, clear, getNotifications };

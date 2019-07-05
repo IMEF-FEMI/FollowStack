@@ -59,7 +59,9 @@ const tiers = [
   {
     title: "Bronze",
     logo: <AddShoppingCart />,
-    price: "3",
+    price: "3.00",
+    points: 500,
+
     description: (
       <Typography component="li" variant="subtitle1" align="center">
         <i
@@ -84,8 +86,9 @@ const tiers = [
   {
     title: "Silver",
     logo: <AddShoppingCart />,
-    price: "5",
+    price: "5.00",
     pathName: "/shared-tweets",
+    points: 800,
     description: (
       <div>
         <Typography component="li" variant="subtitle1" align="center">
@@ -106,7 +109,9 @@ const tiers = [
   {
     title: "Gold",
     logo: <AddShoppingCart />,
-    price: "7",
+    price: "7.00",
+    points: 1200,
+
     pathName: "/gain-followers",
     description: (
       <Typography component="li" variant="subtitle1" align="center">
@@ -144,9 +149,8 @@ class BuyPointsSection extends Component {
         </Container>
 
         <Container maxWidth="md" component="main" className={classes.container}>
-          <Grid container spacing={5} alignItems="flex-end">
+          <Grid container spacing={2} alignItems="flex-end">
             {tiers.map(tier => (
-              // Enterprise card is full width at sm breakpoint
               <Grid item key={tier.title} xs={12} sm={6} md={4}>
                 <Card>
                   <CardHeader
@@ -183,7 +187,10 @@ class BuyPointsSection extends Component {
                       variant={tier.buttonVariant}
                       color="primary"
                       onClick={() => {
-                        this.props.pay(parseInt(tier.price))
+                        this.props.pay({
+                          total: tier.price,
+                          points: tier.points
+                        });
                       }}
                     >
                       {tier.buttonText}
@@ -191,8 +198,7 @@ class BuyPointsSection extends Component {
                       <Payment
                         color={`${
                           tier.title === "Silver" ? "action" : "primary"
-                        }`
-                    }
+                        }`}
                       />
                     </Button>
                   </CardActions>

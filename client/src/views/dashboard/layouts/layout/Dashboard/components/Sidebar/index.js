@@ -18,6 +18,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import SvgIcon from "@material-ui/core/SvgIcon";
+import Icon from "@material-ui/core/Icon";
 
 // Material icons
 
@@ -166,13 +167,16 @@ class Sidebar extends Component {
         >
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.listItemIcon}>
+              <Icon>
               <i
                 className="fas fa-coins"
                 style={{
                   color: "#17bf63"
                 }}
               />{" "}
+              </Icon>
             </ListItemIcon>
+
             <ListItemText
               classes={{ primary: classes.listItemText }}
               primary={`Total Points: ${this.props.auth.points}`}

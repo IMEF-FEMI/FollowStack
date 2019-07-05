@@ -4,11 +4,27 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const keys = require("../../../config/keys");
+const requireAuth = require("../../middlewares/requireAuth");
+
 
 // Load User  model
 const User = require("../../models/User");
+const Transaction = require("../../models/Transactions");
 const UsersOnline = require("../../models/UsersOnline");
 const Notifications = require("../../models/Notifications");
+const {addNotification} = require("../../utils/NotificationsUtil")
+const {addTransaction} = require("../../utils/TransactionsUtil")
+
+
+// 1a. Import the SDK package
+const checkoutNodeJssdk = require('@paypal/checkout-server-sdk');
+
+// 1b. Import the PayPal SDK client that was created in `Set up Server-Side SDK`.
+/**
+ *
+ * PayPal HTTP client dependency
+ */
+const payPalClient = require('../../common/payPalClient');
 
 var Twitter = require("twitter");
 const TWITTER_KEYS = [
@@ -68,6 +84,9 @@ router.post(
                 user_id: req.body.userid
               }).save(),
               new Notifications({
+                user_id: req.body.userid
+              }).save(),
+              new Transaction({
                 user_id: req.body.userid
               }).save()
             ]);
@@ -132,6 +151,64 @@ router.post(
   })
 );
 
+router.post(
+  "/paypal-transaction-complete",
+  requireAuth,
+  asyncHandler(async (req, res, next) => {
+      // 2a. Get the order ID from the request body
+  const orderID = req.body.orderID;
+
+  // 3. Call PayPal to get the transaction details
+  let request = new checkoutNodeJssdk.orders.OrdersGetRequest(orderID);
+
+  let order;
+  try {
+    order = await payPalClient.client().execute(request);
+  } catch (err) {
+
+    // 4. Handle any errors from the call
+    console.error(err);
+    return res.send(500);
+  }
+
+  // 5. Validate the transaction details are as expected
+  if (order.result.purchase_units[0].amount.value !== req.body.payment.amount) {
+    return res.status(200).send("Transaction Error");
+  }
+
+  // 6. Save the transaction in your database
+  // await database.saveTransaction(orderID);
+  console.log("user ", req.user)
+await addTransaction(req.user.userid, {
+  orderID: orderID,
+      amount: order.result.purchase_units[0].amount.value,
+      points: req.body.payment.points,
+})
+   await User.findOneAndUpdate(
+          { userid: req.user.userid },
+          {
+            $inc: {
+              points: +parseInt(req.body.payment.points)
+            }
+          },
+          {
+            new: true
+          }
+        ).then(user => {
+          if (user) {
+            console.log("bout adding new notification details==> ", req.body)  
+            addNotification(req.user.userid, {title: `👍 ${req.body.payment.points} Points Earned `, notificationType: "pointsGained"})
+
+            res.status(200).send({
+              success: "Transaction Successful",
+              points: user.points
+            });
+          }
+        }).catch(err=>{
+          console.log(err)
+        });
+
+  }))
 // check if user exists
 router.get(
   "/check-user/:id",

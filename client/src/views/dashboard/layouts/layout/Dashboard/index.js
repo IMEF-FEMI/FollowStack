@@ -6,11 +6,11 @@ import compose from "recompose/compose";
 import PropTypes from "prop-types";
 
 // Material helpers
-import withStyles  from "@material-ui/core/styles/withStyles";
-import withWidth  from "@material-ui/core/withWidth";
+import withStyles from "@material-ui/core/styles/withStyles";
+import withWidth from "@material-ui/core/withWidth";
 
 // Material components
-import Drawer  from "@material-ui/core/Drawer";
+import Drawer from "@material-ui/core/Drawer";
 
 // Custom components
 import { Sidebar, Topbar, Footer } from "./components";
@@ -72,8 +72,7 @@ class Dashboard extends Component {
           })}
         >
           {children}
-        <Footer />
-
+          <Footer />
         </main>
       </Fragment>
     );
