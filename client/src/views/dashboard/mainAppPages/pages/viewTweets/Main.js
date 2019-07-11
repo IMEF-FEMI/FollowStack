@@ -1,9 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardMedia from "@material-ui/core/CardMedia";
+
 import PropTypes from "prop-types";
 import MainPageLoader from "../../components/loaders/MainPageLoader";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
+
 import axios from "axios";
 
 import {
@@ -21,12 +28,21 @@ import {
   setSnackbarVariant
 } from "../../../../../actions/snackbarAction";
 
+const styles = theme => ({
+  card: {
+    width: "60px"
+  },
+  media: {
+    height: "60px"
+  }
+});
 class Main extends Component {
   constructor() {
     super();
 
     this.state = {
-      showNavToTop: false
+      showNavToTop: false,
+      newTweetLoading: false
     };
     this.onScroll = onScroll.call(this, this.fetchNextPage);
     this.signal = axios.CancelToken.source();
@@ -114,9 +130,25 @@ class Main extends Component {
       //   file: e.target.files[0],
       //   fileSize: e.target.files[0].size
       // });
-      if (e.target.files[0].type.includes("image")) {
+      if (
+        e.target.files[0].type.includes("image") &&
+        !e.target.files[0].type.includes("gif")
+      ) {
         if (e.target.files[0].size <= imgSize) {
           this.mediaFiles.push({ file: e.target.files[0], src: src });
+          console.log(this.mediaFiles);
+          this.forceUpdate();
+        } else {
+          // file too large
+          setSnackbarMessage("File Too large");
+          setSnackbarVariant("error");
+          onSnackbarOpen();
+        }
+      } else if (e.target.files[0].type.includes("gif")) {
+        if (e.target.files[0].size <= vidSize) {
+          this.mediaFiles.push({ file: e.target.files[0], src: src });
+          console.log(this.mediaFiles);
+          this.forceUpdate();
         } else {
           // file too large
           setSnackbarMessage("File Too large");
@@ -126,6 +158,8 @@ class Main extends Component {
       } else if (e.target.files[0].type.includes("video")) {
         if (e.target.files[0].size <= vidSize) {
           this.mediaFiles.push({ file: e.target.files[0], src: src });
+          console.log(this.mediaFiles);
+          this.forceUpdate();
         } else {
           // file too large
           setSnackbarMessage("File Too large");
@@ -140,32 +174,12 @@ class Main extends Component {
       onSnackbarOpen();
     }
   };
-
-  renderThumbnnails = () => {
-    var mediaFiles = this.mediaFiles
-    if (mediaFiles.length !== 0) {
-      for (var i = mediaFiles.length - 1; i >= 0; i--) {
-        return(
-          <div className='card'> 
-              <img src={mediaFiles[i].src} alt={mediaFiles[i].file.name} />
-              {/* <FontAwesome
-                name='times-circle'
-                className='close'
-                onClick={this.closeCard}
-              /> */}
-              <i
-                className="close times-circle "
-                style={{
-                  color: "#ff3366"
-                }}
-              />
-            </div>
-        )
-      }
-    }
+  onFileRemove = file => {
+    this.mediaFiles.splice(this.mediaFiles.indexOf(file), 1);
+    this.forceUpdate();
   };
   render() {
-    const { viewTweets } = this.props;
+    const { viewTweets, classes } = this.props;
 
     return (
       <div ref={this.topRef}>
@@ -184,9 +198,40 @@ class Main extends Component {
           >
             <Grid container justify="center" spacing={2}>
               <Grid item xs={window.innerWidth >= 600 ? 8 : 12}>
-                <PeaMessageInput multiple onFileChange={this.onFileSelect} />
-                {this.renderThumbnnails()}
+                <PeaMessageInput
+                  multiple
+                  onFileChange={this.onFileSelect}
+                  files={this.mediaFiles}
+                  loading={this.state.newTweetLoading}
+                />
               </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              wrap="wrap"
+              justify={"center"}
+              spacing={2}
+            >
+              {this.mediaFiles.lenght !== 0 &&
+                this.mediaFiles.map(file => {
+                  return (
+                    <Grid item key={file.file.name}>
+                      <Card
+                        className={classes.card}
+                        onClick={() => this.onFileRemove(file)}
+                      >
+                        <CardActionArea>
+                          <CardMedia
+                            className={classes.media}
+                            image={file.src}
+                            title={file.file.name}
+                          />
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+                  );
+                })}
             </Grid>
             {viewTweets.tweetInitialFetch && <MainPageLoader />}
           </div>
@@ -221,13 +266,16 @@ const mapStateToProps = state => ({
   auth: state.auth,
   viewTweets: state.viewTweets
 });
-export default connect(
-  mapStateToProps,
-  {
-    initialFetchAction,
-    fetchNextAction,
-    onSnackbarOpen,
-    setSnackbarMessage,
-    setSnackbarVariant
-  }
+export default compose(
+  connect(
+    mapStateToProps,
+    {
+      initialFetchAction,
+      fetchNextAction,
+      onSnackbarOpen,
+      setSnackbarMessage,
+      setSnackbarVariant
+    }
+  ),
+  withStyles(styles)
 )(Main);

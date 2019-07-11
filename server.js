@@ -80,7 +80,7 @@ io.sockets.on("connection", socket => {
   socket.on("disconnect", () => {
     console.log("disconnected");
     if (socket.userInfo) {
-      users.splice(users.indexOf(socket.userInfo));
+      users.splice(users.indexOf(socket.userInfo), 1);
     }
     console.log("remaining users length " + users.length);
   });
