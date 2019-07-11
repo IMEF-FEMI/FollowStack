@@ -4,9 +4,9 @@ import scriptLoader from "react-async-script-loader";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import axios from "axios"
-import {compose} from 'redux'
-import {connect} from "react-redux"
+import axios from "axios";
+import { compose } from "redux";
+import { connect } from "react-redux";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Loader from "../../../../../components/Loader/Loader";
@@ -17,7 +17,6 @@ import {
 } from "../../../../../actions/snackbarAction";
 import { setPoints } from "../../../../../actions/authActions";
 import { addNotificationAction } from "../../../../../actions/notificationAction";
-
 
 const CLIENT = {
   sandbox:
@@ -53,6 +52,7 @@ const styles = theme => ({
   }
 });
 
+let PayPalButton = null;
 class PaypalButton extends React.Component {
   constructor(props) {
     super(props);
@@ -69,6 +69,7 @@ class PaypalButton extends React.Component {
     const { isScriptLoaded, isScriptLoadSucceed } = this.props;
 
     if (isScriptLoaded && isScriptLoadSucceed) {
+      PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
       this.setState({ showButton: true });
     }
   }
@@ -81,7 +82,8 @@ class PaypalButton extends React.Component {
 
     if (isLoadedButWasntLoadedBefore) {
       if (isScriptLoadSucceed) {
-        
+
+        PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
         this.setState({ showButton: true });
       }
     }
@@ -102,62 +104,65 @@ class PaypalButton extends React.Component {
   };
 
   onApprove = (data, actions) => {
-     const {
-        setSnackbarMessage,
-        setSnackbarVariant,
-        onSnackbarOpen,
-        setPoints,
-        goBack,
-        points,
-        total
-      } = this.props;
-    
-     actions.order.capture().then((details)=>{
+    const {
+      setSnackbarMessage,
+      setSnackbarVariant,
+      onSnackbarOpen,
+      setPoints,
+      goBack,
+      points,
+      total
+    } = this.props;
+    this.setState({ showButton: false });
+    actions.order.capture().then(details => {
       const paymentData = {
-      payerID: data.payerID,
-      orderID: data.orderID
-    };
-    console.log("Payment Approved: ", paymentData);
-    this.setState({showButton: false})
-    axios.post("/api/users/paypal-transaction-complete", {orderID: paymentData.orderID, payment: {
-      points: points,
-      amount: total
-    }}).then(res=>{
+        payerID: data.payerID,
+        orderID: data.orderID
+      };
+      console.log("Payment Approved: ", paymentData);
+      axios
+        .post("/api/users/paypal-transaction-complete", {
+          orderID: paymentData.orderID,
+          payment: {
+            points: points,
+            amount: total
+          }
+        })
+        .then(res => {
+          if (res.status === 200) {
+            // notify transact success
 
-      if(res.status === 200){
-      // notify transact success
+            setSnackbarMessage(res.data.success);
+            setSnackbarVariant("success");
+            onSnackbarOpen();
+            setPoints(points);
 
-      setSnackbarMessage(res.data.success);
-          setSnackbarVariant("success");
-          onSnackbarOpen();
-          setPoints(points);
-     
-          this.props.addNotificationAction({
-      id: Date.now(),
-      title: res.data.success,
-      when: Date.now(),
-      type: res.data.success ? "pointsGained" : "error",
-      to: "#"
+            this.props.addNotificationAction({
+              id: Date.now(),
+              title: res.data.success,
+              when: Date.now(),
+              type: res.data.success ? "pointsGained" : "error",
+              to: "#"
+            });
+
+            // add points
+            setPoints(res.data.points);
+
+            // go back
+            goBack();
+          }
+        });
     });
-      
-      // add points
-      setPoints(res.data.points)
-
-      // go back
-      goBack()
-    }
-    })
-     });
   };
 
   render() {
-    const paypal = window.paypal;
-    let PayPalButton = paypal.Buttons.driver("react", { React, ReactDOM });
     const { showButton } = this.state;
     const { total, points, classes, goBack } = this.props;
 
     return (
       <div className={classes.root}>
+        {<Loader showLoader={!showButton} />}
+
         {showButton && (
           <div className={classes.content}>
             <div className={classes.contentHeader}>
@@ -175,30 +180,30 @@ class PaypalButton extends React.Component {
                 </Typography>
               </div>
 
-                <PayPalButton
-                  createOrder={(data, actions) =>
-                    this.createOrder(data, actions)
-                  }
-                  onApprove={(data, actions) => this.onApprove(data, actions)}
-                />
+              <PayPalButton
+                createOrder={(data, actions) => this.createOrder(data, actions)}
+                onApprove={(data, actions) => this.onApprove(data, actions)}
+              />
             </div>
           </div>
         )}
-        {<Loader showLoader={!showButton} />}
       </div>
     );
   }
 }
 
-// export default scriptLoader(
-//   `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}`
-// )(withStyles(styles)(PaypalButton));
 
 export default compose(
-connect(null,
-  { onSnackbarOpen, setSnackbarMessage, setSnackbarVariant, setPoints, addNotificationAction }),
+  connect(
+    null,
+    {
+      onSnackbarOpen,
+      setSnackbarMessage,
+      setSnackbarVariant,
+      setPoints,
+      addNotificationAction
+    }
+  ),
   withStyles(styles),
-  scriptLoader(
-  `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}`
-)
-)(PaypalButton)
+  scriptLoader(`https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}`)
+)(PaypalButton);

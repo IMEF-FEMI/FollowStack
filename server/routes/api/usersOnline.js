@@ -76,7 +76,6 @@ router.post(
     });
 
     await UsersOnline.findOne({ user_id: req.body.userid }).then(user => {
-
       if (user.following.length !== 0) {
         var arr = user.following;
         // arrange the id's as a coma seperated list
@@ -403,8 +402,8 @@ getOnline = (req, res, userArray, client) => {
         screen_name: userArray[i][j].screen_name,
         photo: userArray[i][j].photo
       });
-      if(users.length === 100){
-        break
+      if (users.length === 100) {
+        break;
       }
     }
   }

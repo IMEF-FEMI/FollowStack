@@ -33,7 +33,7 @@ const styles = theme => ({
   root: {
     width: "95%",
     margin: "auto",
-    backgroundColor: "#2c3e50"
+    // backgroundColor: "#2c3e50"
   }
 });
 

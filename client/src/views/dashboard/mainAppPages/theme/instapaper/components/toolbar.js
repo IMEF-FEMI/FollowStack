@@ -5,7 +5,7 @@ export default ({ attach, TOOLBAR }) => ({
         minHeight: 'auto',
       },
       [attach(TOOLBAR.narrow)]: {
-        padding: '8px 24px',
+        // padding: '8px 24px',
       },
     },
   },

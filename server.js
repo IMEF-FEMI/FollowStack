@@ -4,10 +4,16 @@ const app = require("./server/app");
 const server = http.createServer(app);
 const socketIO = require("socket.io");
 const io = socketIO(server);
-const { follow, unFollow, lookup } = require("./server/utils/usersUtil");
+const {
+  follow,
+  unFollow,
+  getOnlineUsers,
+  getFollowedBack,
+  getNotFollowingBack
+} = require("./server/utils/usersUtil");
 const {
   getNotifications,
-  markAsRead,
+  markAsRead, 
   clear
 } = require("./server/utils/NotificationsUtil");
 const { seed } = require("./server/utils/usersUtil");
@@ -35,19 +41,28 @@ io.sockets.on("connection", socket => {
   });
 
   socket.on("get-users", (info, callback) => {
-    lookup(
+    getOnlineUsers(
       info,
       users.slice(info.currentUsers, 10 * (info.page + 1)),
       callback
     );
-    callback(users.slice(info.currentUsers, 10 * (info.page + 1)));
+    // callback(users.slice(info.currentUsers, 10 * (info.page + 1)));
   });
 
+  socket.on("get-followed-back", (info, callback) => {
+    getFollowedBack(info, callback);
+  });
+  socket.on("get-not-following-back", (info, callback) => {
+    getNotFollowingBack(info, callback);
+  });
+  socket.on("clear-following", (info, callback) => {
+    clearFollowings(info, callback);
+  });
   socket.on("get-notifications", (user_id, callback) => {
     getNotifications(user_id, callback);
   });
-  socket.on("mark-as-read", user_id => {
-    markAsRead(user_id);
+  socket.on("mark-as-read", (user_id, callback) => {
+    markAsRead(user_id, callback);
   });
   socket.on("clear-notifications", user_id => {
     clear(user_id);

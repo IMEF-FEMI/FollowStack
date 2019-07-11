@@ -80,7 +80,7 @@ export default theme => ({
     color: theme.palette.text.secondary
   },
   listDivider: {
-    marginBottom: theme.spacing (2),
+    marginBottom: theme.spacing(2),
     marginTop: theme.spacing( 2)
   }
 });

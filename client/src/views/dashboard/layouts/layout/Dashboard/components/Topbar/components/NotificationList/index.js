@@ -102,6 +102,7 @@ class NotificationList extends Component {
             <div className={classes.content}>
               <List component="div">
                 {notifications.map(notification => (
+
                   <Link
                     key={
                       notification.id
@@ -121,18 +122,18 @@ class NotificationList extends Component {
                         style={{
                           color:
                             icons[
-                              notification.type
-                                ? notification.type
-                                : notification.notificationType
+                              notification.notificationType 
+                                ? notification.notificationType
+                                : notification.type
                             ].color
                         }}
                       >
                         {
                           icons[
-                            notification.type
-                              ? notification.type
-                              : notification.notificationType
-                          ].icon
+                              notification.notificationType
+                                ? notification.notificationType
+                                : notification.type
+                            ].icon
                         }
                       </ListItemIcon>
                       <ListItemText

@@ -5,11 +5,10 @@ import PropTypes from "prop-types";
 // import dashboardRoutes from "../../dashboardRoutes";
 // import NotFound from "../guestpages/404/NotFound";
 
-const PrivateDashBoardRoute = ({ auth, path, Layout, Component }) => {
+const PrivateDashBoardRoute = ({ rest, auth, path, Layout, Component }) => {
   return (
     <Route
-      path={path}
-      exact
+      {...rest}
       render={props =>
         auth.isAuthenticated === true ? (
           <Layout {...props}>

@@ -199,8 +199,7 @@ class DashBoard extends Component {
                     className="tooltip-bottom"
                     data-tooltip={"My Profile"}
                   >
-                    {" "}
-                    Blow Up My Wall
+                    {" "}My Wall
                   </Typography>
                 }
               </Grid>

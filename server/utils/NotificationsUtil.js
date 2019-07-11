@@ -55,7 +55,7 @@ const addNotification = async (user_id, newNotif) => {
   });
 };
 
-const markAsRead = user_id => {
+const markAsRead = (user_id, callback) => {
   Notifications.findOneAndUpdate(
     { user_id: user_id },
     {
@@ -64,7 +64,9 @@ const markAsRead = user_id => {
       }
     },
     { new: true }
-  );
+  ).then(notifications=>{
+    callback()
+  });
 };
 
 const clear = user_id => {

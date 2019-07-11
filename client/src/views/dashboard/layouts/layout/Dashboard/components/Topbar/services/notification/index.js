@@ -1,7 +1,7 @@
 import store from "../../../../../../../../../store";
 
 export const getNotifications = (limit = 6) => {
-  const notifs = store.getState().notifications.notifications;
+  const notifs = store.getState().notifications.notifications.reverse();
 
   return new Promise(resolve => {
     setTimeout(() => {

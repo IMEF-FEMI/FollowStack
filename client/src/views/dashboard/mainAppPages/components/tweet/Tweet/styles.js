@@ -8,7 +8,7 @@ export default {
 
     minWidth:
       window.innerWidth >= 600 ? `${0.4 * window.innerWidth}px` : `${0.3 * window.innerWidth}px`,
-    borderBottom: "1px solid #e6ecf0",
+    // borderBottom: "1px solid #e6ecf0",
     color: "#14171a",
     fontFamily: '"Helvetica Neue", "Helvetica", "Arial", "sans-serif"',
     fontSize: "14px",
@@ -192,6 +192,7 @@ export default {
   },
   QuoteTweetAuthor: {
     display: "inline-block",
+    paddingTop: "20px",
     maxWidth: "100%",
     position: "relative",
     zIndex: 1

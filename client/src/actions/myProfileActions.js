@@ -3,7 +3,8 @@ import {
   SET_PAGES,
   SET_INITIAL_FETCH,
   SET_IS_FETCHING,
-  SET_HAS_MORE
+  SET_HAS_MORE,
+  SHARED_TWEETS_COUNT
 } from "./types";
 import { fetchTweetsForProfile } from "../async/post";
 import axios from "axios";
@@ -22,7 +23,8 @@ export const initialFetchAction = (
       token
     );
 
-    dispatch(setPages(tweets));
+    dispatch(setPages(tweets.tweets));
+    dispatch(setSharedTweetsCount(tweets.shared))
     dispatch(setPage(1));
     dispatch(setInitialFetch(false));
 
@@ -49,13 +51,15 @@ export const fetchNextAction = (
       page,
       token
     );
-    if (!data.length) {
+    if (!data.tweets.length || !data.tweets) {
       dispatch(setHasMore(false));
       dispatch(setIsFetching(false));
     } else {
       dispatch(setIsFetching(false));
       dispatch(setPage(page + 1));
-      dispatch(setPages(data));
+      dispatch(setPages(data.tweets));
+    dispatch(setSharedTweetsCount(data.shared))
+
     }
     // console.log("tweets returned ", data);
   } catch (e) {
@@ -98,3 +102,10 @@ export const setHasMore = bool => {
     payload: bool
   };
 };
+
+export const setSharedTweetsCount = count => {
+return {
+    type: SHARED_TWEETS_COUNT,
+    payload: count
+  };
+}

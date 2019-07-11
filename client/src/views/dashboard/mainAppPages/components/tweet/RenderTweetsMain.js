@@ -1,16 +1,12 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
+import Divider from "@material-ui/core/Divider";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import Launch from "@material-ui/icons/Launch";
-import Tooltip from "@material-ui/core/Tooltip";
 import Tweet from "./Tweet/Tweet";
 
 class RenderTweetsMain extends Component {
@@ -52,35 +48,8 @@ class RenderTweetsMain extends Component {
                 xl={8}
               >
                 <Card className={classes.card}>
-                  <CardHeader
-                    avatar={
-                      <Avatar aria-label="avatar" className={classes.avatar}>
-                        <img
-                          src={`${item.user.profile_image_url}`}
-                          alt={"user avatar"}
-                        />
-                      </Avatar>
-                    }
-                    action={
-                      <div>
-                        <a
-                          href={`http://twitter.com/${
-                            item.user.screen_name
-                          }/status/${item.id_str}`}
-                          {...linkProps}
-                        >
-                          <Tooltip title="open in new tab" aria-label="Open">
-                            <IconButton>
-                              <Launch />
-                            </IconButton>
-                          </Tooltip>
-                        </a>
-                      </div>
-                    }
-                    title={`${item.user.name}`}
-                    subheader={`@${item.user.screen_name}`}
-                  />
                   <Tweet data={item} linkProps={linkProps} context="Main" />
+                    <Divider/>
                 </Card>
               </Grid>
             );
@@ -114,7 +83,8 @@ const styles = theme => ({
     zIndex: 1000
   },
   card: {
-    borderRadius: "0px"
+    borderRadius: "0px",
+      boxShadow: "none"
   },
   gridContainer: {
     minHeight: "100vh"

@@ -18,8 +18,9 @@ export const addNotificationAction = notification => async dispatch => {
 };
 
 export const markAllAsReadAction = (socket, user_id) => async dispatch => {
-  socket.emit("mark-as-read", user_id);
+  socket.emit("mark-as-read", user_id, ()=>{
   dispatch(markAllAsRead());
+  });
 };
 
 export const clearNotificationsAction = (socket, user_id) => async dispatch => {

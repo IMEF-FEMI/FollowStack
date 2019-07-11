@@ -257,14 +257,14 @@ class Main extends Component {
         </div>
         <div
           style={{
-            paddingTop: "60px"
+            paddingTop: "60px",
+            paddingBottom: "60px"
           }}
         >
           <Divider className={classes.logoDivider} />
           <Typography variant="h6" component="h2" gutterBottom align="center">
             Alternatively, you can Buy points
           </Typography>
-          {/* <Online /> */}
           <Grid container justify="center">
             <Grid item>
               <Button variant="outlined" color="primary" onClick={()=>{

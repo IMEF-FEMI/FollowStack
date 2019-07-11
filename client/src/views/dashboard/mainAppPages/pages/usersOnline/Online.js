@@ -26,8 +26,8 @@ const container = {
   ...containerFluid,
   zIndex: "2",
   position: "relative",
-  paddingTop: "20vh",
-  paddingBottom: "20vh"
+  paddingTop: "30vh",
+  paddingBottom: "30vh"
 };
 
 class Online extends Component {
@@ -88,6 +88,8 @@ class Online extends Component {
   };
   render() {
     const { users, initialFetch, isFetching } = this.props.users;
+    const context = { context: "Online" };
+
     return (
       <React.Fragment>
         <Grid container justify="center">
@@ -125,7 +127,7 @@ class Online extends Component {
           )}
         {!initialFetch && users.length >= 1 && (
           <Grid container justify="center">
-            <Users users={users} currentUser={this.props.auth.user} />
+            <Users users={users} currentUser={this.props.auth.user} context={context}/>
           </Grid>
         )}
         {users.length !== 0 && isFetching && (

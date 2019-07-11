@@ -3,7 +3,8 @@ import {
   SET_PAGES,
   SET_INITIAL_FETCH,
   SET_IS_FETCHING,
-  SET_HAS_MORE
+  SET_HAS_MORE,
+  SHARED_TWEETS_COUNT
 } from "../actions/types";
 
 const initialState = {
@@ -11,7 +12,8 @@ const initialState = {
   pages: [],
   initialFetch: true,
   isFetching: false,
-  hasMore: true
+  hasMore: true,
+  shareTweetsCount: 0
 };
 
 export default function(state = initialState, action) {
@@ -26,6 +28,12 @@ export default function(state = initialState, action) {
         ...state,
         pages: [...state.pages, ...action.payload]
       };
+
+    case SHARED_TWEETS_COUNT:
+      return {
+        ...state,
+        shareTweetsCount: action.payload
+      }
 
     case SET_INITIAL_FETCH:
       return {

@@ -67,7 +67,6 @@ class App extends Component {
           </div>
           <ThemeProvider theme={theme}>
             <Router>
-              <div>
                 <Switch>
                   {this.state.serverWoke === false ? (
                     <LaunchScreen />
@@ -106,7 +105,6 @@ class App extends Component {
                   })}
                   <Route component={NotFound} />
                 </Switch>
-              </div>
             </Router>
           </ThemeProvider>
         </SocketContext.Provider>

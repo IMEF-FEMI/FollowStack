@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 
-// Externals
+// Externals 
 import classNames from "classnames";
 import compose from "recompose/compose";
 import PropTypes from "prop-types";
@@ -13,7 +13,7 @@ import withWidth from "@material-ui/core/withWidth";
 import Drawer from "@material-ui/core/Drawer";
 
 // Custom components
-import { Sidebar, Topbar, Footer } from "./components";
+import { Sidebar, Topbar } from "./components";
 
 // Component styles
 import styles from "./styles";
@@ -72,7 +72,6 @@ class Dashboard extends Component {
           })}
         >
           {children}
-          <Footer />
         </main>
       </Fragment>
     );

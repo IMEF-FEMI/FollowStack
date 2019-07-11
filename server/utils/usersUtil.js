@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 var Twitter = require("twitter");
 
 const User = require("../models/User");
+const UsersOnline = require("../models/UsersOnline");
 const { addNotification } = require("./NotificationsUtil");
 
 mongoose.set("useNewUrlParser", true);
@@ -49,14 +50,14 @@ const follow = (info, callback, socket) => {
       // add new notification the the person following
       const followingNotif = {
         title: "👍 Follow Successful +40 Points ",
-        notificationType: "pointsGained",
+        notificationType: "pointsGained"
       };
       addNotification(socket.userInfo.user_id, followingNotif);
-      
+
       // add new notification the the person bieng followed
       const followedNotif = {
         title: `${socket.userInfo.screen_name} just Followed you`,
-        type: "followed",
+        notificationType: "followed"
       };
 
       addNotification(info.newUser.user_id, followedNotif);
@@ -73,6 +74,21 @@ const follow = (info, callback, socket) => {
         }
       ).then(user => {
         if (user) {
+          var userObj = {
+            user_id: info.newUser.user_id,
+            name: info.newUser.name,
+            screen_name: info.newUser.screen_name,
+            photo: info.newUser.photo
+          };
+          UsersOnline.findOneAndUpdate(
+            { user_id: info.userData.userid },
+            { $addToSet: { following: userObj } },
+            { new: true }
+          )
+            .then(user => {
+              console.log("user followed added to db");
+            })
+            .catch(err => console.log(err));
           // callback notification on client side
           callback(user.points);
         }
@@ -103,34 +119,132 @@ const unFollow = (info, callback, socket) => {
     if (!error && response.statusCode === 200) {
       // add notification
       const unfollowNotif = {
-        title: "👍 user unFollowed - 40 Points ",
-        type: "pointsDeducted",
+        title: "👍 user unFollowed",
+        type: "error"
       };
       addNotification(socket.userInfo.user_id, unfollowNotif);
 
-      await User.findOneAndUpdate(
-        { userid: info.userData.userid },
-        {
-          $inc: {
-            points: -40
-          }
-        },
-        {
-          new: true
-        }
-      ).then(user => {
-        if (user) {
-          // callback notification on client side
-          callback(user.points);
-        }
-      });
+
+      var userObj = {
+        user_id: info.newUser.user_id,
+        name: info.newUser.name,
+        screen_name: info.newUser.screen_name,
+        photo: info.newUser.photo
+      };
+      UsersOnline.findOneAndUpdate(
+        { user_id: info.userData.userid },
+        { $addToSet: { following: userObj } },
+        { new: true }
+      )
+        .then(user => {
+          console.log("user followed added to db");
+        })
+        .catch(err => console.log(err));
+
+      // await User.findOneAndUpdate(
+      //   { userid: info.userData.userid },
+      //   {
+      //     $inc: {
+      //       points: -40
+      //     }
+      //   },
+      //   {
+      //     new: true
+      //   }
+      // ).then(user => {
+      //   if (user) {
+          
+      //     // callback notification on client side
+      //     callback(user.points);
+      //   }
+      // });
+      callback(user.points);
+
     } else {
       console.log(error);
     }
   });
 };
 
-const lookup = (info, users, callback) => {
+const getOnlineUsers = (info, users, callback) => {
+  friendshipLookup(info, users, arr => {
+    // identify those already followed
+    arr.map(i => {
+      users.map(j => {
+        if (i.id_str === j.user_id) {
+          if (
+            i.connections[0] === "following" ||
+            i.connections[1] === "following"
+          ) {
+            j.following = true;
+          } else {
+            j.following = false;
+          }
+        }
+      });
+    });
+    callback(users);
+  });
+};
+
+const getFollowedBack = async (info, callback) => {
+  await UsersOnline.findOne({ user_id: info.userData.userid }).then(user => {
+    if (user.following.length !== 0) {
+      var users = user.following.slice(info.currentUsers, 10 * (info.page + 1));
+      friendshipLookup(info, users, arr => {
+        // identify those following back
+        var followingBack = [];
+        arr.map(i => {
+          users.map(j => {
+            if (i.id_str === j.user_id) {
+              if (
+                i.connections[0] === "followed_by" ||
+                i.connections[1] === "followed_by"
+              ) {
+                followingBack.push(j);
+              }
+            }
+          });
+        });
+        callback(followingBack);
+      });
+    }
+  });
+};
+
+const getNotFollowingBack = async (info, callback) => {
+  await UsersOnline.findOne({ user_id: info.userData.userid }).then(user => {
+    if (user.following.length !== 0) {
+      var users = user.following.slice(info.currentUsers, 10 * (info.page + 1));
+      friendshipLookup(info, users, arr => {
+        // identify those following back
+        var notFollowingBack = [];
+        arr.map(i => {
+          users.map(j => {
+            if (i.id_str === j.user_id) {
+              if (i.connections[1] !== "followed_by") {
+                notFollowingBack.push(j);
+              }
+            }
+          });
+        });
+        callback(notFollowingBack);
+      });
+    }
+  });
+};
+
+const clearFollowings = async (info, callback) => {
+  await UsersOnline.findOneAndUpdate(
+    { user_id: info.userData.userid },
+    { $set: { following: [] } }
+  ).then(userOnline => {
+    console.log("followings cleared successfully");
+    callback();
+  });
+};
+
+const friendshipLookup = (info, users, callback) => {
   const random = TWITTER_KEYS[info.key];
 
   var client = new Twitter({
@@ -156,23 +270,8 @@ const lookup = (info, users, callback) => {
       //  const users =  Object.values(tweet)
       const arr = Object.keys(tweet).map(i => tweet[i]);
 
-      // identify those already followed
-      arr.map(i => {
-        users.map(j => {
-          if (i.id_str === j.user_id) {
-            if (
-              i.connections[0] === "following" ||
-              i.connections[1] === "following"
-            ) {
-              j.following = true;
-            } else {
-              j.following = false;
-            }
-          }
-        });
-      });
       client = null;
-      callback(users);
+      callback(arr);
     } else {
       // either has an error or returned status code not equals 200
       console.log(error);
@@ -180,4 +279,11 @@ const lookup = (info, users, callback) => {
   });
 };
 
-module.exports = { follow, unFollow, lookup };
+module.exports = {
+  follow,
+  unFollow,
+  getOnlineUsers,
+  getFollowedBack,
+  getNotFollowingBack,
+  clearFollowings
+};

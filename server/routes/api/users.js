@@ -15,7 +15,7 @@ const Notifications = require("../../models/Notifications");
 const {addNotification} = require("../../utils/NotificationsUtil")
 const {addTransaction} = require("../../utils/TransactionsUtil")
 
-
+ 
 // 1a. Import the SDK package
 const checkoutNodeJssdk = require('@paypal/checkout-server-sdk');
 
@@ -27,7 +27,7 @@ const checkoutNodeJssdk = require('@paypal/checkout-server-sdk');
 const payPalClient = require('../../common/payPalClient');
 
 var Twitter = require("twitter");
-const TWITTER_KEYS = [
+const TWITTER_KEYS = [ 
   {
     consumerKey: process.env.TWITTER_KEY,
     consumerSecret: process.env.TWITTER_SECRET
@@ -264,7 +264,8 @@ router.post(
           description: profile.description,
           followers: profile.followers_count,
           following: profile.friends_count,
-          photo: profile.profile_image_url.replace("_normal", ""),
+          background_photo: profile.profile_background_image_url_https,
+          photo: profile.profile_image_url_https.replace("_normal", ""),
           tweets: profile.statuses_count
         });
       } else {

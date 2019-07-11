@@ -21,20 +21,27 @@ export const onScroll = function(cb) {
       const currentInnerHeight = innerHeight;
       const currentDocOffsetHeight = docOffsetHeight;
 
-      if(this.state){
-      if (
-        this.state.showNavToTop === false &&
-        currentPageYOffset > currentInnerHeight
-      ) {
-        this.setState({ showNavToTop: true });
+      if (this.state) {
+        // dont do anythiing for components without navto top FAB
+        if (
+          this.state.showNavToTop === undefined ||
+          this.state.showNavToTop === null
+        ) {
+          return;
+        }
+        if (
+          this.state.showNavToTop === false &&
+          currentPageYOffset > currentInnerHeight
+        ) {
+          this.setState({ showNavToTop: true });
+        }
+        if (
+          this.state.showNavToTop === true &&
+          currentPageYOffset < currentInnerHeight
+        ) {
+          this.setState({ showNavToTop: false });
+        }
       }
-      if (
-        this.state.showNavToTop === true &&
-        currentPageYOffset < currentInnerHeight
-      ) {
-        this.setState({ showNavToTop: false });
-      }
-    }
       if (currentInnerHeight + currentPageYOffset >= currentDocOffsetHeight) {
         cb();
       }

@@ -8,7 +8,7 @@ import MuiLinearProgress from './MuiLinearProgress';
 import MuiListItemIcon from './MuiListItemIcon';
 import MuiOutlinedInput from './MuiOutlinedInput';
 import MuiSvgIcon from './MuiSvgIcon';
-import MuiTab from './MuiTab';
+// import MuiTab from './MuiTab';
 import MuiTableCell from './MuiTableCell';
 import MuiTableRow from './MuiTableRow';
 import MuiTabs from './MuiTabs';
@@ -24,7 +24,7 @@ export default {
   MuiListItemIcon,
   MuiOutlinedInput,
   MuiSvgIcon,
-  MuiTab,
+  // MuiTab,
   MuiTableCell,
   MuiTableRow,
   MuiTabs

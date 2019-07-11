@@ -446,9 +446,9 @@ router.post(
                 }
               });
             });
-            return res.send(tweetForPage);
+            return res.send({tweets: tweetForPage, shared: posts.length});
           }
-          res.send(tweetForPage);
+          return res.send({tweets: tweetForPage, shared: posts.length});
         } else if (parseInt(page) === 1) {
           if (posts.length !== 0) {
             posts.map(post => {
@@ -458,12 +458,12 @@ router.post(
                 }
               });
             });
-            return res.send(allTweet);
+            return res.send({tweets: allTweet, shared: posts.length});
           }
-          res.send(allTweet);
+            return res.send({tweets: allTweet, shared: posts.length});
         } else if (tweetForPage.length === 0) {
           res.send();
-        }
+        } 
       } else {
         console.log(error);
       }
@@ -493,6 +493,7 @@ router.post(
         
         .exec();
       let post_ids = "";
+
       for (var i = 0; i < posts.length; i++) {
         if (i === posts.length - 1) {
           post_ids += posts[i].post_id;
@@ -519,7 +520,6 @@ router.post(
               }
             }
           }
-
           res.send(posts);
         } else {
           console.log(error);
