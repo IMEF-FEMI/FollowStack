@@ -4,6 +4,16 @@ const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const requireAuth = require("../../middlewares/requireAuth");
 var Twitter = require("twitter");
+var async = require("async");
+
+// multer upload imports
+const path = require("path");
+const multer = require("multer");
+const fs = require('fs')
+const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink)
+
+
 
 const {addNotification} = require("../../utils/NotificationsUtil")
 
@@ -33,6 +43,7 @@ mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 
+
 // @route   GET api/Post/test
 // @desc    Tests Post route
 // @access  Public
@@ -43,6 +54,181 @@ router.get(
     res.json({ msg: req.user });
   })
 );
+
+
+
+const storage = multer.diskStorage({   
+  destination: "./public/uploads/",
+   filename: function(req, file, cb){
+      cb(
+        null,"IMAGE-" + Date.now() + path.extname(file.originalname));
+   }
+});
+const upload = multer({storage: storage}).any()
+
+router.post(
+  "/new-tweet/:key",
+  requireAuth,
+  upload,
+  asyncHandler(async (req, res, next) => {
+ const random = TWITTER_KEYS[req.params.key];
+    const userData = JSON.parse(req.body.userData)
+    var client = new Twitter({
+      consumer_key: random.consumerKey,
+      consumer_secret: random.consumerSecret,
+      access_token_key: userData.accessToken,
+      access_token_secret: userData.secret
+    });
+
+     // rremove points
+     // add post to db and return tweet obj
+      await User.findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(req.user._id),
+        points: { $gte: 50 }
+      }, 
+      {
+        $inc: {
+          points: -50
+        }
+      },
+      {
+        new: true
+      }
+    )
+      .then(async user => {
+        if (user) {
+// update status (twitter)
+    var mediaIds = []
+      if (req.files) { 
+           async.each(req.files, function(file, callback) {
+            var params = {
+                media: fs.readFileSync(file.path) 
+              };
+
+              client.post('media/upload', params, async function(error, media, response) {
+                if (!error && response.statusCode === 200) {
+                  mediaIds.push(media.media_id_string)
+                  callback()
+                } else {
+                  return callback(error)
+            }
+          });
+              },
+              function(error) {
+                if(error){
+                    console.log("error ", error)
+                }else{
+                console.log("finished uploads");
+                var media_ids = ""
+                mediaIds.map(ids=>{
+                  media_ids+= `${ids},`
+                })
+                    // Lets tweet it
+                  var status = {
+                    status: JSON.parse(req.body.tweet_text),
+                    media_ids: media_ids // Pass the media id string
+
+                  }
+
+                client.post('statuses/update', status, async function(error, tweet, response) {
+              if (!error) {
+                console.log("status updated");
+          const post = await new Post({
+            _owner: mongoose.Types.ObjectId(req.user._id),
+            text: tweet.text,
+            post_id: tweet.id_str,
+            name: tweet.user.name,
+            screen_name: tweet.user.screen_name,
+            photo: tweet.user.profile_image_url_https
+          });
+          post.save(function(err) {
+            if (err) {
+              console.log(err);
+              res.status(200).send({
+                error: "Could Not share tweet. Try again"
+              });
+            } else {
+              addNotification(req.user.userid, {title: "Status Updated! ", notificationType: "sharedTweet"})
+              // tweet added successfully send back to client
+              res.status(200).send({
+                success: "Status Updated! ",
+                points: user.points,
+                tweet: tweet
+              });
+            }
+          });
+              }else{
+                console.log(error)
+              }
+            });
+          }
+        }
+      );
+   }else{
+      var status = {
+      status: JSON.parse(req.body.tweet_text),
+      }
+
+       client.post('statuses/update', status, async function(error, tweet, response) {
+              if (!error) {
+                console.log("status updated");
+          const post = await new Post({
+            _owner: mongoose.Types.ObjectId(req.user._id),
+            text: tweet.text,
+            post_id: tweet.id_str,
+            name: tweet.user.name,
+            screen_name: tweet.user.screen_name,
+            photo: tweet.user.profile_image_url_https
+          });
+          post.save(function(err) {
+            if (err) {
+              console.log(err);
+              res.status(200).send({
+                error: "Could Not share tweet. Try again"
+              });
+            } else {
+              addNotification(req.user.userid, {title: "Status updated! ", notificationType: "sharedTweet"})
+              // tweet added successfully send back to client
+              res.status(200).send({
+                success: "Status Updated ",
+                points: user.points,
+                tweet: tweet
+              });
+            }
+          });
+              }else{
+                console.log(error)
+              }
+            });
+   }
+
+
+   // Delete the file like normal
+  req.files.map(async (file)=>{
+    await unlinkAsync(file.path)
+  })
+
+
+        } else {
+          // user did not meet search criteria i.e not enough points
+          addNotification(req.user.userid, {title: "Not enough Points! Go blow up some tweets", notificationType: "error"})
+          res.status(200).send({
+            error: "Not enough Points! Go blow up some tweets"
+          });
+        }
+      })
+      .catch(e => {
+        console.log(e); //user.findOneAndUpdate error
+        res.status(200).send({
+          error: "An error Occured try again"
+          // postData: post
+        });
+      });
+
+
+  }))
+
 
 router.post(
   "/add-tweet",
@@ -57,7 +243,7 @@ router.post(
       {
         _id: mongoose.Types.ObjectId(req.body.user_id),
         points: { $gte: 50 }
-      },
+      }, 
       {
         $inc: {
           points: -50

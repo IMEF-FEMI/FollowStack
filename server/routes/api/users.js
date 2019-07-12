@@ -234,7 +234,7 @@ router.get(
       { _id: mongoose.Types.ObjectId(req.params.user_id) },
       "points",
       function(err, user) {
-        if (err) return handleError(err);
+        if (err) return console.log(err);
         res.status(200).json(user.points);
       }
     );

@@ -86,7 +86,8 @@ class MyTweets extends Component {
         } > {
             myProfile.initialFetch && ( < div style = {
                     {
-                        paddingTop: "20px"
+                        paddingTop: "20px",
+                        width: "98%"
                     }
                 } > < Grid container justify = "center"
                 spacing = {
@@ -109,7 +110,8 @@ class MyTweets extends Component {
         } {
             !myProfile.initialFetch && ( < div style = {
                 {
-                    paddingTop: "20px"
+                    paddingTop: "20px",
+                    width: "98%"
                 }
             } > {
                 myProfile.pages && ( < RenderProfileTweets pages = {

@@ -10,12 +10,16 @@ import PropTypes from "prop-types";
 import MainPageLoader from "../../components/loaders/MainPageLoader";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import VideoPlayer from "simple-react-video-thumbnail";
+import { ClapSpinner } from "react-spinners-kit";
 
 import axios from "axios";
 
 import {
   initialFetchAction,
-  fetchNextAction
+  fetchNextAction,
+  addStatus
 } from "../../../../../actions/viewTweetsAction";
 import PeaMessageInput from "../../components/statusUpdate/PeaMessageInput";
 
@@ -27,10 +31,12 @@ import {
   setSnackbarMessage,
   setSnackbarVariant
 } from "../../../../../actions/snackbarAction";
+import { setPoints } from "../../../../../actions/authActions";
 
 const styles = theme => ({
   card: {
-    width: "60px"
+    width: "60px",
+    height: "60px"
   },
   media: {
     height: "60px"
@@ -117,19 +123,17 @@ class Main extends Component {
       setSnackbarVariant,
       onSnackbarOpen
     } = this.props;
+    if (this.mediaFiles.length === 4) {
+      return;
+    }
+    const src = e.target.files[0] && URL.createObjectURL(e.target.files[0]);
+    if (!src) {
+      return;
+    }
     if (
       e.target.files[0].type.includes("image") ||
       e.target.files[0].type.includes("video")
     ) {
-      const src = e.target.files[0] && URL.createObjectURL(e.target.files[0]);
-      if (!src) {
-        return;
-      }
-      // this.setState({ previewImage: src });
-      // this.setState({
-      //   file: e.target.files[0],
-      //   fileSize: e.target.files[0].size
-      // });
       if (
         e.target.files[0].type.includes("image") &&
         !e.target.files[0].type.includes("gif")
@@ -178,6 +182,47 @@ class Main extends Component {
     this.mediaFiles.splice(this.mediaFiles.indexOf(file), 1);
     this.forceUpdate();
   };
+  onSubmit = tweet => {
+    console.log("submitting ", tweet);
+    const data = new FormData();
+    const {
+      onSnackbarOpen,
+      setSnackbarMessage,
+      setSnackbarVariant,
+      addStatus
+    } = this.props;
+    this.setState({ newTweetLoading: true }, () => {
+      this.mediaFiles.map(file => {
+        data.append(file.file.name, file.file);
+      });
+
+      data.append("tweet_text", JSON.stringify(tweet));
+      data.append("userData", JSON.stringify(this.props.auth.userData));
+      const config = {
+        headers: {
+          "content-type": "multipart/form-data"
+        }
+      };
+      axios
+        .post(`/api/post/new-tweet/${this.props.auth.keyInUse}`, data, config)
+        .then(res => {
+          if (res.data.success) {
+            setSnackbarVariant("success");
+            setSnackbarMessage(res.data.success);
+            onSnackbarOpen();
+            setPoints(res.data.points);
+            addStatus(res.data.tweet);
+            this.setState({ newTweetLoading: false });
+            this.mediaFiles = []
+            this.forceUpdate();
+          } else if (res.data.error) {
+            setSnackbarVariant("error");
+            setSnackbarMessage(res.data.error);
+            onSnackbarOpen();
+          }
+        });
+    });
+  };
   render() {
     const { viewTweets, classes } = this.props;
 
@@ -193,7 +238,8 @@ class Main extends Component {
         <div>
           <div
             style={{
-              paddingTop: "20px"
+              paddingTop: "20px",
+              width: "98%"
             }}
           >
             <Grid container justify="center" spacing={2}>
@@ -203,41 +249,83 @@ class Main extends Component {
                   onFileChange={this.onFileSelect}
                   files={this.mediaFiles}
                   loading={this.state.newTweetLoading}
+                  onSubmit={this.onSubmit}
                 />
               </Grid>
             </Grid>
-            <Grid
-              container
-              direction="row"
-              wrap="wrap"
-              justify={"center"}
-              spacing={2}
-            >
-              {this.mediaFiles.lenght !== 0 &&
-                this.mediaFiles.map(file => {
-                  return (
-                    <Grid item key={file.file.name}>
-                      <Card
-                        className={classes.card}
-                        onClick={() => this.onFileRemove(file)}
-                      >
-                        <CardActionArea>
-                          <CardMedia
-                            className={classes.media}
-                            image={file.src}
-                            title={file.file.name}
-                          />
-                        </CardActionArea>
-                      </Card>
-                    </Grid>
-                  );
+
+            {this.mediaFiles.length !== 0 && !this.state.newTweetLoading && (
+              <Grid
+                container
+                direction="row"
+                wrap="wrap"
+                justify={"center"}
+                spacing={1}
+              >
+                {this.mediaFiles.map(file => {
+                  if (
+                    file.file.type.includes("video") ||
+                    file.file.type.includes("gif")
+                  ) {
+                    return (
+                      <Grid item key={file.file.name}>
+                        <Card
+                          className={classes.card}
+                          onClick={() => this.onFileRemove(file)}
+                        >
+                          <CardActionArea>
+                            <VideoPlayer videoUrl={file.src} snapshotAt={10} />
+                          </CardActionArea>
+                        </Card>
+                      </Grid>
+                    );
+                  } else {
+                    return (
+                      <Grid item key={file.file.name}>
+                        <Card
+                          className={classes.card}
+                          onClick={() => this.onFileRemove(file)}
+                        >
+                          <CardActionArea>
+                            <CardMedia
+                              className={classes.media}
+                              image={file.src}
+                              title={file.file.name}
+                            />
+                          </CardActionArea>
+                        </Card>
+                      </Grid>
+                    );
+                  }
                 })}
-            </Grid>
+                <Grid item xs={12}>
+                  <Typography
+                    align="center"
+                    style={{
+                      fontSize: "14px"
+                    }}
+                  >
+                    Click on file to remove
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
+            {this.state.newTweetLoading && (
+              <Grid container justify="center" spacing={2}>
+                <Grid item>
+                  <ClapSpinner
+                    size={30}
+                    color="#93788a"
+                    loading={this.state.newTweetLoading}
+                  />
+                </Grid>
+              </Grid>
+            )}
             {viewTweets.tweetInitialFetch && <MainPageLoader />}
           </div>
 
           {!viewTweets.tweetInitialFetch && (
-            <div style={{ paddingTop: "20px" }}>
+            <div style={{ paddingTop: "20px", width: "98%" }}>
               {viewTweets.tweetPages && (
                 <RenderTweetsMain
                   pages={viewTweets.tweetPages}
@@ -274,7 +362,9 @@ export default compose(
       fetchNextAction,
       onSnackbarOpen,
       setSnackbarMessage,
-      setSnackbarVariant
+      setSnackbarVariant,
+      setPoints,
+      addStatus
     }
   ),
   withStyles(styles)

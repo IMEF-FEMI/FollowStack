@@ -67,8 +67,9 @@ const PeaMessageInput = ({
   };
   const toggleEmoji = () => setShowEmoji(!showEmoji);
   const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit(value);
+    e.preventDefault(); 
+    onInputChange("")
+    onSubmit(inputValue);
   };
   const onEmojiSelect = e => {
     handleChange({
@@ -115,7 +116,13 @@ const PeaMessageInput = ({
               type="file"
               accept={accept}
               multiple={multiple}
+              name="files"
               onChange={onFileChange}
+              disabled={
+              loading
+                ? true
+                : false
+            }
             />
             <PeaIcon icon="fas fa-paperclip" className={classes.icon} />
           </label>
@@ -132,6 +139,11 @@ const PeaMessageInput = ({
             placeholder="Whats Happening. . ."
             inputProps={{ maxLength: 140 }}
             multiline
+            disabled={
+              loading
+                ? true
+                : false
+            }
             endAdornment={
               <InputAdornment position="end" onClick={toggleEmoji}>
                 {!showEmoji ? (
@@ -190,7 +202,7 @@ PeaMessageInput.defaultProps = {
   onUpload: noop,
   onSubmit: noop,
   accept: "image/*, video/*",
-  multiple: true,
+  multiple: false,
   files: [],
   loading: false
 };

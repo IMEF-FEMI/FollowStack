@@ -3,7 +3,8 @@ import {
   SET_TWEET_PAGES,
   SET_TWEET_INITIAL_FETCH,
   SET_TWEET_IS_FETCHING,
-  SET_TWEET_HAS_MORE
+  SET_TWEET_HAS_MORE,
+  ADD_STATUS
 } from "./types";
 import { fetchTweetsForMain } from "../async/post";
 import axios from "axios";
@@ -66,6 +67,14 @@ export const fetchNextAction = (
     console.log(e);
   }
 };
+export const addStatus = (tweet) => async dispatch => {
+  dispatch({
+    type: ADD_STATUS,
+    payload: tweet
+  })
+}
+
+
 export const setInitialFetch = bool => {
   return {
     type: SET_TWEET_INITIAL_FETCH,

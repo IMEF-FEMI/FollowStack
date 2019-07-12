@@ -3,7 +3,8 @@ import {
   SET_TWEET_PAGES,
   SET_TWEET_INITIAL_FETCH,
   SET_TWEET_IS_FETCHING,
-  SET_TWEET_HAS_MORE
+  SET_TWEET_HAS_MORE,
+  ADD_STATUS
 } from "../actions/types";
 
 const initialState = {
@@ -16,6 +17,11 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case ADD_STATUS:
+    return{
+      ...state,
+        tweetPages: [action.payload, ...state.tweetPages]
+    }
     case SET_TWEET_PAGE:
       return {
         ...state,
