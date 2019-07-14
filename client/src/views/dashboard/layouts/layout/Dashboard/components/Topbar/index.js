@@ -12,9 +12,10 @@ import withStyles  from "@material-ui/core/styles/withStyles";
 // Material components
 import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
+import PeaButton from "../../../../../mainAppPages/components/profile/PeaButton"
+
 import Popover from "@material-ui/core/Popover";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 
 // Material icons
 import MenuIcon from "@material-ui/icons/Menu";
@@ -25,6 +26,9 @@ import InputIcon from "@material-ui/icons/Input";
 import { connect } from "react-redux";
 import { logoutUser } from "../../../../../../../actions/authActions";
 import { markAllAsReadAction } from "../../../../../../../actions/notificationAction";
+import {refreshOnlineAction} from "../../../../../../../actions/usersAction"
+import {refreshTweetsAction} from "../../../../../../../actions/viewTweetsAction"
+import {refreshProfileAction} from "../../../../../../../actions/myProfileActions"
 
 // Shared services
 import { getNotifications } from "./services/notification";
@@ -45,7 +49,8 @@ class Topbar extends Component {
     notifications: [],
     notificationsLimit: 4,
     notificationsCount: 0,
-    notificationsEl: null
+    notificationsEl: null,
+    loading: false
   };
 
   async getNotifications() {
@@ -97,16 +102,45 @@ class Topbar extends Component {
       notificationsEl: null
     });
   };
+  handleRefresh = ()=>{
+    const {refreshProfileAction, refreshTweetsAction, refreshOnlineAction} = this.props
+    const location = this.props.location.pathname
+    this.setState({loading: true})
 
+
+    console.log(location)
+
+    setTimeout(()=>{
+        switch(location){
+            case "/profile":
+              refreshProfileAction()
+              this.setState({loading: false})
+              break;
+
+            case "/shared-tweets":
+              refreshTweetsAction();
+              this.setState({loading: false})
+              break;
+            case "/online-users":
+              refreshOnlineAction()
+              this.setState({loading: false})
+              break;
+            default:
+              this.setState({loading: false})
+              break;
+    }
+
+    },2000)
+
+  }
   render() {
     const {
       classes,
       className,
-      title,
       isSidebarOpen,
       onToggleSidebar,
     } = this.props;
-    const { notifications,  notificationsEl } = this.state;
+    const { notifications,  notificationsEl, loading } = this.state;
     const rootClassName = classNames(classes.root, className);
     const showNotifications = Boolean(notificationsEl);
 
@@ -121,9 +155,24 @@ class Topbar extends Component {
             >
               {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
-            <Typography className={classes.title} variant="h4">
-              {title}
-            </Typography>
+          
+            <PeaButton
+              className={classes.refreshButton}
+              size={'small'}
+              variant={'outlined'}
+              labelExpanded={false}
+              icon={!loading ? 'refresh': ''}
+              iconProps={{
+                color: 'default',
+                size: 'small',
+              }}
+              loading={this.state.loading}
+
+              style={{ marginTop: 6 }}
+              onClick={this.handleRefresh}
+            >
+              { "Refresh"}
+            </PeaButton>
             <IconButton
               className={classes.notificationsButton}
               onClick={this.handleShowNotifications}
@@ -174,7 +223,6 @@ Topbar.propTypes = {
   history: PropTypes.object.isRequired,
   isSidebarOpen: PropTypes.bool,
   onToggleSidebar: PropTypes.func,
-  title: PropTypes.string
 };
 
 Topbar.defaultProps = {
@@ -192,7 +240,7 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { logoutUser , markAllAsReadAction}
+  { logoutUser , markAllAsReadAction, refreshOnlineAction, refreshTweetsAction, refreshProfileAction}
 )(
   compose(
     withRouter,

@@ -98,8 +98,11 @@ export const initSignIn = socket => {
       screen_name: userInfo.userProfile.screen_name
     }
   );
-
+  if(!store.getState().auth.user._id){
+  store.dispatch(setPointsAction(100));
+}else{
   store.dispatch(setPointsAction(store.getState().auth.user._id));
+}
 };
 export const initFirebase = () => {
   // init firebase

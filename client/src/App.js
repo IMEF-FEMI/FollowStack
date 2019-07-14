@@ -76,7 +76,7 @@ class App extends Component {
                       path="/"
                       render={() =>
                         loggedIn === true ? (
-                          <Redirect to="/dashboard" />
+                          <Redirect to="/shared-tweets" />
                         ) : (
                           <LandingPage />
                         )

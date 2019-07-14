@@ -1,52 +1,43 @@
-  /*!
+import React from 'react';
+import PropTypes from 'prop-types';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import PeaButton from '../../components/profile/PeaButton';
+import PeaIcon from '../../components/profile/PeaIcon';
+import PeaAvatar from '../../components/profile/PeaAvatar';
+import PeaStatistic from '../../components/profile/PeaStatistic';
+import PeaText from '../../components/profile/PeaTypography';
 
-  =========================================================
-  * Material Kit React - v1.7.0
-  =========================================================
+import theme from "../../components/profile/theme";
+import ThemeProvider from "@material-ui/styles/ThemeProvider"; 
 
-  * Product Page: https://www.creative-tim.com/product/material-kit-react
-  * Copyright 2019 Creative Tim (https://www.creative-tim.com)
-  * Licensed under MIT (https://github.com/creativetimofficial/material-kit-react/blob/master/LICENSE.md)
+import withStyles from "@material-ui/core/styles/withStyles";
+import Close from "@material-ui/icons/Close";
+import Slide from "@material-ui/core/Slide";
+import Button from "@material-ui/core/Button"
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import Tab from '@material-ui/core/Tab/Tab';
+import Tabs from '@material-ui/core/Tabs/Tabs';
+import {ClapSpinner}  from "react-spinners-kit"; 
 
-  * Coded by Creative Tim
-
-  =========================================================
-
-  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-  */
-  import React from "react";
-  // nodejs library to set properties for components
-  import PropTypes from "prop-types";
-  // nodejs library that concatenates classes
-  import classNames from "classnames";
-
-  // @material-ui/core components
-  import withStyles from "@material-ui/core/styles/withStyles";
-  import Typography from "@material-ui/core/Typography"
-  import Grid from "@material-ui/core/Grid"
-  import Button from "@material-ui/core/Button"
-  import DeleteForever from "@material-ui/icons/DeleteForever"
-  import Close from "@material-ui/icons/Close";
-  import Collapse from "@material-ui/core/Collapse";
-  import Slide from "@material-ui/core/Slide";
-  import IconButton from "@material-ui/core/IconButton";
-  import Dialog from "@material-ui/core/Dialog";
-  import DialogTitle from "@material-ui/core/DialogTitle";
-  import DialogContent from "@material-ui/core/DialogContent";
-  import DialogActions from "@material-ui/core/DialogActions";
-  import {ClapSpinner}  from "react-spinners-kit"; 
-
-  import {connect} from 'react-redux'
-
-  import GridContainer from "../../components/Grid/GridContainer.jsx";
-  import GridItem from "../../components/Grid/GridItem.jsx";
-  import Parallax from "../../components/Parallax/Parallax.jsx";
-
-  import profilePageStyle from "../../../assets/jss/material-kit-react/views/profilePage.jsx";
+import {connect} from 'react-redux'
 
 
-  import MyTweets from "./MyTweets"
+import profilePageStyle from "../../../assets/jss/material-kit-react/views/profilePage.jsx";
+
+
+import MyTweets from "./MyTweets"
+
+import {deleteUser} from "../../../../../async/auth";
+import { logoutUser} from "../../../../../actions/authActions";
 
 
 
@@ -55,21 +46,18 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
-
-  class ProfilePage extends React.Component {
-    state ={
-      expanded:false,
+class Main extends React.Component{
+ state ={
       confirmed: false,
-      classicModal: false
+      deleteButtonLoad: false,
+      classicModal: false,
+      index: 0
     }
-    handleExpandClick = () => {
-    this.setState(state => ({ expanded: !state.expanded }));
-  };
-      formatCount(count) {
-      const readablize = num => {
-        var e = Math.floor(Math.log(num) / Math.log(1000));
-        return (num / Math.pow(1000, e)).toFixed(1) + "K";
-      };
+    formatCount(count) {
+        const readablize = num => {
+          var e = Math.floor(Math.log(num) / Math.log(1000));
+          return (num / Math.pow(1000, e)).toFixed(1) + "K";
+        };
 
       if (count > 999) return readablize(count);
       else return count;
@@ -84,146 +72,183 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     var x = [];
     x[modal] = false;
     this.setState(x, ()=>{
-    this.setState({confirmed: false})
+    this.setState({confirmed: false, deleteButtonLoad: false})
+
     });
   }
-  handleConfirmDelete =()=>{
+  handleConfirmDelete = async()=>{
     this.setState({confirmed:true})
-
+    const res = await deleteUser()
+    if (res.data.success) {
+      this.props.logoutUser()
+    }
+  }
+  onChange = (index)=>{
+    this.setState({index: index})
   }
 
-    render() {
-      const { classes} = this.props;
-      const imageClasses = classNames(
-        classes.imgRaised,
-        classes.imgRoundedCircle,
-        classes.imgFluid
-      );
+render() {
+    const { classes} = this.props;
+     const { userProfile } = this.props.auth;
 
-      const { userProfile } = this.props.auth;
+      const {
+      twitter_location,
+      } = this.props
+  return (
+ <ThemeProvider theme={theme}>
+    <Card className={'PeaFullProfile-root'}>
+      <CardMedia className={'MuiCardMedia-root'} image={userProfile.background_photo} />
+      <CardContent className={'MuiCardContent-root'}>
+        <Grid container justify={'space-between'} spacing={2} wrap={'nowrap'}>
+          <Grid item>
+              <PeaAvatar className={'MuiAvatar-root-profilePic'} src={userProfile.photo} />
+          </Grid>
+          <Hidden only={'xs'}>
+            <Grid item>
+              <PeaStatistic style={{color: "#788898"}} label={'Tweets'} value={userProfile.tweets} />
+            </Grid>
+            <Grid item>
+              <PeaStatistic label={'Following'} value={userProfile.following} />
+            </Grid>
+            <Grid item>
+              <PeaStatistic label={'Followers'} value={userProfile.followers} />
+            </Grid>
+          </Hidden>
+          <Grid item>
+            <PeaButton
+              size={'small'}
+              variant={'outlined'}
+              labelExpanded={false}
+              icon={'delete'}
+              iconProps={{
+                color: 'danger',
+                size: 'small',
+              }}
+              loading={this.state.deleteButtonLoad}
 
-      return (
-        <div>
-          <Parallax small filter image={userProfile.background_photo} />
-          <div className={classNames(classes.main, classes.mainRaised)}>
-            <div className={classes.name}>
-              <div className={classes.container}>
-                <GridContainer justify="center">
-                  <GridItem xs={12} sm={12} md={6}>
-                    <div className={classes.profile}>
-                      <div>
-                        <img src={userProfile.photo} alt="..." className={imageClasses} />
-                      </div>
-                      <div>
-                      <Typography
-                          component="h2"
-                          variant="h3"
-                          color="textPrimary"
-                        >
-                          {userProfile.name}
-                        </Typography>
-                        <Typography className={classes.nameText} variant="h6">
-                        {userProfile.screen_name}
-                      </Typography>
-                       <Grid container justify="center" spacing={2}>
-                        <Grid item>
-                          {
-                            <h3>
-                              <b> {`${userProfile.tweets} `}</b>Tweets
-                            </h3>
-                          }
-                        </Grid>
-                        <Grid item>
-                          <h3 >
-                            <b>{this.formatCount(userProfile.followers)}</b>{"  "}
-                            followers
-                          </h3>
-                        </Grid>
-                        <Grid item>
-                          <h3>
-                            <b>{this.formatCount(userProfile.following)}</b>{"  "}
-                            following
-                          </h3>
-                        </Grid>
-                      </Grid>
-                    
-                    </div>
-                    </div>
-                  </GridItem>
-                </GridContainer>
-                <Grid container justify="center" spacing={4}>
-                  <Grid item xs={12}>
-                    {
-                      <Typography className={classes.nameText} align="center" variant="h6">
-                        {`${userProfile.description} `}
-                      </Typography>
-                    }
-                  </Grid>
-                  <Grid item>
-                    <Button variant="outlined" onClick={this.handleExpandClick}>
-                        User Account Details
-                     </Button> 
-                     </Grid>
-                   </Grid>
-
-
-                <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-                   <Grid container justify="center" spacing={2}>
-                    <Grid item>
-                      <h3>
-                        <b>{this.props.auth.points}</b>{"  "}
-                        Points
-                      </h3>
-                    </Grid>
-                    <Grid item>
-                      <h3>
-                        <b>{this.props.myProfile.shareTweetsCount}</b>{"  "}
-                        Tweets shared
-                      </h3>
-                    </Grid>
-                    </Grid>
-                    <Grid container justify="center" >
-                      <Button variant="contained" size="small" color="secondary"
-                        onClick={() => this.handleClickOpen("classicModal")}
-                      >
-                      <DeleteForever/>
-                       Delete Account
-                     </Button> 
-                 </Grid>
-               </Collapse>
-
-                    <Dialog
-                    classes={{
-                      root: classes.center,
-                      paper: classes.modal
-                    }}
-                    open={this.state.classicModal}
-                    TransitionComponent={Transition}
-                    keepMounted
-                    onClose={() => this.handleClose("classicModal")}
-                    aria-labelledby="classic-modal-slide-title"
-                    aria-describedby="classic-modal-slide-description"
-                  >
-                    <DialogTitle
-                      id="classic-modal-slide-title"
-                      disableTypography
-                      className={classes.modalHeader}
-                    >
-                      <IconButton
-                        className={classes.modalCloseButton}
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        onClick={() => this.handleClose("classicModal")}
-                      >
-                        <Close className={classes.modalClose} />
-                      </IconButton>
-                      <h4 className={classes.modalTitle}>Confirm Action</h4>
-                    </DialogTitle>
-                    <DialogContent
-                      id="classic-modal-slide-description"
-                      className={classes.modalBody}
-                    >
+              style={{ marginTop: 6 }}
+              onClick={() => {this.handleClickOpen("classicModal")
+                this.setState({deleteButtonLoad: true})
+            }}
+            >
+              Delete Account
+            </PeaButton>
+          </Grid>
+          <Grid item>
+            <IconButton >
+              <PeaIcon>more_vert</PeaIcon>
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Hidden smUp>
+          <Grid container justify={'space-evenly'} style={{ marginTop: -32 }}>
+            <Grid item>
+              <PeaStatistic label={'Pods'} value={2} />
+            </Grid>
+            <Grid item>
+              <PeaStatistic label={'Following'} value={48} />
+            </Grid>
+            <Grid item>
+              <PeaStatistic label={'Followers'} value={5} />
+            </Grid>
+          </Grid>
+          <br />
+        </Hidden>
+        <Hidden only={'xs'}>
+          <div style={{ marginTop: -32 }} />
+        </Hidden>
+        <PeaText variant={'h5'} weight={'bold'}>
+          {userProfile.name}
+        </PeaText>
+        <PeaText gutterBottom>{`@${userProfile.screen_name}`}</PeaText>
+        <PeaText>
+          <Link
+            color={'primary'}
+            href={`https://twitter.com/${userProfile.screen_name}`}
+            target={'_blank'}
+            rel={'noopener'}
+          >
+            Twitter Profile
+          </Link>
+        </PeaText>
+        <br />
+        <Grid container wrap={'nowrap'} spacing={1}>
+          <Grid item>
+            <PeaIcon color={'secondary'} size={'small'}>
+              info
+            </PeaIcon>
+          </Grid>
+          <Grid item>
+            <PeaText gutterBottom>{userProfile.description}</PeaText>
+          </Grid>
+        </Grid>
+        <Grid container wrap={'nowrap'} spacing={1}>
+          <Grid item>
+            <PeaIcon color={'secondary'} size={'small'}>
+              location_on
+            </PeaIcon>
+          </Grid>
+          <Grid item>
+            <PeaText gutterBottom>{twitter_location}</PeaText>
+          </Grid>
+        </Grid>
+        <br />
+        <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
+          User Activity
+        </PeaText>
+          <PeaText underline={'none'}>
+            <b>Points: </b> {this.props.auth.points}
+          </PeaText>
+          
+          <PeaText underline={'none'}>
+            <b>Tweets Shared: </b> {this.props.myProfile.shareTweetsCount}
+          
+        </PeaText>
+        <Tabs
+        className={'MuiTabs-root'}
+        variant={'fullWidth'}
+        centered
+        value={this.state.index}
+        onChange={(e, val) => this.onChange(val)}
+      >
+        <Tab label="My Tweets" disableRipple />
+        <Tab label="Shared Tweets" disableRipple />
+      </Tabs>
+        
+      <MyTweets/>
+        <PeaText gutterBottom />
+        <Dialog
+            classes={{
+              root: classes.center,
+              paper: classes.modal
+            }}
+            open={this.state.classicModal}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={() => this.handleClose("classicModal")}
+            aria-labelledby="classic-modal-slide-title"
+            aria-describedby="classic-modal-slide-description"
+          >
+            <DialogTitle
+              id="classic-modal-slide-title"
+              disableTypography
+              className={classes.modalHeader}
+            >
+              <IconButton
+                className={classes.modalCloseButton}
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                onClick={() => this.handleClose("classicModal")}
+              >
+                <Close className={classes.modalClose} />
+              </IconButton>
+              <h4 className={classes.modalTitle}>Confirm Action</h4>
+            </DialogTitle>
+            <DialogContent
+              id="classic-modal-slide-description"
+              className={classes.modalBody}
+            >
              { !this.state.confirmed &&
               (<p style={{
                   fontSize: "32px"
@@ -256,22 +281,29 @@ const Transition = React.forwardRef(function Transition(props, ref) {
                   </DialogActions>)}
                   </Dialog>
                 
-                  </div>
-                  <MyTweets/>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  }
+      </CardContent>
+    </Card>
+  </ThemeProvider>
+  );
+};
+}
 
-  ProfilePage.propTypes = {
-    classes: PropTypes.object,
-  };
-  const mapStateToProps = state => ({
+Main.propTypes = {
+  twitter_location: PropTypes.string,
+  age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  gender: PropTypes.string,
+  
+};
+Main.defaultProps = {
+  twitter_location: '',
+  age: 'unknown',
+  gender: 'unknown',
+};
+const mapStateToProps = state => ({
     auth: state.auth,
     myProfile: state.myProfile
   });
   export default connect(
-    mapStateToProps,
-  )(withStyles(profilePageStyle)(ProfilePage));
+    mapStateToProps, {logoutUser}
+  )(withStyles(profilePageStyle)(Main));
+

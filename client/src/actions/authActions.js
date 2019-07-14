@@ -177,4 +177,6 @@ export const logoutUser = () => dispatch => {
     type: SET_USER_DATA,
     payload: {}
   });
+
+  window.location.href = '/sign-in';
 };

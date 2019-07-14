@@ -25,6 +25,10 @@ export default theme => ({
   notificationsButton: {
     marginLeft: 'auto'
   },
+  refreshButton: {
+    marginRight: 'auto',
+    color: "#66788A"
+  },
   signOutButton: {
     marginLeft: theme.spacing()
   }

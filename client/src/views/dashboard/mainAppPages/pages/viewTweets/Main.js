@@ -33,6 +33,9 @@ import {
 } from "../../../../../actions/snackbarAction";
 import { setPoints } from "../../../../../actions/authActions";
 
+import theme from "../../components/profile/theme";
+import ThemeProvider from "@material-ui/styles/ThemeProvider"; 
+
 const styles = theme => ({
   card: {
     width: "60px",
@@ -116,8 +119,8 @@ class Main extends Component {
   }
 
   onFileSelect = e => {
-    const imgSize = 5242880;
-    const vidSize = 15728640;
+    const imgSize = 5242880; //5mb
+    const vidSize = 15728640; //15mb
     const {
       setSnackbarMessage,
       setSnackbarVariant,
@@ -193,7 +196,7 @@ class Main extends Component {
     } = this.props;
     this.setState({ newTweetLoading: true }, () => {
       this.mediaFiles.map(file => {
-        data.append(file.file.name, file.file);
+        return data.append(file.file.name, file.file);
       });
 
       data.append("tweet_text", JSON.stringify(tweet));
@@ -219,6 +222,8 @@ class Main extends Component {
             setSnackbarVariant("error");
             setSnackbarMessage(res.data.error);
             onSnackbarOpen();
+            this.setState({ newTweetLoading: false });
+            this.mediaFiles = []
           }
         });
     });
@@ -227,6 +232,8 @@ class Main extends Component {
     const { viewTweets, classes } = this.props;
 
     return (
+      <ThemeProvider theme={theme}>
+    <Card className={'PeaFullProfile-root'}>
       <div ref={this.topRef}>
         <Divider
           variant="fullWidth"
@@ -341,6 +348,8 @@ class Main extends Component {
           )}
         </div>
       </div>
+    </Card>
+  </ThemeProvider>
     );
   }
 }

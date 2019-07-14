@@ -58,7 +58,7 @@ class TermsAndCondition extends Component {
     if (nextProps.auth.isAuthenticated) {
       this.props.setUserData(this.state.user);
       this.props.setUserProfile(this.state.user, this.props.auth.keyInUse);
-      initSignIn(this.props.sockt)
+      initSignIn(this.props.socket)
       this.props.nextStep();
       this.props.gotoDashboard();
     } else if (nextProps.errors.userError) {
@@ -113,11 +113,15 @@ class TermsAndCondition extends Component {
                 paddingTop: "5vh"
               }}
             >
-              <div className="d-flex px-3 border-0">
                 <Button
                   variant="contained"
                   color="secondary"
                   onClick={this.props.prevStep}
+                  style={{
+                    // backgroundColor: "#28a745",
+                    borderColor: "#28a745",
+                    marginRight: "auto"
+                  }}
                 >
                   Prev
                 </Button>
@@ -129,12 +133,13 @@ class TermsAndCondition extends Component {
                   variant="contained"
                   style={{
                     backgroundColor: "#28a745",
-                    borderColor: "#28a745"
+                    borderColor: "#28a745",
+                    marginLeft: "auto"
                   }}
+
                 >
                   Finish
                 </Button>
-              </div>
             </div>
           </div>
         )}

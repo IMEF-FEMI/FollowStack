@@ -100,7 +100,6 @@ class SignUp extends React.Component {
           }
           // The signed-in user info.
           var user = result.user;
-          console.log("User " + JSON.stringify(user));
           if (user !== null) {
             userData.userid = user.providerData[0].uid;
             userData.username = user.providerData[0].displayName;

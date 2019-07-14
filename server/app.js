@@ -10,7 +10,7 @@ const app = express();
 
 const users = require("./routes/api/users");
 const post = require("./routes/api/post");
-const usersOnline = require("./routes/api/usersOnline");
+// const usersOnline = require("./routes/api/usersOnline");
 
 // Setup for passport and to accept JSON objects
 app.use(express.json());
@@ -51,7 +51,8 @@ app.get("/wake-up", (req, res) => res.send("👍"));
 // Use Routes
 app.use("/api/users", users);
 app.use("/api/post", post);
-app.use("/api/users-online", usersOnline);
+// app.use("/api/users-online", usersOnline);
+
 // Server static assets if in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder

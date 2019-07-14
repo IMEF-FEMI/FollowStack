@@ -128,7 +128,7 @@ class SignIn extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
       this.props.setUserData(this.state.user);
-      this.props.history.push("/dashboard");
+      this.props.history.push("/shared-tweets");
     }
   }
   componentWillMount() {

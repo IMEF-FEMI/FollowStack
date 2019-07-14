@@ -74,21 +74,7 @@ const follow = (info, callback, socket) => {
         }
       ).then(user => {
         if (user) {
-          var userObj = {
-            user_id: info.newUser.user_id,
-            name: info.newUser.name,
-            screen_name: info.newUser.screen_name,
-            photo: info.newUser.photo
-          };
-          UsersOnline.findOneAndUpdate(
-            { user_id: info.userData.userid },
-            { $addToSet: { following: userObj } },
-            { new: true }
-          )
-            .then(user => {
-              console.log("user followed added to db");
-            })
-            .catch(err => console.log(err));
+          
           // callback notification on client side
           callback(user.points);
         }
@@ -123,41 +109,6 @@ const unFollow = (info, callback, socket) => {
         type: "error"
       };
       addNotification(socket.userInfo.user_id, unfollowNotif);
-
-
-      var userObj = {
-        user_id: info.newUser.user_id,
-        name: info.newUser.name,
-        screen_name: info.newUser.screen_name,
-        photo: info.newUser.photo
-      };
-      UsersOnline.findOneAndUpdate(
-        { user_id: info.userData.userid },
-        { $addToSet: { following: userObj } },
-        { new: true }
-      )
-        .then(user => {
-          console.log("user followed added to db");
-        })
-        .catch(err => console.log(err));
-
-      // await User.findOneAndUpdate(
-      //   { userid: info.userData.userid },
-      //   {
-      //     $inc: {
-      //       points: -40
-      //     }
-      //   },
-      //   {
-      //     new: true
-      //   }
-      // ).then(user => {
-      //   if (user) {
-          
-      //     // callback notification on client side
-      //     callback(user.points);
-      //   }
-      // });
       callback(user.points);
 
     } else {
@@ -187,62 +138,62 @@ const getOnlineUsers = (info, users, callback) => {
   });
 };
 
-const getFollowedBack = async (info, callback) => {
-  await UsersOnline.findOne({ user_id: info.userData.userid }).then(user => {
-    if (user.following.length !== 0) {
-      var users = user.following.slice(info.currentUsers, 10 * (info.page + 1));
-      friendshipLookup(info, users, arr => {
-        // identify those following back
-        var followingBack = [];
-        arr.map(i => {
-          users.map(j => {
-            if (i.id_str === j.user_id) {
-              if (
-                i.connections[0] === "followed_by" ||
-                i.connections[1] === "followed_by"
-              ) {
-                followingBack.push(j);
-              }
-            }
-          });
-        });
-        callback(followingBack);
-      });
-    }
-  });
-};
+// const getFollowedBack = async (info, callback) => {
+//   await UsersOnline.findOne({ user_id: info.userData.userid }).then(user => {
+//     if (user.following.length !== 0) {
+//       var users = user.following.slice(info.currentUsers, 10 * (info.page + 1));
+//       friendshipLookup(info, users, arr => {
+//         // identify those following back
+//         var followingBack = [];
+//         arr.map(i => {
+//           users.map(j => {
+//             if (i.id_str === j.user_id) {
+//               if (
+//                 i.connections[0] === "followed_by" ||
+//                 i.connections[1] === "followed_by"
+//               ) {
+//                 followingBack.push(j);
+//               }
+//             }
+//           });
+//         });
+//         callback(followingBack);
+//       });
+//     }
+//   });
+// };
 
-const getNotFollowingBack = async (info, callback) => {
-  await UsersOnline.findOne({ user_id: info.userData.userid }).then(user => {
-    if (user.following.length !== 0) {
-      var users = user.following.slice(info.currentUsers, 10 * (info.page + 1));
-      friendshipLookup(info, users, arr => {
-        // identify those following back
-        var notFollowingBack = [];
-        arr.map(i => {
-          users.map(j => {
-            if (i.id_str === j.user_id) {
-              if (i.connections[1] !== "followed_by") {
-                notFollowingBack.push(j);
-              }
-            }
-          });
-        });
-        callback(notFollowingBack);
-      });
-    }
-  });
-};
+// const getNotFollowingBack = async (info, callback) => {
+//   await UsersOnline.findOne({ user_id: info.userData.userid }).then(user => {
+//     if (user.following.length !== 0) {
+//       var users = user.following.slice(info.currentUsers, 10 * (info.page + 1));
+//       friendshipLookup(info, users, arr => {
+//         // identify those following back
+//         var notFollowingBack = [];
+//         arr.map(i => {
+//           users.map(j => {
+//             if (i.id_str === j.user_id) {
+//               if (i.connections[1] !== "followed_by") {
+//                 notFollowingBack.push(j);
+//               }
+//             }
+//           });
+//         });
+//         callback(notFollowingBack);
+//       });
+//     }
+//   });
+// };
 
-const clearFollowings = async (info, callback) => {
-  await UsersOnline.findOneAndUpdate(
-    { user_id: info.userData.userid },
-    { $set: { following: [] } }
-  ).then(userOnline => {
-    console.log("followings cleared successfully");
-    callback();
-  });
-};
+// const clearFollowings = async (info, callback) => {
+//   await UsersOnline.findOneAndUpdate(
+//     { user_id: info.userData.userid },
+//     { $set: { following: [] } }
+//   ).then(userOnline => {
+//     console.log("followings cleared successfully");
+//     callback();
+//   });
+// };
 
 const friendshipLookup = (info, users, callback) => {
   const random = TWITTER_KEYS[info.key];
@@ -283,7 +234,7 @@ module.exports = {
   follow,
   unFollow,
   getOnlineUsers,
-  getFollowedBack,
-  getNotFollowingBack,
-  clearFollowings
+  // getFollowedBack,
+  // getNotFollowingBack,
+  // clearFollowings
 };

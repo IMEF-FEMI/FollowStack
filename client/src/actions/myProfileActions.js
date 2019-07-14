@@ -4,10 +4,20 @@ import {
   SET_INITIAL_FETCH,
   SET_IS_FETCHING,
   SET_HAS_MORE,
-  SHARED_TWEETS_COUNT
+  SHARED_TWEETS_COUNT,
+  REFRESH_PROFILE
 } from "./types";
 import { fetchTweetsForProfile } from "../async/post";
 import axios from "axios";
+import store from "../store"
+
+
+export const refreshProfileAction =()=> async dispatch=>{
+  var signal = axios.CancelToken.source();
+  const storeObj = store.getState();
+  dispatch(refreshProfile())
+  dispatch(initialFetchAction(storeObj.auth.userData, storeObj.auth.keyInUse, 0, signal.token))
+};
 
 export const initialFetchAction = (
   userData,
@@ -108,4 +118,10 @@ return {
     type: SHARED_TWEETS_COUNT,
     payload: count
   };
+}
+
+export const refreshProfile = () =>{
+  return{
+    type: REFRESH_PROFILE,
+  }
 }

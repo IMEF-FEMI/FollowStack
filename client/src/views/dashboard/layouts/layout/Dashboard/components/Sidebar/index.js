@@ -22,10 +22,9 @@ import Icon from "@material-ui/core/Icon";
 
 // Material icons
 
-import DashboardIcon from "@material-ui/icons/DashboardOutlined";
 import PeopleIcon from "@material-ui/icons/PeopleOutlined";
 import AccountBoxIcon from "@material-ui/icons/AccountBoxOutlined";
-import Payment from "@material-ui/icons/Payment";
+import ShoppingCart from "@material-ui/icons/ShoppingCart";
 import { connect } from "react-redux";
 
 // Component styles
@@ -68,39 +67,7 @@ class Sidebar extends Component {
         </div>
         <Divider className={classes.profileDivider} />
         <List component="div" disablePadding>
-          <ListItem
-            activeClassName={classes.activeListItem}
-            className={classes.listItem}
-            component={MyLink}
-            to="/dashboard"
-          >
-            <ListItemIcon className={classes.listItemIcon}>
-              <DashboardIcon
-                style={{
-                  color: "rgb(28, 136, 204)"
-                }}
-              />
-            </ListItemIcon>
-            <ListItemText
-              classes={{ primary: classes.listItemText }}
-              primary="Dashboard"
-            />
-          </ListItem>
-          <ListItem
-            activeClassName={classes.activeListItem}
-            className={classes.listItem}
-            component={MyLink}
-            to="/gain-followers"
-          >
-            <ListItemIcon className={classes.listItemIcon}>
-              <PeopleIcon style={{ color: "rgb(144, 138, 22)" }} />
-            </ListItemIcon>
-            <ListItemText
-              classes={{ primary: classes.listItemText }}
-              primary="Gain Followers"
-            />
-          </ListItem>
-          <ListItem
+        <ListItem
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={MyLink}
@@ -117,7 +84,7 @@ class Sidebar extends Component {
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
-              primary="View Shared Tweets"
+              primary="Shared Tweets"
             />
           </ListItem>
 
@@ -136,22 +103,37 @@ class Sidebar extends Component {
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
-              primary="Profile"
+              primary="My Wall"
             />
           </ListItem>
           <ListItem
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={MyLink}
-            to="/earn-points"
+            to="/online-users"
           >
             <ListItemIcon className={classes.listItemIcon}>
-             
-              <Payment color="primary" />
+              <PeopleIcon style={{ color: "rgb(144, 138, 22)" }} />
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
-              primary="Earn points"
+              primary="Online Users"
+            />
+          </ListItem>
+          
+          <ListItem
+            activeClassName={classes.activeListItem}
+            className={classes.listItem}
+            component={MyLink}
+            to="/buy-points"
+          >
+            <ListItemIcon className={classes.listItemIcon}>
+             
+              <ShoppingCart color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              classes={{ primary: classes.listItemText }}
+              primary="Get Extra Points"
             />
           </ListItem>
         </List>

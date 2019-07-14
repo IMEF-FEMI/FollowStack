@@ -153,7 +153,7 @@ class CompleteRegistration extends React.Component {
 
   gotoDashboard = () =>{
       setTimeout(() => {
-        this.props.history.push("/dashboard");
+        this.props.history.push("/shared-tweets");
       }, 5000);
   }
 
@@ -218,7 +218,7 @@ class CompleteRegistration extends React.Component {
                           />
                         </Typography>
                         <Typography variant="subtitle1">
-                          You will be redirected to your dashboard page shortly.
+                          You will be redirected shortly.
                         </Typography>
                         <Spinner />
                       </Grid>

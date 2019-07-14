@@ -4,17 +4,23 @@ import {
   SET_TWEET_INITIAL_FETCH,
   SET_TWEET_IS_FETCHING,
   SET_TWEET_HAS_MORE,
-  ADD_STATUS
+  ADD_STATUS,
+  REFRESH_TWEETS
 } from "./types";
 import { fetchTweetsForMain } from "../async/post";
 import axios from "axios";
 
-export const initialFetchAction = (
-  userData,
-  keyInUse,
-  page,
-  token
-) => async dispatch => {
+import store from "../store"
+
+
+export const refreshTweetsAction =()=> async dispatch=>{
+  var signal = axios.CancelToken.source();
+  const storeObj = store.getState();
+  dispatch(refreshTweets())
+  dispatch(initialFetchAction(storeObj.auth.userData, storeObj.auth.keyInUse, 0, signal.token))
+};
+
+export const initialFetchAction = ( userData,  keyInUse,  page,  token) => async dispatch => {
   try {
     const { data: tweets } = await fetchTweetsForMain(
       userData,
@@ -108,3 +114,9 @@ export const setHasMore = bool => {
     payload: bool
   };
 };
+
+export const refreshTweets = ()=>{
+  return{
+    type: REFRESH_TWEETS
+  }
+}

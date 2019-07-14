@@ -50,17 +50,17 @@ class RegionSelect extends Component {
             paddingTop: "10vh"
           }}
         >
-          <div className="d-flex px-3 border-0">
             <Button
               variant="contained"
               color="primary"
-              className="ml-auto"
+              style={{
+                marginLeft: "auto"
+              }}
               onClick={this.props.nextStep}
               disabled={this.state.disabled}
             >
               Next
             </Button>
-          </div>
         </div>
       </div>
     );

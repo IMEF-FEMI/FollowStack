@@ -10,7 +10,6 @@ import { Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 
 import PeaIcon from "./PeaIcon";
-// import Face from "@material-ui/icons/Face"
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -206,15 +205,5 @@ PeaMessageInput.defaultProps = {
   files: [],
   loading: false
 };
-PeaMessageInput.metadata = {
-  name: "Whats Happening..."
-};
-PeaMessageInput.getTheme = () => ({
-  "Mui{Component}": {
-    // this object will be injected to 'overrides' section
-    root: {}
-    // ...
-  }
-});
 
 export default PeaMessageInput;

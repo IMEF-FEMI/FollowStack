@@ -15,7 +15,7 @@ const UserSchema = new Schema({
     },
     points: {
         type: Number,
-        default: 50
+        default: 100
     },
     joined: {
         type: Number,

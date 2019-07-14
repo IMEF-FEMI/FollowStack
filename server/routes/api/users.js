@@ -9,8 +9,8 @@ const requireAuth = require("../../middlewares/requireAuth");
 
 // Load User  model
 const User = require("../../models/User");
+const Post = require("../../models/Post");
 const Transaction = require("../../models/Transactions");
-const UsersOnline = require("../../models/UsersOnline");
 const Notifications = require("../../models/Notifications");
 const {addNotification} = require("../../utils/NotificationsUtil")
 const {addTransaction} = require("../../utils/TransactionsUtil")
@@ -79,10 +79,10 @@ router.post(
           .save()
           .then(user => {
             Promise.all([
-              new UsersOnline({
-                username: req.body.username,
-                user_id: req.body.userid
-              }).save(),
+              // new UsersOnline({
+              //   username: req.body.username,
+              //   user_id: req.body.userid
+              // }).save(),
               new Notifications({
                 user_id: req.body.userid
               }).save(),
@@ -92,7 +92,8 @@ router.post(
             ]);
 
             const payload = {
-              userid: user.userid
+              userid: user.userid,
+            _id: user._id
             };
             // Sign Token
             jwt.sign(
@@ -150,6 +151,39 @@ router.post(
       .catch(err => console.log(err));
   })
 );
+
+router.delete(
+  "/delete-user",
+  requireAuth,
+  asyncHandler(async (req, res, next) => {
+
+            // post
+            Promise.all([
+              Post.deleteMany({ 
+                 _owner: mongoose.Types.ObjectId(req.user._id),
+              }, function (err) {
+                console.log(err)
+              }),
+              Notifications.deleteOne({
+                user_id: req.user.userid
+              }, function (err) {
+                console.log(err)
+              }),
+              Transaction.deleteOne({
+                user_id: req.user.userid
+              }, function (err) {
+                console.log(err)
+              }),
+              User.deleteOne({
+                userid: req.user.userid
+              }, function (err) {
+                console.log(err)
+              }),
+              ]).then(data=>{
+                console.log("done ", data)
+                 res.status(200).send({success: "user deleted"})
+              })
+  }))
 
 router.post(
   "/paypal-transaction-complete",
@@ -233,7 +267,7 @@ router.get(
     User.findOne(
       { _id: mongoose.Types.ObjectId(req.params.user_id) },
       "points",
-      function(err, user) {
+      function(err, user) { 
         if (err) return console.log(err);
         res.status(200).json(user.points);
       }

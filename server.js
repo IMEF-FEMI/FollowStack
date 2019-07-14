@@ -8,8 +8,8 @@ const {
   follow,
   unFollow,
   getOnlineUsers,
-  getFollowedBack,
-  getNotFollowingBack
+  // getFollowedBack,
+  // getNotFollowingBack
 } = require("./server/utils/usersUtil");
 const {
   getNotifications,
@@ -49,15 +49,17 @@ io.sockets.on("connection", socket => {
     // callback(users.slice(info.currentUsers, 10 * (info.page + 1)));
   });
 
-  socket.on("get-followed-back", (info, callback) => {
-    getFollowedBack(info, callback);
-  });
-  socket.on("get-not-following-back", (info, callback) => {
-    getNotFollowingBack(info, callback);
-  });
-  socket.on("clear-following", (info, callback) => {
-    clearFollowings(info, callback);
-  });
+  // socket.on("get-followed-back", (info, callback) => {
+  //   getFollowedBack(info, callback);
+  // });
+  // socket.on("get-not-following-back", (info, callback) => {
+  //   getNotFollowingBack(info, callback);
+  // });
+  // socket.on("clear-following", (info, callback) => {
+  //   clearFollowings(info, callback);
+  // });
+
+  
   socket.on("get-notifications", (user_id, callback) => {
     getNotifications(user_id, callback);
   });

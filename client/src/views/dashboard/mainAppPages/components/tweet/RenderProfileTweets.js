@@ -5,6 +5,8 @@
   import withStyles from "@material-ui/core/styles/withStyles";
   import PropTypes from "prop-types";
   import { connect } from "react-redux";
+  import {withRouter} from 'react-router-dom'
+  import { compose } from 'redux'
   import CircularProgress from "@material-ui/core/CircularProgress";
 
   import IconButton from "@material-ui/core/IconButton";
@@ -65,6 +67,10 @@
           type: "error",
           to: "#"
         });
+
+        // redirect to  get-points
+       this.props.history.push("/earn-points");
+
       }
     };
     removeTweet = async tweet => {
@@ -266,9 +272,18 @@
     auth: state.auth,
     myProfile: state.myProfile
   });
-  export default connect(
-    mapStateToProps,
-    { setPoints, addNotificationAction,onSnackbarOpen ,
-      setSnackbarMessage,
-      setSnackbarVariant, }
-  )(withStyles(styles)(RenderProfileTweets));
+
+
+  export default compose(
+   connect(
+      mapStateToProps,
+      { setPoints, 
+        addNotificationAction,
+        onSnackbarOpen ,
+        setSnackbarMessage,
+        setSnackbarVariant, 
+      },
+  ),
+   withStyles(styles),
+   withRouter
+    )(RenderProfileTweets)

@@ -132,7 +132,7 @@ const sections = [
     title: "Follow Users",
     logo: <PersonAdd color="secondary" />,
     header: "Points",
-    pathName: "/gain-followers",
+    pathName: "/online-users",
     description: (
       <Typography component="li" variant="subtitle1" align="center">
         {" "}
@@ -159,6 +159,9 @@ class Main extends Component {
       <React.Fragment>
         <CssBaseline />
         <Container maxWidth="md" component="main" className={classes.content}>
+        <Typography variant="h4" component="h6" gutterBottom align="center" color="secondary">
+            Sorry You don't have enough points for that action
+          </Typography>
           <Typography
             component="h2"
             variant="h2"
@@ -174,9 +177,9 @@ class Main extends Component {
             color="textPrimary"
             component="p"
           >
-            Go through any of the sections below in order to Gain points. Points
-            gained will be used in sharing your tweets to the "Tweets" section.
-            which will gain you more Likes/comments/RT's
+            Go through any of the sections below in order to Earn points. Points
+            earned will be used in sharing your tweets to the "Tweets" section.
+            which will earn you more Likes/comments/RT's
           </Typography>
         </Container>
 

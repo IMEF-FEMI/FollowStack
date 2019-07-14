@@ -89,11 +89,12 @@ class ShareSocial extends Component {
             paddingTop: "10vh"
           }}
         >
-          <div className="d-flex px-3 border-0">
             <Button
-              theme="danger"
               variant="contained"
               color="secondary"
+              style={{
+                marginRight: "auto"
+              }}
               onClick={this.props.prevStep}
             >
               Prev
@@ -106,7 +107,6 @@ class ShareSocial extends Component {
             >
               Next
             </Button>
-          </div>
         </div>
       </div>
     );

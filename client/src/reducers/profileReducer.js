@@ -4,7 +4,8 @@ import {
   SET_INITIAL_FETCH,
   SET_IS_FETCHING,
   SET_HAS_MORE,
-  SHARED_TWEETS_COUNT
+  SHARED_TWEETS_COUNT,
+  REFRESH_PROFILE
 } from "../actions/types";
 
 const initialState = {
@@ -50,6 +51,11 @@ export default function(state = initialState, action) {
         ...state,
         hasMore: action.payload
       };
+
+    case REFRESH_PROFILE:
+    return{
+      ...initialState
+    }
 
     default:
       return state;

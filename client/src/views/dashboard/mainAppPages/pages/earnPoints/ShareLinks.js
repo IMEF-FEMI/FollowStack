@@ -21,7 +21,7 @@ import {
 class ShareLinks extends Component {
   render() {
     const URL = window.location.host;
-    const TITLE = "Gain more Followers, likes and comments on your twitter";
+    const TITLE = "Gain more Followers, likes and comments on FollowStack.com The ultimate Like4like Application";
 
     return (
       <div>

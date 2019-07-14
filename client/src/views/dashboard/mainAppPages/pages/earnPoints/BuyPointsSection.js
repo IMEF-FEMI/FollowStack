@@ -112,7 +112,7 @@ const tiers = [
     price: "7.00",
     points: 1200,
 
-    pathName: "/gain-followers",
+    pathName: "/online-users",
     description: (
       <Typography component="li" variant="subtitle1" align="center">
         <i

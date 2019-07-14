@@ -9,6 +9,11 @@ export const signInUser = async userData => {
   return res;
 };
 
+export const deleteUser = async()=>{
+  const res = await axios.delete('/api/users/delete-user')
+  return res
+}
+
 export const checkUser = async id => {
   const res = await axios.get(`/api/users/check-user/${id}`);
   return res;

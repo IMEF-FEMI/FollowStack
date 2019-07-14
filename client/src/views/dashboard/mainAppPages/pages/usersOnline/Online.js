@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import {
   initialFetchAction,
   fetchNextAction,
-  refreshAction
+  refreshOnlineAction
 } from "../../../../../actions/usersAction";
 import { onScroll } from "../../components/tweet/utils";
 import Button from "@material-ui/core/Button";
@@ -75,9 +75,9 @@ class Online extends Component {
       users,
       auth,
       initialFetchAction,
-      refreshAction
+      refreshOnlineAction
     } = this.props;
-    await refreshAction();
+    await refreshOnlineAction();
     initialFetchAction(
       socket,
       users.users.length,
@@ -157,5 +157,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { initialFetchAction, fetchNextAction, refreshAction }
+  { initialFetchAction, fetchNextAction, refreshOnlineAction }
 )(OnlineWithSocket);

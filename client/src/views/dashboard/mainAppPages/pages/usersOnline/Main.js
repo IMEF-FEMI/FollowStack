@@ -4,12 +4,15 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Online from "./Online";
 import { connect } from "react-redux";
+import theme from "../../components/profile/theme";
+import ThemeProvider from "@material-ui/styles/ThemeProvider"; 
 
 
 function Main(props) {
   
 
   return (
+ <ThemeProvider theme={theme}>
     <React.Fragment>
       <CssBaseline />
       <div mb="44px">
@@ -38,6 +41,7 @@ function Main(props) {
       </Grid>
       { <Online />}
     </React.Fragment>
+  </ThemeProvider>
   );
 }
 

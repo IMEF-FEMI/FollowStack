@@ -4,7 +4,8 @@ import {
   SET_TWEET_INITIAL_FETCH,
   SET_TWEET_IS_FETCHING,
   SET_TWEET_HAS_MORE,
-  ADD_STATUS
+  ADD_STATUS,
+  REFRESH_TWEETS
 } from "../actions/types";
 
 const initialState = {
@@ -48,6 +49,10 @@ export default function(state = initialState, action) {
         ...state,
         tweetHasMore: action.payload
       };
+    case REFRESH_TWEETS:
+    return{
+      ...initialState
+       }
 
     default:
       return state;

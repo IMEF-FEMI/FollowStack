@@ -1,15 +1,15 @@
-import {
+import { 
   SET_USERS_PAGE,
   SET_USERS,
   SET_USERS_INITIAL_FETCH,
   SET_USERS_IS_FETCHING,
   SET_USERS_HAS_MORE,
-  REFRESH
+  REFRESH_ONLINE
 } from "./types";
 
-export const refreshAction = () => async dispatch => {
+export const refreshOnlineAction = () => async dispatch => {
   dispatch({
-    type: REFRESH
+    type: REFRESH_ONLINE
   });
 };
 export const initialFetchAction = (
