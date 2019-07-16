@@ -153,7 +153,7 @@ class Footer extends React.Component {
           <div style={styles.footer}>
             <div style={styles.ProfileTweetAction}>
               {/* comment */}
-              <Tooltip title="Comment = 10 Points" aria-label="comment">
+              <Tooltip title="Comment = 20 Points" aria-label="comment">
                 <button
                   style={styles.ProfileTweetActionBtn}
                   onClick={this.handleExpandClick}
@@ -177,7 +177,7 @@ class Footer extends React.Component {
             </div>
             <div style={styles.ProfileTweetAction}>
               {/* retweets */}
-              <Tooltip title="Retweet = 20 Points" aria-label="Retweet">
+              <Tooltip title="Retweet = 30 Points" aria-label="Retweet">
                 <button
                   style={styles.ProfileTweetActionBtn}
                   onClick={this.retweetPost}
@@ -208,7 +208,7 @@ class Footer extends React.Component {
               </button>
             </div>
             <div style={styles.ProfileTweetAction}>
-              <Tooltip title="Like Post = 5 Points" aria-label="Like">
+              <Tooltip title="Like Post = 10 Points" aria-label="Like">
                 <button
                   style={styles.ProfileTweetActionBtn}
                   onClick={this.favPost}

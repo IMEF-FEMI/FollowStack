@@ -76,14 +76,10 @@ router.post(
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,
-      access_token_key: userData.accessToken,
+      access_token_key: userData.accessToken, 
       access_token_secret: userData.secret
     });
-    console.log(
-"random.consumerKey", random.consumerKey,
-"random.consumerSecret", random.consumerSecret,
-"userData.accessToken",userData.accessToken, 
-"userData.secret",userData.secret, "req.user._id ", req.user._id)
+   
      // rremove points
      // add post to db and return tweet obj
       await User.findOneAndUpdate(

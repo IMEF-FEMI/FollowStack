@@ -6,16 +6,16 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "./modules/components/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import firebase from "firebase/app";
-import "firebase/auth";
+
 import { withRouter, Link } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
+import {ClapSpinner}  from "react-spinners-kit";
 import AppFooter from "../guestpages/modules/views/AppFooter";
 import AppAppBar from "../guestpages/modules/views/AppAppBar";
-import Spinner from "./modules/views/completeregSubview/Spinner";
 import { connect } from "react-redux";
 import { TwitterLoginButton } from "react-social-login-buttons";
+import axios from 'axios'
 
-import { checkUser } from "../../async/auth";
 import { initGA, trackPage } from "../../components/Tracking";
 import {
   onSnackbarOpen,
@@ -26,11 +26,8 @@ import {
 import {
   signIn,
   setUserData,
-  setUserProfile,
-  setKeyInUse
 } from "../../actions/authActions";
 import { SocketContext } from "../../components/SocketContext";
-import { initSignIn } from "../../components/Init";
 
 const styles = theme => ({
   main: {
@@ -64,7 +61,6 @@ class SignIn extends React.Component {
       user: {},
       width: window.innerWidth
     };
-    this.handleUserData = this.handleUserData.bind(this);
   }
   notify = (message, variant) => {
     this.props.setSnackbarMessage(message);
@@ -77,54 +73,23 @@ class SignIn extends React.Component {
     });
   };
 
-  startTwitterAuth = () => {
-    const provider = new firebase.auth.TwitterAuthProvider();
-    const isMobile = this.state.width <= 500;
-    if (isMobile) {
-      localStorage.setItem("redirected", true);
-      firebase.auth().signInWithRedirect(provider);
-    } else {
-      const that = this;
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(async function(result) {
-          var userData = {};
-          if (result.credential) {
-            // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
-            // You can use these server side with your app's credentials to access the Twitter API.
-            var token = result.credential.accessToken;
-            var secret = result.credential.secret;
-            // ...
-            userData.accessToken = token;
-            userData.secret = secret;
-          }
-          // The signed-in user info.
-          var user = result.user;
-          if (user !== null) {
-            userData.userid = user.providerData[0].uid;
-            userData.username = user.providerData[0].displayName;
-            userData.photo = user.providerData[0].photoURL;
-            await that.props.setUserProfile(
-              userData,
-              localStorage.getItem("keyInUse")
-            );
-            // console.log("user from the base" + JSON.stringify(userData));
+startTwitterAuth = () =>{
+      this.setState({loading: true})
 
-            that.handleUserData(userData);
-          }
-        })
-        .catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.log(`error code ${errorCode} message ${errorMessage}`);
-
-          that.notify("Connection Error Try Again!", "error");
-        });
+  axios.get(`/auth/twitter/connect/${localStorage.getItem("keyInUse")}`).then(res=>{
+    if (res.data.redirectUrl) {
+      this.setState({loading: true})
+      localStorage.setItem("oauthRequestTokenSecret", res.data.oauthRequestTokenSecret)
+      localStorage.setItem("oauthRequestToken", res.data.oauthRequestToken)
+      window.location.href= res.data.redirectUrl
     }
-  };
-
+  })
+}
+ componentDidMount (){
+  if(this.props.location.state){
+    this.notify(this.props.location.state.error, "error")
+  }
+}
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
       this.props.setUserData(this.state.user);
@@ -137,106 +102,21 @@ class SignIn extends React.Component {
     initGA();
     trackPage(page);
 
-    const { width } = this.state;
-
-    const isMobile = width <= 500;
-
-    if (isMobile) {
-      if (localStorage.getItem("redirected") === "true") {
-        this.setState({ loading: true });
-      } else {
-        return;
-      }
-      const that = this;
-      firebase
-        .auth()
-        .getRedirectResult()
-        .then(async function(result) {
-          var userData = {};
-          if (result.credential) {
-            // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
-            // You can use these server side with your app's credentials to access the Twitter API.
-            var token = result.credential.accessToken;
-            var secret = result.credential.secret;
-            // ...
-            userData.accessToken = token;
-            userData.secret = secret;
-          }
-          // The signed-in user info.
-          var user = result.user;
-          if (user !== null) {
-            userData.userid = user.providerData[0].uid;
-            userData.username = user.providerData[0].displayName;
-            userData.photo = user.providerData[0].photoURL;
-            await that.props.setUserProfile(
-              userData,
-              localStorage.getItem("keyInUse")
-            );
-            // console.log("user from the base" + JSON.stringify(userData));
-            that.handleUserData(userData);
-            localStorage.setItem("redirected", false);
-          } else if (user === null || result.credential === undefined) {
-            that.setState({ loading: false });
-            localStorage.setItem("redirected", false);
-          }
-        })
-        .catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.log(`error code ${errorCode} message ${errorMessage}`);
-          that.notify("Connnectio Error Try Again!", "error");
-          localStorage.setItem("redirected", false);
-          that.setState({ loading: false });
-        });
-    }
 
     // size change listener
     window.addEventListener("resize", this.hasWindowSizeChange);
+
+
     if (this.props.auth.isAuthenticated === true) {
-      this.props.history.push("/dashboard");
+      this.props.history.push("/shared-tweets");
     }
   }
 
   componentWillUnmount() {
     window.addEventListener("resize", this.hasWindowSizeChange);
   }
-  handleUserData(userData) {
-    this.setState(
-      {
-        user: userData,
-        loading: true,
-        networkError: false
-      },
-      () => {
-        this.completeSignIn(userData);
-      }
-    );
-  }
+ 
 
-  async completeSignIn(userData) {
-    try {
-      const res = await checkUser(userData.userid);
-      if (res.data === false) {
-        this.setState({ loading: false });
-
-        this.notify(" ⚠️ User Not Registered! 👨", "error");
-      } else {
-        try {
-          //sign in
-         await this.props.signIn(userData);
-          initSignIn(this.props.socket)
-        } catch (err) {
-          this.setState({ loading: false });
-
-          this.notify("Error Connecting to Server Try again", "error");
-        }
-      }
-    } catch (err) {
-      this.setState({ loading: false });
-      this.notify("Error Connecting to Server Try again", "error");
-    }
-  }
   render() {
     const { classes } = this.props;
     return (
@@ -297,7 +177,13 @@ class SignIn extends React.Component {
                     </TwitterLoginButton>
                   </div>
                 )}
-                {this.state.loading && <Spinner />}
+                {this.state.loading &&
+             (<Grid container justify="center" style={{marginTop: "65px", marginBottom: "65px"}}>
+                   <ClapSpinner
+                     size={70}
+                     color="#686769"
+                     loading={true}/> 
+                     </Grid>)}
               </React.Fragment>
               <Divider
                 variant="fullWidth"
@@ -326,8 +212,6 @@ SignIn.propTypes = {
   auth: PropTypes.object.isRequired,
   signIn: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
-  setUserProfile: PropTypes.func.isRequired,
-  setKeyInUse: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -346,8 +230,6 @@ export default withRouter(
       {
         signIn,
         setUserData,
-        setUserProfile,
-        setKeyInUse,
         onSnackbarOpen,
         setSnackbarMessage,
         setSnackbarVariant

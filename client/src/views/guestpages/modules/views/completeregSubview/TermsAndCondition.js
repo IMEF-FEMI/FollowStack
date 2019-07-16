@@ -11,6 +11,7 @@ import {
 import Spinner from "./Spinner";
 
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import {
   onSnackbarOpen,
   setSnackbarMessage,
@@ -108,7 +109,7 @@ class TermsAndCondition extends Component {
                 </div>
               </div>
             </div>
-            <div
+            <Grid item
               style={{
                 paddingTop: "5vh"
               }}
@@ -140,7 +141,7 @@ class TermsAndCondition extends Component {
                 >
                   Finish
                 </Button>
-            </div>
+            </Grid>
           </div>
         )}
 

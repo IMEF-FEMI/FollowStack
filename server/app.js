@@ -10,6 +10,7 @@ const app = express();
 
 const users = require("./routes/api/users");
 const post = require("./routes/api/post");
+const auth = require("./routes/auth/twitter");
 // const usersOnline = require("./routes/api/usersOnline");
 
 // Setup for passport and to accept JSON objects
@@ -48,9 +49,15 @@ mongoose
 // test server connect
 app.get("/wake-up", (req, res) => res.send("👍"));
 
+app.use(function(req, res, next) {
+  res.locals.session = req.session;
+  next();
+});
+
 // Use Routes
 app.use("/api/users", users);
 app.use("/api/post", post);
+app.use("/auth", auth);
 // app.use("/api/users-online", usersOnline);
 
 // Server static assets if in production

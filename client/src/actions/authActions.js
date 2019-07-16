@@ -1,9 +1,5 @@
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
-import { firebaseKeys } from "../config";
-
-import firebase from "firebase/app";
-import "firebase/auth";
 
 import {
   GET_ERRORS,
@@ -94,6 +90,12 @@ export const setUserData = userData => async dispatch => {
 };
 
 // Set user Profile
+export const setUserProfileData = (data) => async dispatch => {
+    dispatch({
+      type: SET_USER_PROFILE,
+      payload: data
+    });
+}
 export const setUserProfile = (userData, key) => async dispatch => {
   try {
     const profile = await getUserProfile(userData, key);
@@ -139,35 +141,18 @@ export const setPoints = points => dispatch => {
 };
 // Log user out
 export const logoutUser = () => dispatch => {
+  // window.location.href = '/sign-in';
+  
   // Remove token from localStorage
   // localStorage.removeItem("jwtToken");
   // localStorage.removeItem("userData");
   // localStorage.removeItem("userProfile");
   // localStorage.removeItem("points")
   localStorage.clear();
-
-  firebase
-    .auth()
-    .signOut()
-    .then(async function() {
-      try {
-        // Sign-out successful.
-        firebase.apps.length = 0;
-        // localStorage.removeItem("keyInUse");
-
-        const randomNumber = Math.floor(Math.random() * 4);
-        await firebase.app("[DEFAULT]").delete();
-        await firebase.initializeApp(firebaseKeys[randomNumber]);
-        localStorage.setItem("keyInUse", randomNumber);
-        dispatch(setKeyInUse(randomNumber));
-      } catch (e) {
-        console.log(e);
-      }
-    })
-    .catch(function(error) {
-      // An error happened
-      console.log(error);
-    });
+  const randomNumber = Math.floor(Math.random() * 4);
+  localStorage.setItem("keyInUse", randomNumber);
+  dispatch(setKeyInUse(randomNumber));
+  
 
   // Remove auth header for future requests
   setAuthToken(false);
@@ -178,5 +163,4 @@ export const logoutUser = () => dispatch => {
     payload: {}
   });
 
-  window.location.href = '/sign-in';
 };

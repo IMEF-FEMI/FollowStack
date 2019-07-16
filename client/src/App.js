@@ -7,6 +7,7 @@ import store from "./store";
 import LandingPage from "./views/guestpages/LandingPage";
 import SignUp from "./views/guestpages/SignUp";
 import SignIn from "./views/guestpages/SignIn";
+import AuthPage from "./views/guestpages/AuthPage";
 import NotFound from "./views/guestpages/404/NotFound";
 import CompleteRegistration from "./views/guestpages/CompleteRegistration";
 import Privacy from "./views/guestpages/Privacy";
@@ -28,8 +29,10 @@ import socketIO from "socket.io-client";
 import { SocketContext } from "./components/SocketContext";
 import { initApp } from "./components/Init";
 import { CustomSnackbar } from "./components/CustomSnackbar/index";
+import { SOCKET_URL } from "./config";
 
-const socket = socketIO("http://localhost:8080", { transports: ["websocket"] });
+
+const socket = socketIO(SOCKET_URL, { transports: ["websocket"] });
 
 // initialize initial app settings
 // includes user profile, points etc.
@@ -84,7 +87,7 @@ class App extends Component {
                     />
                   )}
                   <PrivateGuestRoute exact path="/sign-up" component={SignUp} />
-
+                  <PrivateGuestRoute exact path="/auth/authorize" component={AuthPage} />
                   <PrivateGuestRoute
                     exact
                     path="/complete-signup"

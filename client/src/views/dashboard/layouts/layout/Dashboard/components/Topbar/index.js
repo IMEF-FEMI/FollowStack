@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import { withRouter } from "react-router-dom";
 
 // Externals
 import classNames from "classnames";
@@ -82,9 +81,7 @@ class Topbar extends Component {
   }
 
   handleSignOut = () => {
-    const { history, logoutUser, socket } = this.props;
-
-    history.push("/sign-in");
+    const {  logoutUser, socket } = this.props;
     logoutUser();
     socket.emit("disconnect");
   };
@@ -220,7 +217,6 @@ class Topbar extends Component {
 Topbar.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
   isSidebarOpen: PropTypes.bool,
   onToggleSidebar: PropTypes.func,
 };
@@ -243,7 +239,6 @@ export default connect(
   { logoutUser , markAllAsReadAction, refreshOnlineAction, refreshTweetsAction, refreshProfileAction}
 )(
   compose(
-    withRouter,
     withStyles(styles)
   )(TopbarWithSocket)
 );

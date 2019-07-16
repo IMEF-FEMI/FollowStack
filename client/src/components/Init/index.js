@@ -15,13 +15,10 @@ import {
   setSnackbarVariant
 } from "../../actions/snackbarAction";
 import {setNotifications} from "../../actions/notificationAction"
-import firebase from "firebase/app";
-import "firebase/auth";
-import { firebaseKeys } from "../../config";
 import store from "../../store";
 
 export const initApp = socket => {
-  initFirebase();
+  initKeyInUse();
   // localStorage.clear();
   // Check for token
   if (localStorage.jwtToken) {
@@ -86,7 +83,7 @@ export const initSocket = socket => {
   });
 };
 export const initSignIn = socket => {
-  initFirebase();
+  initKeyInUse();
 
 
   // go-online using socketIO
@@ -104,23 +101,15 @@ export const initSignIn = socket => {
   store.dispatch(setPointsAction(store.getState().auth.user._id));
 }
 };
-export const initFirebase = () => {
-  // init firebase
-  if (
-    (localStorage.getItem("keyInUse") === undefined ||
-      localStorage.getItem("keyInUse") === null) &&
-    !firebase.apps.length
-  ) {
+export const initKeyInUse = () => {
+  // init keyInUse
+  if (localStorage.getItem("keyInUse") === undefined ||
+      localStorage.getItem("keyInUse") === null) {
     const randomNumber = Math.floor(Math.random() * 4);
-    firebase.initializeApp(firebaseKeys[randomNumber]);
     localStorage.setItem("keyInUse", randomNumber);
     store.dispatch(setKeyInUse(randomNumber));
-  } else if (!firebase.apps.length) {
+  } else {
     const key = localStorage.getItem("keyInUse");
     store.dispatch(setKeyInUse(key));
-
-    // console.log("key in sign in pge ", key)
-    // console.log("we here", key);
-    firebase.initializeApp(firebaseKeys[key]);
   }
 };

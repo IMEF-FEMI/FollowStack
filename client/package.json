@@ -9,10 +9,10 @@
     "classnames": "^2.2.5",
     "clsx": "^1.0.4",
     "emoji-mart": "^2.11.1",
-    "firebase": "^5.9.3",
     "jwt-decode": "^2.2.0",
     "markdown-to-jsx": "^6.9.3",
     "moment": "^2.24.0",
+    "query-string": "^6.8.1",
     "react": "^16.8.4",
     "react-async-script-loader": "^0.3.0",
     "react-component-countdown-timer": "^0.1.1",
@@ -32,6 +32,7 @@
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.5",
     "redux-thunk": "^2.2.0",
+    "request": "^2.88.0",
     "simple-react-video-thumbnail": "^0.0.5",
     "socket.io-client": "^2.2.0",
     "styled-components": "^4.3.2",
@@ -39,7 +40,7 @@
     "twitter-text": "1.13.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set HOST=127.0.0.1&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

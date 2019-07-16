@@ -1,13 +1,11 @@
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-// import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-
+import axios from 'axios'
 export const HeroUnit = props => {
   const { classes } = props;
 
@@ -19,6 +17,16 @@ export const HeroUnit = props => {
       inline: "nearest"
     });
   };
+  const  startTwitterAuth = () =>{
+
+  axios.get(`/auth/twitter/connect/${localStorage.getItem("keyInUse")}`).then(res=>{
+    if (res.data.redirectUrl) {
+      localStorage.setItem("oauthRequestTokenSecret", res.data.oauthRequestTokenSecret)
+      localStorage.setItem("oauthRequestToken", res.data.oauthRequestToken)
+      window.location.href= res.data.redirectUrl
+    }
+  })
+}
 
   return (
     <React.Fragment>
@@ -69,10 +77,7 @@ export const HeroUnit = props => {
               <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button
-                    to={{
-                      pathname: "/sign-up"
-                    }}
-                    component={Link}
+                   onClick={startTwitterAuth}
                     variant="outlined"
                     className={classes.heroButtons}
                     style={{
