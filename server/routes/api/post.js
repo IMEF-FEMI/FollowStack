@@ -381,7 +381,6 @@ router.post(
       access_token_secret: req.body.userData.secret
     });
 
-    // console.log("comment ", req.body.comment)
     const { tweet: data } = req.body;
     var params = {
       id: data.id_str
@@ -404,7 +403,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-
 
             res.status(200).send({
               success: "👍 +10 Points Earned ",

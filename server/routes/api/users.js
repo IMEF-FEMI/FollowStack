@@ -6,26 +6,24 @@ const asyncHandler = require("express-async-handler");
 const keys = require("../../../config/keys");
 const requireAuth = require("../../middlewares/requireAuth");
 
-
 // Load User  model
 const User = require("../../models/User");
 const Post = require("../../models/Post");
 const Transaction = require("../../models/Transactions");
-const {addTransaction} = require("../../utils/TransactionsUtil")
+const { addTransaction } = require("../../utils/TransactionsUtil");
 
- 
 // 1a. Import the SDK package
-const checkoutNodeJssdk = require('@paypal/checkout-server-sdk');
+const checkoutNodeJssdk = require("@paypal/checkout-server-sdk");
 
 // 1b. Import the PayPal SDK client that was created in `Set up Server-Side SDK`.
 /**
  *
  * PayPal HTTP client dependency
  */
-const payPalClient = require('../../common/payPalClient');
+const payPalClient = require("../../common/payPalClient");
 
 var Twitter = require("twitter");
-const TWITTER_KEYS = [ 
+const TWITTER_KEYS = [
   {
     consumerKey: process.env.TWITTER_KEY,
     consumerSecret: process.env.TWITTER_SECRET
@@ -88,7 +86,7 @@ router.post(
 
             const payload = {
               userid: user.userid,
-            _id: user._id
+              _id: user._id
             };
             // Sign Token
             jwt.sign(
@@ -122,7 +120,6 @@ router.post(
     await User.findOne({ userid: req.body.userid })
       .then(user => {
         if (user) {
-
           const payload = {
             userid: user.userid,
             _id: user._id
@@ -151,86 +148,97 @@ router.delete(
   "/delete-user",
   requireAuth,
   asyncHandler(async (req, res, next) => {
-
-            // post
-            Promise.all([
-              Post.deleteMany({ 
-                 _owner: mongoose.Types.ObjectId(req.user._id),
-              }, function (err) {
-                console.log(err)
-              }),
-              Transaction.deleteOne({
-                user_id: req.user.userid
-              }, function (err) {
-                console.log(err)
-              }),
-              User.deleteOne({
-                userid: req.user.userid
-              }, function (err) {
-                console.log(err)
-              }),
-              ]).then(data=>{
-                console.log("done ", data)
-                 res.status(200).send({success: "user deleted"})
-              })
-  }))
+    // post
+    Promise.all([
+      Post.deleteMany(
+        {
+          _owner: mongoose.Types.ObjectId(req.user._id)
+        },
+        function(err) {
+          console.log(err);
+        }
+      ),
+      Transaction.deleteOne(
+        {
+          user_id: req.user.userid
+        },
+        function(err) {
+          console.log(err);
+        }
+      ),
+      User.deleteOne(
+        {
+          userid: req.user.userid
+        },
+        function(err) {
+          console.log(err);
+        }
+      )
+    ]).then(data => {
+      console.log("done ", data);
+      res.status(200).send({ success: "user deleted" });
+    });
+  })
+);
 
 router.post(
   "/paypal-transaction-complete",
   requireAuth,
   asyncHandler(async (req, res, next) => {
-      // 2a. Get the order ID from the request body
-  const orderID = req.body.orderID;
+    // 2a. Get the order ID from the request body
+    const orderID = req.body.orderID;
 
-  // 3. Call PayPal to get the transaction details
-  let request = new checkoutNodeJssdk.orders.OrdersGetRequest(orderID);
+    // 3. Call PayPal to get the transaction details
+    let request = new checkoutNodeJssdk.orders.OrdersGetRequest(orderID);
 
-  let order;
-  try {
-    order = await payPalClient.client().execute(request);
-  } catch (err) {
+    let order;
+    try {
+      order = await payPalClient.client().execute(request);
+    } catch (err) {
+      // 4. Handle any errors from the call
+      console.error(err);
+      return res.send(500);
+    }
 
-    // 4. Handle any errors from the call
-    console.error(err);
-    return res.send(500);
-  }
+    // 5. Validate the transaction details are as expected
+    if (
+      order.result.purchase_units[0].amount.value !== req.body.payment.amount
+    ) {
+      return res.status(200).send("Transaction Error");
+    }
 
-  // 5. Validate the transaction details are as expected
-  if (order.result.purchase_units[0].amount.value !== req.body.payment.amount) {
-    return res.status(200).send("Transaction Error");
-  }
-
-  // 6. Save the transaction in your database
-  // await database.saveTransaction(orderID);
-  console.log("user ", req.user)
-await addTransaction(req.user.userid, {
-  orderID: orderID,
+    // 6. Save the transaction in your database
+    // await database.saveTransaction(orderID);
+    console.log("user ", req.user);
+    await addTransaction(req.user.userid, {
+      orderID: orderID,
       amount: order.result.purchase_units[0].amount.value,
-      points: req.body.payment.points,
-})
-   await User.findOneAndUpdate(
-          { userid: req.user.userid },
-          {
-            $inc: {
-              points: +parseInt(req.body.payment.points)
-            }
-          },
-          {
-            new: true
-          }
-        ).then(user => {
-          if (user) {
-
-            res.status(200).send({
-              success: "Transaction Successful",
-              points: user.points
-            });
-          }
-        }).catch(err=>{
-          console.log(err)
-        });
-
-  }))
+      points: req.body.payment.points
+    });
+    await User.findOneAndUpdate(
+      { userid: req.user.userid },
+      {
+        $inc: {
+          points: +parseInt(req.body.payment.points)
+        }
+      },
+      {
+        new: true
+      }
+    )
+      .then(user => {
+        if (user) {
+          res.status(200).send({
+            success: "Transaction Successful",
+            points: user.points
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  })
+);
 // check if user exists
 router.get(
   "/check-user/:id",
@@ -255,11 +263,40 @@ router.get(
     User.findOne(
       { _id: mongoose.Types.ObjectId(req.params.user_id) },
       "points",
-      function(err, user) { 
+      function(err, user) {
         if (err) return console.log(err);
         res.status(200).json(user.points);
       }
     );
+  })
+);
+
+router.get(
+  "/link-share-points",
+  requireAuth,
+  asyncHandler(async (req, res, next) => {
+    await User.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(req.user._id) },
+      {
+        $inc: {
+          points: +40
+        }
+      },
+      {
+        new: true
+      }
+    )
+      .then(user => {
+        if (user) {
+          res.status(200).send({
+            success: "👍 +40 Points Earned ",
+            points: user.points
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   })
 );
 
