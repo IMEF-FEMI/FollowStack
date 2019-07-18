@@ -28,7 +28,8 @@ export default theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    minHeight: "fit-content"
+    minHeight: "fit-content",
+    maxWidth: "240px"
   },
   avatar: {
     width: "100px",

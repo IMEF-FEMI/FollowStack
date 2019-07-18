@@ -11,8 +11,6 @@ const requireAuth = require("../../middlewares/requireAuth");
 const User = require("../../models/User");
 const Post = require("../../models/Post");
 const Transaction = require("../../models/Transactions");
-const Notifications = require("../../models/Notifications");
-const {addNotification} = require("../../utils/NotificationsUtil")
 const {addTransaction} = require("../../utils/TransactionsUtil")
 
  
@@ -83,9 +81,6 @@ router.post(
               //   username: req.body.username,
               //   user_id: req.body.userid
               // }).save(),
-              new Notifications({
-                user_id: req.body.userid
-              }).save(),
               new Transaction({
                 user_id: req.body.userid
               }).save()
@@ -127,7 +122,7 @@ router.post(
     await User.findOne({ userid: req.body.userid })
       .then(user => {
         if (user) {
-          // new Notifications({ user_id: req.body.userid }).save(); 
+
           const payload = {
             userid: user.userid,
             _id: user._id
@@ -161,11 +156,6 @@ router.delete(
             Promise.all([
               Post.deleteMany({ 
                  _owner: mongoose.Types.ObjectId(req.user._id),
-              }, function (err) {
-                console.log(err)
-              }),
-              Notifications.deleteOne({
-                user_id: req.user.userid
               }, function (err) {
                 console.log(err)
               }),
@@ -230,8 +220,6 @@ await addTransaction(req.user.userid, {
           }
         ).then(user => {
           if (user) {
-            console.log("bout adding new notification details==> ", req.body)  
-            addNotification(req.user.userid, {title: `👍 ${req.body.payment.points} Points Earned `, notificationType: "pointsGained"})
 
             res.status(200).send({
               success: "Transaction Successful",

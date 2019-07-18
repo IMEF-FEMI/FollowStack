@@ -3,7 +3,7 @@ var Twitter = require("twitter");
 
 const User = require("../models/User");
 const UsersOnline = require("../models/UsersOnline");
-const { addNotification } = require("./NotificationsUtil");
+
 
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
@@ -29,13 +29,29 @@ const TWITTER_KEYS = [
 ];
 
 const follow = (info, callback, socket) => {
-  const random = TWITTER_KEYS[info.key];
+  var random = null
+  if (socket.userInfo === undefined) {
+ return socket.emit("get-user-info", {}, userInfo => {
+    userInfo.socketId = socket.id;
+    socket.userInfo = userInfo;
+    users.unshift(userInfo);
+    random = TWITTER_KEYS[socket.userInfo.keyInUse];
+
+    // users = seed;
+    console.log(userInfo);
+    console.log("current users length " + users.length);
+  });
+
+  }else{
+    random = TWITTER_KEYS[socket.userInfo.keyInUse];
+  }
+
 
   var client = new Twitter({
     consumer_key: random.consumerKey,
     consumer_secret: random.consumerSecret,
-    access_token_key: info.userData.accessToken,
-    access_token_secret: info.userData.secret
+    access_token_key: socket.userInfo.accessToken,
+    access_token_secret: socket.userInfo.secret
   });
   var params = {
     user_id: info.newUser.user_id,
@@ -47,26 +63,13 @@ const follow = (info, callback, socket) => {
     response
   ) {
     if (!error && response.statusCode === 200) {
-      // add new notification the the person following
-      const followingNotif = {
-        title: "👍 Follow Successful +40 Points ",
-        notificationType: "pointsGained"
-      };
-      addNotification(socket.userInfo.user_id, followingNotif);
-
-      // add new notification the the person bieng followed
-      const followedNotif = {
-        title: `${socket.userInfo.screen_name} just Followed you`,
-        notificationType: "followed"
-      };
-
-      addNotification(info.newUser.user_id, followedNotif);
+      
 
       await User.findOneAndUpdate(
-        { userid: info.userData.userid },
+        { userid: socket.userInfo.user_id },
         {
           $inc: {
-            points: +40
+            points: +20
           }
         },
         {
@@ -76,7 +79,7 @@ const follow = (info, callback, socket) => {
         if (user) {
           
           // callback notification on client side
-          callback(user.points);
+          callback({points: user.points});
         }
       });
     } else {
@@ -85,14 +88,55 @@ const follow = (info, callback, socket) => {
   });
 };
 
-const unFollow = (info, callback, socket) => {
-  const random = TWITTER_KEYS[info.key];
+const followBack = (info, socket, callback) => {
+  // the person u followed automatically following back
+  const random = TWITTER_KEYS[info.newUser.keyInUse];
 
   var client = new Twitter({
     consumer_key: random.consumerKey,
     consumer_secret: random.consumerSecret,
-    access_token_key: info.userData.accessToken,
-    access_token_secret: info.userData.secret
+    access_token_key: info.newUser.accessToken,
+    access_token_secret: info.newUser.secret
+  });
+  var params = {
+    user_id: socket.userInfo.user_id,
+    follow: true
+  };
+  client.post("friendships/create", params, function(
+    error,
+    tweet,
+    response
+  ) {
+    if (!error && response.statusCode === 200) {
+      callback() 
+    } else {
+      console.log(error);
+    }
+  });
+};
+
+const unFollow = (info, callback, socket) => {
+  var random = null
+  if (socket.userInfo === undefined) {
+ return socket.emit("get-user-info", {}, userInfo => {
+    userInfo.socketId = socket.id;
+    socket.userInfo = userInfo;
+    users.unshift(userInfo);
+    random = TWITTER_KEYS[socket.userInfo.keyInUse]
+    // users = seed;
+    console.log(userInfo);
+    console.log("current users length " + users.length);
+  });
+
+  }else{
+    random = TWITTER_KEYS[socket.userInfo.keyInUse];
+  }
+
+  var client = new Twitter({
+    consumer_key: random.consumerKey,
+    consumer_secret: random.consumerSecret,
+    access_token_key: socket.userInfo.accessToken,
+    access_token_secret: socket.userInfo.secret
   });
   var params = {
     user_id: info.newUser.user_id
@@ -103,13 +147,8 @@ const unFollow = (info, callback, socket) => {
     response
   ) {
     if (!error && response.statusCode === 200) {
-      // add notification
-      const unfollowNotif = {
-        title: "👍 user unFollowed",
-        type: "error"
-      };
-      addNotification(socket.userInfo.user_id, unfollowNotif);
-      callback(user.points);
+      
+      callback();
 
     } else {
       console.log(error);
@@ -117,8 +156,8 @@ const unFollow = (info, callback, socket) => {
   });
 };
 
-const getOnlineUsers = (info, users, callback) => {
-  friendshipLookup(info, users, arr => {
+const getOnlineUsers = (socket, info, users, callback) => {
+  friendshipLookup(socket, info, users, arr => {
     // identify those already followed
     arr.map(i => {
       users.map(j => {
@@ -134,7 +173,7 @@ const getOnlineUsers = (info, users, callback) => {
         }
       });
     });
-    callback(users);
+    callback({users: users});
   });
 };
 
@@ -195,14 +234,30 @@ const getOnlineUsers = (info, users, callback) => {
 //   });
 // };
 
-const friendshipLookup = (info, users, callback) => {
-  const random = TWITTER_KEYS[info.key];
+const friendshipLookup = (socket, info, users, callback ) => {
+  
+  var random = null
+  if (socket.userInfo === undefined) {
+ return socket.emit("get-user-info", {}, userInfo => {
+    userInfo.socketId = socket.id;
+    socket.userInfo = userInfo;
+    users.unshift(userInfo);
+    random = TWITTER_KEYS[socket.userInfo.keyInUse];
+    
+    // users = seed;
+    console.log(userInfo);
+    console.log("current users length " + users.length);
+  });
+
+  }else{
+    random = TWITTER_KEYS[socket.userInfo.keyInUse];
+  }
 
   var client = new Twitter({
     consumer_key: random.consumerKey,
     consumer_secret: random.consumerSecret,
-    access_token_key: info.userData.accessToken,
-    access_token_secret: info.userData.secret
+    access_token_key: socket.userInfo.accessToken,
+    access_token_secret: socket.userInfo.secret
   });
   let user_ids = "";
   for (var i = 0; i < users.length; i++) {
@@ -233,6 +288,7 @@ const friendshipLookup = (info, users, callback) => {
 module.exports = {
   follow,
   unFollow,
+  followBack,
   getOnlineUsers,
   // getFollowedBack,
   // getNotFollowingBack,

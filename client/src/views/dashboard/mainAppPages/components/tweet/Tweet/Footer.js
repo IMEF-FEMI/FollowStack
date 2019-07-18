@@ -19,7 +19,6 @@ import {
   unPostRetweet
 } from "../../../../../../async/post";
 import { setPoints } from "../../../../../../actions/authActions";
-import { addNotificationAction } from "../../../../../../actions/notificationAction";
 import {
   onSnackbarOpen,
   setSnackbarMessage,
@@ -76,7 +75,7 @@ class Footer extends React.Component {
       // post fav only if only tweet wasnt favorited
       res = await postLike(userData, tweet, keyInUse);
       if (res.data.success || res.data.error) {
-        this.notify(res, "pointsGained");
+        this.notify(res);
       }
     } else {
       tweet.favorited = false;
@@ -85,7 +84,7 @@ class Footer extends React.Component {
       // this.forceUpdate();
       res = await unPostLike(userData, tweet, keyInUse);
       if (res.data.success || res.data.error) {
-        this.notify(res, "pointsDeducted");
+        this.notify(res);
       }
     }
   };
@@ -102,7 +101,7 @@ class Footer extends React.Component {
       // post fav only if only tweet wasnt favorited
       res = await postRetweet(userData, tweet, keyInUse);
       if (res.data.success || res.data.error) {
-        this.notify(res, "pointsGained");
+        this.notify(res);
       }
     } else {
       tweet.retweeted = false;
@@ -112,23 +111,17 @@ class Footer extends React.Component {
       // post fav only if only tweet wasnt favorited
       res = await unPostRetweet(userData, tweet, keyInUse);
       if (res.data.success || res.data.error) {
-        this.notify(res, "pointsDeducted");
+        this.notify(res);
       }
     }
   };
 
-  notify = (res, type) => {
+  notify = (res) => {
     this.props.setSnackbarMessage(res.data.success ? res.data.success : res.data.error)
     this.props.setSnackbarVariant(res.data.success ? "success" : "error")
     this.props.onSnackbarOpen()
     
-    this.props.addNotificationAction({
-      id: Date.now(),
-      title: res.data.success,
-      when: Date.now(),
-      type: res.data.success ? type : "error",
-      to: "#"
-    });
+    
     this.props.setPoints(res.data.points);
   };
  
@@ -287,7 +280,7 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { setPoints, addNotificationAction, 
+  { setPoints, 
     onSnackbarOpen,
     setSnackbarMessage,
     setSnackbarVariant, }

@@ -15,7 +15,6 @@ const unlinkAsync = promisify(fs.unlink)
 
 
 
-const {addNotification} = require("../../utils/NotificationsUtil")
 
 const TWITTER_KEYS = [
   {
@@ -85,11 +84,11 @@ router.post(
       await User.findOneAndUpdate(
       {
         _id: mongoose.Types.ObjectId(req.user._id),
-        points: { $gte: 50 }
+        points: { $gte: 100 }
       }, 
       {
         $inc: {
-          points: -50
+          points: -100
         }
       },
       {
@@ -149,7 +148,6 @@ router.post(
                 error: "Could Not share tweet. Try again"
               });
             } else {
-              addNotification(req.user.userid, {title: "Status Updated! ", notificationType: "sharedTweet"})
               // tweet added successfully send back to client
               res.status(200).send({
                 success: "Status Updated! ",
@@ -188,7 +186,6 @@ router.post(
                 error: "Could Not share tweet. Try again"
               });
             } else {
-              addNotification(req.user.userid, {title: "Status updated! ", notificationType: "sharedTweet"})
               // tweet added successfully send back to client
               res.status(200).send({
                 success: "Status Updated ",
@@ -212,7 +209,6 @@ router.post(
 
         } else {
           // user did not meet search criteria i.e not enough points
-          addNotification(req.user.userid, {title: "Not enough Points! Go blow up some tweets", notificationType: "error"})
           res.status(200).send({
             error: "Not enough Points! Go blow up some tweets"
           });
@@ -242,11 +238,11 @@ router.post(
     await User.findOneAndUpdate(
       {
         _id: mongoose.Types.ObjectId(req.body.user_id),
-        points: { $gte: 50 }
+        points: { $gte: 100 }
       }, 
       {
         $inc: {
-          points: -50
+          points: -100
         }
       },
       {
@@ -271,7 +267,6 @@ router.post(
                 error: "Could Not share tweet. Try again"
               });
             } else {
-              addNotification(req.user.userid, {title: "Tweet Shared Successfully! ", notificationType: "sharedTweet"})
               res.status(200).send({
                 success: "Tweet Shared Successfully! ",
                 points: user.points
@@ -280,7 +275,6 @@ router.post(
           });
         } else {
           // user did not meet search criteria i.e not enough points
-          addNotification(req.user.userid, {title: "Not enough Points! Go blow up some tweets", notificationType: "error"})
           res.status(200).send({
             error: "Not enough Points! Go blow up some tweets"
           });
@@ -306,7 +300,6 @@ router.delete(
         post_id: req.params.post_id
       })
         .then(post => {
-          addNotification(req.user.userid, {title: "Tweet removed", notificationType: "error"})
 
           res.json({ success: "Tweet removed" });
         })
@@ -361,8 +354,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-            console.log("bout adding new notification details==> ", req.body)  
-            addNotification(req.user.userid, {title: "👍 +20 Points Earned ", notificationType: "pointsGained"})
 
             res.status(200).send({
               success: "👍 +20 Points Earned ",
@@ -414,8 +405,6 @@ router.post(
         ).then(user => {
           if (user) {
 
-            console.log("bout adding new notification details==> ", req.body)  
-            addNotification(req.user.userid, {title: "👍 +10 Points Earned ", notificationType: "pointsGained"})
 
             res.status(200).send({
               success: "👍 +10 Points Earned ",
@@ -466,7 +455,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-            addNotification(req.user.userid, {title: "👎 10 Points Deducted", notificationType: "pointsGained"})
 
             res.status(200).send({
               success: "👎 10 Points Deducted",
@@ -517,7 +505,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-            addNotification(req.user.userid, {title: "👍 +30 Points Earned ", notificationType: "pointsGained"})
 
             res.status(200).send({
               success: "👍 +30 Points Earned",
@@ -568,8 +555,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-            console.log("bout adding new notification details==> ", req.body)  
-            addNotification(req.user.userid, {title: "👎 30 Points Deducted", notificationType: "pointsGained"})
 
             res.status(200).send({
               success: "👎 30 Points Deducted",

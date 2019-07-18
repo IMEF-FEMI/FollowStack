@@ -3,6 +3,7 @@
 import React, { Component } from "react";
 import { Dashboard as DashboardLayout } from "./layout";
 import {initGA, trackPage} from '../../../components/Tracking';
+import {withRouter} from 'react-router-dom'
 
 
 class Default extends Component {
@@ -13,15 +14,10 @@ class Default extends Component {
   }
   render() {
     return (
-      <DashboardLayout
-        title={`${this.props.location.pathname
-          .replace(/\//g, "")
-          .replace("-", " ")
-          .toUpperCase()}`}
-      >
+      <DashboardLayout>
         {this.props.children}
       </DashboardLayout>
     );
   }
 }
-export default Default;
+export default withRouter(Default);

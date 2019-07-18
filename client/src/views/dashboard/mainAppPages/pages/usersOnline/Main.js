@@ -28,6 +28,34 @@ function Main(props) {
         >
          Online Users
         </Typography>
+        <Grid container justify="center">
+        <Grid item xs={12} sm={8} md={6}>
+        <Typography
+          component="h4"
+          variant="h5"
+          align="center"
+          color="primary"
+          gutterBottom
+          style={{
+            // paddingTop: "30px"
+          }}
+        >
+         for every person you follow, you gain: 20 points and an instant followback, also when you are followed, we automatically help u follow the person back
+        </Typography>
+       <Typography
+          component="h5"
+          variant="h5"
+          align="center"
+          color="textPrimary"
+          gutterBottom
+          style={{
+            // paddingTop: "30px"
+          }}
+        >
+          Note: Follows are limited to 20 per day
+        </Typography>
+        </Grid>
+        </Grid>
       </div>
       <Grid
         container

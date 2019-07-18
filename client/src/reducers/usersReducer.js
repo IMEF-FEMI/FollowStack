@@ -4,7 +4,8 @@ import {
   SET_USERS_INITIAL_FETCH,
   SET_USERS_IS_FETCHING,
   SET_USERS_HAS_MORE,
-  REFRESH_ONLINE
+  REFRESH_ONLINE,
+  UPDATE_USER
 } from "../actions/types";
 
 const initialState = {
@@ -27,7 +28,16 @@ export default function(state = initialState, action) {
         ...state,
         users: [...state.users, ...action.payload]
       };
-
+    case UPDATE_USER:
+      return{
+        ...state,
+        users: state.users.map(user => user.user_id === action.payload.user_id ?
+            // update the user with the id  and set following = true
+            { ...user, following: true } : 
+            // otherwise return original todo
+            user
+            )
+      };
     case SET_USERS_INITIAL_FETCH:
       return {
         ...state,

@@ -18,7 +18,6 @@
   import Tooltip from "@material-ui/core/Tooltip";
   import { addTweetPost, removeTweetPost } from "../../../../../async/post";
   import { setPoints } from "../../../../../actions/authActions";
-  import { addNotificationAction } from "../../../../../actions/notificationAction";
   import Tweet from "./Tweet/Tweet";
   import {
     onSnackbarOpen,
@@ -35,23 +34,17 @@
       this.forceUpdate();
       const res = await addTweetPost(auth.user._id, tweet);
       this.props.setPoints(res.data.points);
-      this.notify(res, "sharedTweet", tweet);
+      this.notify(res, tweet);
     };
 
-    notify = (res, notificationType, tweet) => {
+    notify = (res, tweet) => {
       // just istart replacing with redux actons here no questions lol..
       if (res.data.success) {
        
         this.props.setSnackbarMessage(res.data.success)
         this.props.setSnackbarVariant("success")
         this.props.onSnackbarOpen()
-        this.props.addNotificationAction({
-          id: Date.now(),
-          title: res.data.success,
-          when: Date.now(),
-          type: notificationType,
-          to: "#"
-        });
+      
       } else if (res.data.error) {
         tweet.added = false;
         this.forceUpdate();
@@ -60,13 +53,6 @@
         this.props.setSnackbarMessage(res.data.error)
         this.props.setSnackbarVariant("error")
         this.props.onSnackbarOpen()
-        this.props.addNotificationAction({
-          id: Date.now(),
-          title: res.data.error,
-          when: Date.now(),
-          type: "error",
-          to: "#"
-        });
 
         // redirect to  get-points
        this.props.history.push("/earn-points");
@@ -78,7 +64,7 @@
       tweet.added = false;
       this.forceUpdate();
       const res = await removeTweetPost(tweet.id_str, auth.user._id);
-      this.notify(res, "unsharedTweet", tweet);
+      this.notify(res, tweet);
     };
 
     render() {
@@ -278,7 +264,6 @@
    connect(
       mapStateToProps,
       { setPoints, 
-        addNotificationAction,
         onSnackbarOpen ,
         setSnackbarMessage,
         setSnackbarVariant, 

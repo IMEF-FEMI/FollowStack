@@ -136,7 +136,7 @@ const sections = [
     description: (
       <Typography component="li" variant="subtitle1" align="center">
         {" "}
-        40 for every user Followed
+        20 for every user Followed
       </Typography>
     ),
     buttonText: "See Online Users",

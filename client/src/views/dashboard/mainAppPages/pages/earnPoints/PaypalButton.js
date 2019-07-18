@@ -16,7 +16,6 @@ import {
   setSnackbarVariant
 } from "../../../../../actions/snackbarAction";
 import { setPoints } from "../../../../../actions/authActions";
-import { addNotificationAction } from "../../../../../actions/notificationAction";
 
 const CLIENT = {
   sandbox:
@@ -136,15 +135,6 @@ class PaypalButton extends React.Component {
             setSnackbarVariant("success");
             onSnackbarOpen();
             setPoints(points);
-
-            this.props.addNotificationAction({
-              id: Date.now(),
-              title: res.data.success,
-              when: Date.now(),
-              type: res.data.success ? "pointsGained" : "error",
-              to: "#"
-            });
-
             // add points
             setPoints(res.data.points);
 
@@ -200,8 +190,7 @@ export default compose(
       onSnackbarOpen,
       setSnackbarMessage,
       setSnackbarVariant,
-      setPoints,
-      addNotificationAction
+      setPoints
     }
   ),
   withStyles(styles),

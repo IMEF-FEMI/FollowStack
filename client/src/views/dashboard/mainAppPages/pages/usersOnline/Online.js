@@ -36,7 +36,7 @@ class Online extends Component {
     this.onScroll = onScroll.call(this, this.fetchNextPage);
   }
   fetchNextPage = async () => {
-    const { socket, users, fetchNextAction, auth } = this.props;
+    const { socket, users, fetchNextAction } = this.props;
 
     if (users.initialFetch || users.isFetching || !users.hasMore) {
       return;
@@ -45,22 +45,18 @@ class Online extends Component {
       socket,
       users.users.length,
       users.page,
-      auth.userData,
-      auth.keyInUse
     );
   };
 
   async componentDidMount() {
     window.addEventListener("scroll", this.onScroll, false);
 
-    const { socket, users, initialFetchAction, auth } = this.props;
+    const { socket, users, initialFetchAction } = this.props;
     if (users.initialFetch === true) {
       await initialFetchAction(
         socket,
         users.users.length,
-        users.page,
-        auth.userData,
-        auth.keyInUse
+        users.page
       );
     }
   }
@@ -73,7 +69,6 @@ class Online extends Component {
     const {
       socket,
       users,
-      auth,
       initialFetchAction,
       refreshOnlineAction
     } = this.props;
@@ -82,8 +77,6 @@ class Online extends Component {
       socket,
       users.users.length,
       users.page,
-      auth.userData,
-      auth.keyInUse
     );
   };
   render() {

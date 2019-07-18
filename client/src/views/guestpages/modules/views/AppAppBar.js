@@ -7,6 +7,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import MuiAppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 class AppBar extends React.Component {
@@ -70,15 +71,13 @@ class AppBar extends React.Component {
                 }}
                 className={classNames(classes.logo, classes.aTag)}
               >
-                <img
-                  alt="FollowStack logo"
-                  className={classes.logoImage}
-                  src={
-                    location !== "/"
-                      ? "/images/logos/followstack.png"
-                      : "/images/logos/followstack_white.png"
-                  }
-                />
+                 <Typography
+                  variant="h6"
+                  color="inherit"
+                  className={classes.grow}
+                >
+                  Follow-Stack
+                </Typography>
               </MyLink>
             </div>
 

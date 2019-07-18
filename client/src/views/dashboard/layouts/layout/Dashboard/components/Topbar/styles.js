@@ -22,14 +22,13 @@ export default theme => ({
   menuButton: {
     marginLeft: '-4px'
   },
-  notificationsButton: {
-    marginLeft: 'auto'
-  },
   refreshButton: {
     marginRight: 'auto',
     color: "#66788A"
   },
   signOutButton: {
-    marginLeft: theme.spacing()
+    // marginLeft: theme.spacing(),
+    marginLeft: 'auto'
+
   }
 });

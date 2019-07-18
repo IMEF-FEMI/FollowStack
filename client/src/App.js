@@ -32,7 +32,7 @@ import { CustomSnackbar } from "./components/CustomSnackbar/index";
 import { SOCKET_URL } from "./config";
 
 
-const socket = socketIO(SOCKET_URL, { transports: ["websocket"] });
+const socket = socketIO(SOCKET_URL);
 
 // initialize initial app settings
 // includes user profile, points etc.

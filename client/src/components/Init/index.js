@@ -11,10 +11,11 @@ import {
 import { SET_USER_DATA, SET_USER_PROFILE } from "../../actions/types";
 import {
   onSnackbarOpen,
+  onSnackbarClose,
   setSnackbarMessage,
   setSnackbarVariant
 } from "../../actions/snackbarAction";
-import {setNotifications} from "../../actions/notificationAction"
+import {updateUser} from "../../actions/usersAction"
 import store from "../../store";
 
 export const initApp = socket => {
@@ -63,25 +64,59 @@ export const initApp = socket => {
 export const initSocket = socket => {
 
   const userInfo = store.getState().auth
-  socket.emit("get-notifications", userInfo.user.userid, notifications => {
-    // console.log(notifications)
-  store.dispatch(setNotifications(notifications));
-
-  })
+  
   socket.on("get-user-info", (info, callback) => {
     callback({
       user_id: userInfo.user.userid,
       photo: userInfo.userData.photo,
-      screen_name: userInfo.userProfile.screen_name
+      screen_name: userInfo.userProfile.screen_name,
+      accessToken: userInfo.userData.accessToken,
+      secret: userInfo.userData.secret,
+      keyInUse: localStorage.getItem("keyInUse")
     });
   });
 
-  socket.on("followed", res => {
+  socket.on("followed", (res) => {
+    if (res=== undefined) {
+      return
+    }
+    setTimeout(()=>{
+    store.dispatch(onSnackbarClose())
     store.dispatch(setSnackbarMessage(res.user));
     store.dispatch(setSnackbarVariant("followed"));
     store.dispatch(onSnackbarOpen());
+  }, 3000)
+
+  });
+
+  socket.on("followedback", (res) => {
+    if (res=== undefined) {
+      return
+    }
+    setTimeout(()=>{
+    store.dispatch(onSnackbarClose())
+    store.dispatch(setSnackbarMessage(res.user));
+    store.dispatch(setSnackbarVariant("followedback"));
+    store.dispatch(onSnackbarOpen());
+  }, 7000)
+  });
+
+  
+  socket.on("followingback", res => {
+    if (res=== undefined) {
+      return
+    }
+    store.dispatch(updateUser(res.user))
+    setTimeout(()=>{
+    store.dispatch(onSnackbarClose())
+    store.dispatch(setSnackbarMessage(res.user));
+    store.dispatch(setSnackbarVariant("followingback"));
+    store.dispatch(onSnackbarOpen());
+  }, 7000)
+    
   });
 };
+
 export const initSignIn = socket => {
   initKeyInUse();
 
@@ -92,7 +127,10 @@ export const initSignIn = socket => {
   socket.emit("push-user-info",{
       user_id: userInfo.user.userid,
       photo: userInfo.userData.photo,
-      screen_name: userInfo.userProfile.screen_name
+      screen_name: userInfo.userProfile.screen_name,
+      accessToken: userInfo.userData.accessToken,
+      secret: userInfo.userData.secret,
+      keyInUse: localStorage.getItem("keyInUse")
     }
   );
   if(!store.getState().auth.user._id){

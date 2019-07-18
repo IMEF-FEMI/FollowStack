@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+
 import axios from 'axios'
 export const HeroUnit = props => {
   const { classes } = props;
@@ -40,7 +41,7 @@ export const HeroUnit = props => {
               className={classes.heroMainTxt}
               gutterBottom
             >
-              FollowStack For Twitter{" "}
+              Follow-Stack For Twitter{" "}
               <i
                 className="fab fa-twitter"
                 style={{

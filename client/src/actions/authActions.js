@@ -95,6 +95,8 @@ export const setUserProfileData = (data) => async dispatch => {
       type: SET_USER_PROFILE,
       payload: data
     });
+    localStorage.setItem("userProfile", JSON.stringify(data));
+
 }
 export const setUserProfile = (userData, key) => async dispatch => {
   try {

@@ -5,6 +5,7 @@ import { SocketContext } from "../../../../../components/SocketContext";
 
 import {
   onSnackbarOpen,
+  onSnackbarClose,
   setSnackbarMessage,
   setSnackbarVariant
 } from "../../../../../actions/snackbarAction";
@@ -71,10 +72,10 @@ class FollowButton extends Component {
       // this.checkFollowPopup();
       const {
         socket,
-        auth,
         setSnackbarMessage,
         setSnackbarVariant,
         onSnackbarOpen,
+        onSnackbarClose,
         setPoints,
         user
       } = this.props;
@@ -82,13 +83,21 @@ class FollowButton extends Component {
       // follow using sockets and notify user
       socket.emit(
         "follow",
-        { userData: auth.userData, newUser: user, key: auth.keyInUse },
-        points => {
+        {  newUser: user },
+        data => {
+          if (data.points) { 
           // callback to show notification when follow is successful
-          setSnackbarMessage("👍 Follow successful +40 points earned");
+          onSnackbarClose()
+          setSnackbarMessage("👍 Follow successful +20 points earned");
           setSnackbarVariant("success");
           onSnackbarOpen();
-          setPoints(points);
+          setPoints(data.points);
+          }else{
+          onSnackbarClose()
+          setSnackbarMessage(data.error);
+          setSnackbarVariant("error");
+          onSnackbarOpen();
+          }
         }
       );
       this.setState({ disabled: false });
@@ -101,40 +110,31 @@ class FollowButton extends Component {
     if (!this.state.disabled && this.props.user.following === true) {
       // this.followPopup = this.openPopup();
       // this.checkFollowPopup();
-      if (this.props.usersOnline.hasFollowingsTime >= 1) {
-        this.props.setSnackbarMessage(
-          "Can't unfollow yet. wait for countdown to complete"
-        );
-        this.props.setSnackbarVariant("warning");
-        this.props.onSnackbarOpen();
-      } else {
+    
         const {
           socket,
-          auth,
           setSnackbarMessage,
           setSnackbarVariant,
           onSnackbarOpen,
-          setPoints,
+          onSnackbarClose,
           user
         } = this.props;
         this.setState({ disabled: true });
         socket.emit(
           "unfollow",
-          { userData: auth.userData, newUser: user, key: auth.keyInUse },
-          points => {
+          {  newUser: user },() => {
             // callback to show notification when unfollow is successful
-
-            setSnackbarMessage("👎 User Unfollowed successful -40 points");
+            onSnackbarClose()
+            setSnackbarMessage("👎 User Unfollowed");
             setSnackbarVariant("warning");
             onSnackbarOpen();
-            setPoints(points);
           }
         );
         this.setState({ disabled: false });
         user.following = false;
 
         this.forceUpdate();
-      }
+      
     }
   };
   render() {
@@ -225,5 +225,5 @@ const FollowButtonWithSocket = props => (
 
 export default connect(
   mapStateToProps,
-  { onSnackbarOpen, setSnackbarMessage, setSnackbarVariant, setPoints }
+  { onSnackbarOpen, onSnackbarClose, setSnackbarMessage, setSnackbarVariant, setPoints }
 )(FollowButtonWithSocket);

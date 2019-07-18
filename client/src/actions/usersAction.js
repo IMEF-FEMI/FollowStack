@@ -4,8 +4,23 @@ import {
   SET_USERS_INITIAL_FETCH,
   SET_USERS_IS_FETCHING,
   SET_USERS_HAS_MORE,
-  REFRESH_ONLINE
+  REFRESH_ONLINE,
+  UPDATE_USER
 } from "./types";
+
+import {
+  onSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarVariant
+} from './snackbarAction'
+export const updateUser = (user) => async dispatch => {
+dispatch({
+    type: UPDATE_USER,
+    payload: user
+  });
+
+}
+
 
 export const refreshOnlineAction = () => async dispatch => {
   dispatch({
@@ -16,19 +31,24 @@ export const initialFetchAction = (
   socket,
   currentUsers,
   page,
-  userData,
-  key
 ) => async dispatch => {
   socket.emit(
     "get-users",
-    { currentUsers: currentUsers, page: page, userData: userData, key: key },
-    users => {
-      dispatch(setUsers(users));
-      dispatch(setPage(1));
-      dispatch(setInitialFetch(false));
-      if (users.length === 0 || users.length === 1) {
-        dispatch(setHasMore(false));
-      }
+    { currentUsers: currentUsers, page: page },
+    data => {
+      if (data.users) {
+        dispatch(setUsers(data.users));
+          dispatch(setPage(1));
+          dispatch(setInitialFetch(false));
+          if (data.users.length === 0 || data.users.length === 1) {
+            dispatch(setHasMore(false));
+          }
+        }else{
+          // error message
+            dispatch(setSnackbarMessage(data.error))
+            dispatch(setSnackbarVariant("error"))
+            dispatch(onSnackbarOpen())
+        }
     }
   );
 };
@@ -37,22 +57,27 @@ export const fetchNextAction = (
   socket,
   currentUsers,
   page,
-  userData,
-  key
 ) => async dispatch => {
   dispatch(setIsFetching(true));
   socket.emit(
     "get-users",
-    { currentUsers: currentUsers, page: page, userData: userData, key: key },
-    users => {
-      if (!users.length) {
+    { currentUsers: currentUsers, page: page},
+    data => {
+      if (data.users) {
+      if (!data.users.length) {
         dispatch(setHasMore(false));
         dispatch(setIsFetching(false));
       } else {
         dispatch(setIsFetching(false));
         dispatch(setPage(page + 1));
-        dispatch(setUsers(users));
+        dispatch(setUsers(data.users));
       }
+    }else{
+      // error message
+            dispatch(setSnackbarMessage(data.error))
+            dispatch(setSnackbarVariant("error"))
+            dispatch(onSnackbarOpen())
+    }
     }
   );
 };

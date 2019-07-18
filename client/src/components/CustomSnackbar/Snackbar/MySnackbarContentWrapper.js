@@ -18,7 +18,9 @@ const variantIcon = {
   warning: WarningIcon,
   error: ErrorIcon,
   info: InfoIcon,
-  followed: Avatar
+  followed: Avatar,
+  followedback: Avatar,
+  followingback: Avatar
 };
 
 const styles = theme => ({
@@ -26,6 +28,12 @@ const styles = theme => ({
     backgroundColor: green[600]
   },
   followed: {
+    backgroundColor: green[600]
+  },
+  followedback: {
+    backgroundColor: green[600]
+  },
+  followingback: {
     backgroundColor: green[600]
   },
   error: {
@@ -61,12 +69,13 @@ function MySnackbarContent(props) {
       message={
         <span id="client-snackbar" className={classes.message}>
           <Icon
-            src={variant === "followed" ? message.photo : undefined}
+            src={variant.includes("follow") ? message.photo : undefined}
             className={classNames(classes.icon, classes.iconVariant)}
           />
-          {variant === "followed"
-            ? message.screen_name + " Just followed you"
-            : message}
+          {(variant !== "followed" && variant !== "followedback" && variant !== "followingback") && (message)}
+          {variant === "followed" && (`${message.screen_name }Just followed you`)}
+          {variant === "followedback" && (`${message.screen_name } Just followed you back`)}
+          {variant === "followingback" && (` you are now following ${message.screen_name}`)}
         </span>
       }
       action={[
@@ -89,7 +98,7 @@ MySnackbarContent.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   onClose: PropTypes.func,
-  variant: PropTypes.oneOf(["success", "warning", "error", "info", "followed"])
+  variant: PropTypes.oneOf(["success", "warning", "error", "info", "followed", "followedback", "followingback"])
     .isRequired
 };
 
