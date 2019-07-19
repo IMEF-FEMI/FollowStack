@@ -135,8 +135,8 @@ const followUs = (req, res) => {
               }
             });
           } else {
-            console.log(error);
-            res.status(500).send({error: error})
+            console.log(error[0].message);
+            res.status(200).send({error: error[0].message})
           }
         });
       }
@@ -144,7 +144,11 @@ const followUs = (req, res) => {
     } else {
       // either has an error or returned status code not equals 200
       console.log(error);
+      if (error[0]) {
+      res.status(200).send({error: error[0].message})
+      }else{
       res.status(500).send({error: error})
+      }
     }
   });
 

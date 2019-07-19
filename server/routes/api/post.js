@@ -163,7 +163,8 @@ router.post(
             }
           });
               }else{
-                console.log(error)
+                 console.log(error[0].message);
+                 res.status(200).send({error: error[0].message})
               }
             });
           }
@@ -206,16 +207,13 @@ router.post(
             }
           });
               }else{
-                console.log(error)
-
                // Delete the file like normal
               req.files.map(async (file)=>{
                 await unlinkAsync(file.path)
               })
 
-                res.status(500).send({
-                error: error
-              });
+               console.log(error[0].message);
+                 res.status(200).send({error: error[0].message})
               }
             });
    }
@@ -299,7 +297,12 @@ router.post(
               })
 
 
-              }})
+              }else{
+                console.log(error[0].message);
+                 res.status(200).send({error: error[0].message})
+              }
+
+            })
           } 
         });
 
@@ -450,8 +453,8 @@ router.post(
           }
         });
       } else {
-        // comment reply error
-        console.log(error);
+        console.log(error[0].message);
+        res.status(200).send({error: error[0].message})
       }
     });
   })
@@ -499,8 +502,8 @@ router.post(
           }
         });
       } else {
-        // comment reply error
-        console.log(error);
+        console.log(error[0].message);
+        res.status(200).send({error: error[0].message})
       }
     });
   })
@@ -550,7 +553,8 @@ router.post(
         });
       } else {
         // comment reply error
-        console.log(error);
+        console.log(error[0].message);
+        res.status(200).send({error: error[0].message})
       }
     });
   })
@@ -600,7 +604,8 @@ router.post(
         });
       } else {
         // comment reply error
-        console.log(error);
+       console.log(error[0].message);
+       res.status(200).send({error: error[0].message})
       }
     });
   })
@@ -650,7 +655,8 @@ router.post(
         });
       } else {
         // comment reply error
-        console.log(error);
+                console.log(error[0].message);
+                 res.status(200).send({error: error[0].message})
       }
     });
   })
@@ -722,7 +728,8 @@ router.post(
           res.send();
         } 
       } else {
-        console.log(error);
+        console.log(error[0].message);
+        res.status(200).send({error: error[0].message})
       }
     });
   })
@@ -779,7 +786,8 @@ router.post(
           }
           res.send(posts);
         } else {
-          console.log(error);
+          console.log(error[0].message);
+          res.status(200).send({error: error[0].message})
         }
       });
     } catch (e) {

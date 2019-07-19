@@ -1,7 +1,6 @@
 import jwt_decode from "jwt-decode";
 import setAuthToken from "../../utils/setAuthToken";
 import React from 'react'
-import Button from '@material-ui/core/Button'
 
 import {
   setCurrentUser,
@@ -67,16 +66,6 @@ export const initSocket = socket => {
   
   socket.on("get-user-info", (info, callback) => {
  
-   store.dispatch(enqueueSnackbar({
-            message: 'You are online',
-            options: {
-                key: new Date().getTime() + Math.random(),
-                variant: 'success',
-                 action: key => (
-                    <Button style={{color: "#fff"}} onClick={() => store.dispatch(closeSnackbar(key))}>dismiss</Button>
-                ),
-            },
-        })) 
     callback({
       user_id: userInfo.user.userid,
       photo: userInfo.userData.photo,
