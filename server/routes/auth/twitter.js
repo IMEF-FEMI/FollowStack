@@ -29,10 +29,10 @@ router.get(
   "/twitter/connect/:key",
   asyncHandler(async (req, res, next) => {
   	const random = TWITTER_KEYS[req.params.key];
-
+    console.log("twitter connect")
   	var consumer = new oauth.OAuth(
     "https://twitter.com/oauth/request_token", "https://twitter.com/oauth/access_token", 
-    random.consumerKey, random.consumerSecret, "1.0A", "http://127.0.0.1:3000/auth/authorize", "HMAC-SHA1");
+    random.consumerKey, random.consumerSecret, "1.0A", "https://followstack.herokuapp.com/auth/authorize", "HMAC-SHA1");
    
  	consumer.getOAuthRequestToken(function(error, oauthToken, oauthTokenSecret, results){
     if (error) {
@@ -59,7 +59,7 @@ router.get(
     const random = TWITTER_KEYS[req.params.key];
     var consumer = new oauth.OAuth(
     "https://twitter.com/oauth/request_token", "https://twitter.com/oauth/access_token", 
-    random.consumerKey, random.consumerSecret, "1.0A", "http://127.0.0.1:3000/auth/authorize", "HMAC-SHA1");
+    random.consumerKey, random.consumerSecret, "1.0A", "https://followstack.herokuapp.com/auth/authorize", "HMAC-SHA1");
   
   console.log("------------------------");
   console.log(">>oauthRequestToken "+req.params.oauthRequestToken);
@@ -82,7 +82,7 @@ router.get(
 	const random = TWITTER_KEYS[req.params.key];
     var consumer = new oauth.OAuth(
     "https://twitter.com/oauth/request_token", "https://twitter.com/oauth/access_token", 
-    random.consumerKey, random.consumerSecret, "1.0A", "http://127.0.0.1:3000/auth/authorize", "HMAC-SHA1");
+    random.consumerKey, random.consumerSecret, "1.0A", "https://followstack.herokuapp.com/auth/authorize", "HMAC-SHA1");
 
   consumer.get("https://api.twitter.com/1.1/account/verify_credentials.json", req.params.oauthAccessToken, req.params.oauthAccessTokenSecret, function (error, data, response) {
       if (error) {
