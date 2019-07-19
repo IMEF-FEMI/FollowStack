@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Card from "@material-ui/core/Card";
+import Button from "@material-ui/core/Button";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardMedia from "@material-ui/core/CardMedia";
 
@@ -27,10 +28,9 @@ import RenderTweetsMain from "../../components/tweet/RenderTweetsMain";
 import { onScroll } from "../../components/tweet/utils";
 import NavToTopButton from "../../components/tweet/NavToTopButton";
 import {
-  onSnackbarOpen,
-  setSnackbarMessage,
-  setSnackbarVariant
-} from "../../../../../actions/snackbarAction";
+  enqueueSnackbar,
+  closeSnackbar
+} from "../../../../../actions/notistackActions";
 import { setPoints } from "../../../../../actions/authActions";
 
 import theme from "../../components/profile/theme";
@@ -122,9 +122,8 @@ class Main extends Component {
     const imgSize = 5242880; //5mb
     const vidSize = 15728640; //15mb
     const {
-      setSnackbarMessage,
-      setSnackbarVariant,
-      onSnackbarOpen
+      enqueueSnackbar,
+      closeSnackbar,
     } = this.props;
     if (this.mediaFiles.length === 4) {
       return;
@@ -147,9 +146,21 @@ class Main extends Component {
           this.forceUpdate();
         } else {
           // file too large
-          setSnackbarMessage("File Too large");
-          setSnackbarVariant("error");
-          onSnackbarOpen();
+          enqueueSnackbar({
+            message: "File Too large",
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: "error",
+              action: key => (
+                <Button
+                  style={{ color: "#fff" }}
+                  onClick={() => closeSnackbar(key)}
+                >
+                  dismiss
+                </Button>
+              )
+            }
+          });
         }
       } else if (e.target.files[0].type.includes("gif")) {
         if (e.target.files[0].size <= vidSize) {
@@ -158,9 +169,21 @@ class Main extends Component {
           this.forceUpdate();
         } else {
           // file too large
-          setSnackbarMessage("File Too large");
-          setSnackbarVariant("error");
-          onSnackbarOpen();
+          enqueueSnackbar({
+            message: "File Too large",
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: "error",
+              action: key => (
+                <Button
+                  style={{ color: "#fff" }}
+                  onClick={() => closeSnackbar(key)}
+                >
+                  dismiss
+                </Button>
+              )
+            }
+          });
         }
       } else if (e.target.files[0].type.includes("video")) {
         if (e.target.files[0].size <= vidSize) {
@@ -169,16 +192,40 @@ class Main extends Component {
           this.forceUpdate();
         } else {
           // file too large
-          setSnackbarMessage("File Too large");
-          setSnackbarVariant("error");
-          onSnackbarOpen();
+          enqueueSnackbar({
+            message: "File Too large",
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: "error",
+              action: key => (
+                <Button
+                  style={{ color: "#fff" }}
+                  onClick={() => closeSnackbar(key)}
+                >
+                  dismiss
+                </Button>
+              )
+            }
+          });
         }
       }
     } else {
       // file type not supported
-      setSnackbarMessage("File Type not supported");
-      setSnackbarVariant("error");
-      onSnackbarOpen();
+      enqueueSnackbar({
+        message: "File Type not supported",
+        options: {
+          key: new Date().getTime() + Math.random(),
+          variant: "error",
+          action: key => (
+            <Button
+              style={{ color: "#fff" }}
+              onClick={() => closeSnackbar(key)}
+            >
+              dismiss
+            </Button>
+          )
+        }
+      });
     }
   };
   onFileRemove = file => {
@@ -189,9 +236,8 @@ class Main extends Component {
     console.log("submitting ", tweet);
     const data = new FormData();
     const {
-      onSnackbarOpen,
-      setSnackbarMessage,
-      setSnackbarVariant,
+      enqueueSnackbar,
+      closeSnackbar,
       addStatus
     } = this.props;
     this.setState({ newTweetLoading: true }, () => {
@@ -210,18 +256,43 @@ class Main extends Component {
         .post(`/api/post/new-tweet/${this.props.auth.keyInUse}`, data, config)
         .then(res => {
           if (res.data.success) {
-            setSnackbarVariant("success");
-            setSnackbarMessage(res.data.success);
-            onSnackbarOpen();
+           
+            enqueueSnackbar({
+              message: res.data.success,
+              options: {
+                key: new Date().getTime() + Math.random(),
+                variant: "success",
+                action: key => (
+                  <Button
+                    style={{ color: "#fff" }}
+                    onClick={() => closeSnackbar(key)}
+                  >
+                    dismiss
+                  </Button>
+                )
+              }
+            });
             setPoints(res.data.points);
             addStatus(res.data.tweet);
             this.setState({ newTweetLoading: false });
             this.mediaFiles = []
             this.forceUpdate();
           } else if (res.data.error) {
-            setSnackbarVariant("error");
-            setSnackbarMessage(res.data.error);
-            onSnackbarOpen();
+            enqueueSnackbar({
+              message: res.data.error,
+              options: {
+                key: new Date().getTime() + Math.random(),
+                variant: "error",
+                action: key => (
+                  <Button
+                    style={{ color: "#fff" }}
+                    onClick={() => closeSnackbar(key)}
+                  >
+                    dismiss
+                  </Button>
+                )
+              }
+            });
             this.setState({ newTweetLoading: false });
             this.mediaFiles = []
           }
@@ -369,9 +440,8 @@ export default compose(
     {
       initialFetchAction,
       fetchNextAction,
-      onSnackbarOpen,
-      setSnackbarMessage,
-      setSnackbarVariant,
+      enqueueSnackbar,
+      closeSnackbar,
       setPoints,
       addStatus
     }

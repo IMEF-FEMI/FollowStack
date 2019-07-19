@@ -28,9 +28,9 @@ import "./assets/styles/custom.css";
 import socketIO from "socket.io-client";
 import { SocketContext } from "./components/SocketContext";
 import { initApp } from "./components/Init";
-import { CustomSnackbar } from "./components/CustomSnackbar/index";
+import Notifier from "./components/CustomSnackbar/Notifier/Notifier";
 import { SOCKET_URL } from "./config";
-
+import { SnackbarProvider } from "notistack";
 
 const socket = socketIO(SOCKET_URL);
 
@@ -64,12 +64,13 @@ class App extends Component {
 
     return (
       <Provider store={store}>
-        <SocketContext.Provider value={socket}>
-          <div>
-            <CustomSnackbar />
-          </div>
-          <ThemeProvider theme={theme}>
-            <Router>
+        <SnackbarProvider>
+          <SocketContext.Provider value={socket}>
+            <div>
+              <Notifier />
+            </div>
+            <ThemeProvider theme={theme}>
+              <Router>
                 <Switch>
                   {this.state.serverWoke === false ? (
                     <LaunchScreen />
@@ -87,7 +88,11 @@ class App extends Component {
                     />
                   )}
                   <PrivateGuestRoute exact path="/sign-up" component={SignUp} />
-                  <PrivateGuestRoute exact path="/auth/authorize" component={AuthPage} />
+                  <PrivateGuestRoute
+                    exact
+                    path="/auth/authorize"
+                    component={AuthPage}
+                  />
                   <PrivateGuestRoute
                     exact
                     path="/complete-signup"
@@ -108,9 +113,10 @@ class App extends Component {
                   })}
                   <Route component={NotFound} />
                 </Switch>
-            </Router>
-          </ThemeProvider>
-        </SocketContext.Provider>
+              </Router>
+            </ThemeProvider>
+          </SocketContext.Provider>
+        </SnackbarProvider>
       </Provider>
     );
   }

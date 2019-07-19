@@ -4,11 +4,9 @@ import { connect } from "react-redux";
 import { SocketContext } from "../../../../../components/SocketContext";
 
 import {
-  onSnackbarOpen,
-  onSnackbarClose,
-  setSnackbarMessage,
-  setSnackbarVariant
-} from "../../../../../actions/snackbarAction";
+  enqueueSnackbar,
+  closeSnackbar
+} from "../../../../../actions/notistackActions";
 import { setPoints } from "../../../../../actions/authActions";
 
 class FollowButton extends Component {
@@ -72,34 +70,51 @@ class FollowButton extends Component {
       // this.checkFollowPopup();
       const {
         socket,
-        setSnackbarMessage,
-        setSnackbarVariant,
-        onSnackbarOpen,
-        onSnackbarClose,
+        enqueueSnackbar,
+        closeSnackbar,
         setPoints,
         user
       } = this.props;
       this.setState({ disabled: true });
       // follow using sockets and notify user
-      socket.emit(
-        "follow",
-        {  newUser: user },
-        data => {
-          if (data.points) { 
+      socket.emit("follow", { newUser: user }, data => {
+        if (data.points) {
           // callback to show notification when follow is successful
-          onSnackbarClose()
-          setSnackbarMessage("👍 Follow successful +20 points earned");
-          setSnackbarVariant("success");
-          onSnackbarOpen();
+
+          enqueueSnackbar({
+            message: "👍 Follow successful +20 points earned",
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: "success",
+              action: key => (
+                <Button
+                  style={{ color: "#fff" }}
+                  onClick={() => closeSnackbar(key)}
+                >
+                  dismiss
+                </Button>
+              )
+            }
+          });
           setPoints(data.points);
-          }else{
-          onSnackbarClose()
-          setSnackbarMessage(data.error);
-          setSnackbarVariant("error");
-          onSnackbarOpen();
-          }
+        } else {
+          enqueueSnackbar({
+            message: data.error,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: "error",
+              action: key => (
+                <Button
+                  style={{ color: "#fff" }}
+                  onClick={() => closeSnackbar(key)}
+                >
+                  dismiss
+                </Button>
+              )
+            }
+          });
         }
-      );
+      });
       this.setState({ disabled: false });
       user.following = true;
 
@@ -110,31 +125,32 @@ class FollowButton extends Component {
     if (!this.state.disabled && this.props.user.following === true) {
       // this.followPopup = this.openPopup();
       // this.checkFollowPopup();
-    
-        const {
-          socket,
-          setSnackbarMessage,
-          setSnackbarVariant,
-          onSnackbarOpen,
-          onSnackbarClose,
-          user
-        } = this.props;
-        this.setState({ disabled: true });
-        socket.emit(
-          "unfollow",
-          {  newUser: user },() => {
-            // callback to show notification when unfollow is successful
-            onSnackbarClose()
-            setSnackbarMessage("👎 User Unfollowed");
-            setSnackbarVariant("warning");
-            onSnackbarOpen();
-          }
-        );
-        this.setState({ disabled: false });
-        user.following = false;
 
-        this.forceUpdate();
-      
+      const { socket, enqueueSnackbar, closeSnackbar, user } = this.props;
+      this.setState({ disabled: true });
+      socket.emit("unfollow", { newUser: user }, () => {
+        // callback to show notification when unfollow is successful
+
+        enqueueSnackbar({
+          message: "👎 User Unfollowed",
+          options: {
+            key: new Date().getTime() + Math.random(),
+            variant: "warning",
+            action: key => (
+              <Button
+                style={{ color: "#fff" }}
+                onClick={() => closeSnackbar(key)}
+              >
+                dismiss
+              </Button>
+            )
+          }
+        });
+      });
+      this.setState({ disabled: false });
+      user.following = false;
+
+      this.forceUpdate();
     }
   };
   render() {
@@ -164,41 +180,9 @@ class FollowButton extends Component {
         {"following"}
       </Button>
     );
-    const followsYouButton = (
-      <Button
-        color="primary"
-        size="medium"
-        variant="contained"
-        style={{
-          borderRadius: "100px",
-          backgroundColor: "#28a745",
-          borderColor: "#28a745"
-        }}
-        disabled={this.state.disabled}
-        onClick={() => {
-          this.props.setSnackbarMessage(
-            "Click the Unfollow Tab to Unfollow Users"
-          );
-          this.props.setSnackbarVariant("info");
-          this.props.onSnackbarOpen();
-        }}
-      >
-        {"Follows you"}
-      </Button>
-    );
     var button = null;
     switch (context.context) {
       case "Online":
-        if (user.following) {
-          button = followingButton;
-        } else {
-          button = followButton;
-        }
-        break;
-      case "Followed Back":
-        button = followsYouButton;
-        break;
-      case "UnFollowed":
         if (user.following) {
           button = followingButton;
         } else {
@@ -225,5 +209,5 @@ const FollowButtonWithSocket = props => (
 
 export default connect(
   mapStateToProps,
-  { onSnackbarOpen, onSnackbarClose, setSnackbarMessage, setSnackbarVariant, setPoints }
+  { enqueueSnackbar, closeSnackbar, setPoints }
 )(FollowButtonWithSocket);

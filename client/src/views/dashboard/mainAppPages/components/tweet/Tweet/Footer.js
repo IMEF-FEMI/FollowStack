@@ -5,6 +5,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Input from "@material-ui/core/Input";
 import Collapse from "@material-ui/core/Collapse";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Send from "@material-ui/icons/Send";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -19,19 +20,18 @@ import {
   unPostRetweet
 } from "../../../../../../async/post";
 import { setPoints } from "../../../../../../actions/authActions";
+
 import {
-  onSnackbarOpen,
-  setSnackbarMessage,
-  setSnackbarVariant,
-} from "../../../../../../actions/snackbarAction";
+  enqueueSnackbar,
+  closeSnackbar
+} from "../../../../../../actions/notistackActions";
 
 class Footer extends React.Component {
   state = {
     expanded: false,
     favoriteColor: this.props.data.favorited ? "#ff3366" : "#657786",
     RtColor: this.props.data.retweeted ? "#17bf63" : "#657786",
-    comment: "",
-    
+    comment: ""
   };
 
   onValueChanged = e => {
@@ -116,15 +116,25 @@ class Footer extends React.Component {
     }
   };
 
-  notify = (res) => {
-    this.props.setSnackbarMessage(res.data.success ? res.data.success : res.data.error)
-    this.props.setSnackbarVariant(res.data.success ? "success" : "error")
-    this.props.onSnackbarOpen()
-    
-    
+  notify = res => {
+    this.props.enqueueSnackbar({
+      message: res.data.success ? res.data.success : res.data.error,
+      options: {
+        key: new Date().getTime() + Math.random(),
+        variant: res.data.success ? "success" : "error",
+        action: key => (
+          <Button
+            style={{ color: "#fff" }}
+            onClick={() => this.props.closeSnackbar(key)}
+          >
+            dismiss
+          </Button>
+        )
+      }
+    });
+
     this.props.setPoints(res.data.points);
   };
- 
 
   formatCount(count) {
     const readablize = num => {
@@ -142,7 +152,6 @@ class Footer extends React.Component {
     return (
       <div>
         <CardActions>
-        
           <div style={styles.footer}>
             <div style={styles.ProfileTweetAction}>
               {/* comment */}
@@ -280,8 +289,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { setPoints, 
-    onSnackbarOpen,
-    setSnackbarMessage,
-    setSnackbarVariant, }
+  { setPoints, enqueueSnackbar, closeSnackbar }
 )(Footer);

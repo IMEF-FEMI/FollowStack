@@ -1,4 +1,4 @@
-import { 
+import {
   SET_USERS_PAGE,
   SET_USERS,
   SET_USERS_INITIAL_FETCH,
@@ -8,19 +8,16 @@ import {
   UPDATE_USER
 } from "./types";
 
-import {
-  onSnackbarOpen,
-  setSnackbarMessage,
-  setSnackbarVariant
-} from './snackbarAction'
-export const updateUser = (user) => async dispatch => {
-dispatch({
+import Button from "@material-ui/core/Button";
+import React from "react";
+import { enqueueSnackbar, closeSnackbar } from "./notistackActions";
+
+export const updateUser = user => async dispatch => {
+  dispatch({
     type: UPDATE_USER,
     payload: user
   });
-
-}
-
+};
 
 export const refreshOnlineAction = () => async dispatch => {
   dispatch({
@@ -30,40 +27,48 @@ export const refreshOnlineAction = () => async dispatch => {
 export const initialFetchAction = (
   socket,
   currentUsers,
-  page,
+  page
 ) => async dispatch => {
-  socket.emit(
-    "get-users",
-    { currentUsers: currentUsers, page: page },
-    data => {
-      if (data.users) {
-        dispatch(setUsers(data.users));
-          dispatch(setPage(1));
-          dispatch(setInitialFetch(false));
-          if (data.users.length === 0 || data.users.length === 1) {
-            dispatch(setHasMore(false));
+  socket.emit("get-users", { currentUsers: currentUsers, page: page }, data => {
+    if (data.users) {
+      dispatch(setUsers(data.users));
+      dispatch(setPage(1));
+      dispatch(setInitialFetch(false));
+      if (data.users.length === 0 || data.users.length === 1) {
+        dispatch(setHasMore(false));
+      }
+    } else {
+      // error message
+
+      dispatch(
+        enqueueSnackbar({
+          message: data.error,
+          options: {
+            key: new Date().getTime() + Math.random(),
+            variant: "error",
+            action: key => (
+              <Button
+                style={{ color: "#fff" }}
+                onClick={() => dispatch(closeSnackbar(key))}
+              >
+                dismiss
+              </Button>
+            )
           }
-        }else{
-          // error message
-            dispatch(setSnackbarMessage(data.error))
-            dispatch(setSnackbarVariant("error"))
-            dispatch(onSnackbarOpen())
-        }
+        })
+      );
     }
-  );
+  });
 };
 
 export const fetchNextAction = (
   socket,
   currentUsers,
-  page,
+  page
 ) => async dispatch => {
   dispatch(setIsFetching(true));
-  socket.emit(
-    "get-users",
-    { currentUsers: currentUsers, page: page},
-    data => {
-      if (data.users) {
+  socket.emit("get-users", { currentUsers: currentUsers, page: page }, data => {
+    if (data.users) {
       if (!data.users.length) {
         dispatch(setHasMore(false));
         dispatch(setIsFetching(false));
@@ -72,14 +77,27 @@ export const fetchNextAction = (
         dispatch(setPage(page + 1));
         dispatch(setUsers(data.users));
       }
-    }else{
+    } else {
       // error message
-            dispatch(setSnackbarMessage(data.error))
-            dispatch(setSnackbarVariant("error"))
-            dispatch(onSnackbarOpen())
+      dispatch(
+        enqueueSnackbar({
+          message: data.error,
+          options: {
+            key: new Date().getTime() + Math.random(),
+            variant: "error",
+            action: key => (
+              <Button
+                style={{ color: "#fff" }}
+                onClick={() => dispatch(closeSnackbar(key))}
+              >
+                dismiss
+              </Button>
+            )
+          }
+        })
+      );
     }
-    }
-  );
+  });
 };
 export const setInitialFetch = bool => {
   return {

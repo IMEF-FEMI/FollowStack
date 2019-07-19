@@ -5,8 +5,7 @@ import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import Typography from "./modules/components/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-
-
+import Button from "@material-ui/core/Button";
 import { withRouter, Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import {ClapSpinner}  from "react-spinners-kit";
@@ -18,10 +17,9 @@ import axios from 'axios'
 
 import { initGA, trackPage } from "../../components/Tracking";
 import {
-  onSnackbarOpen,
-  setSnackbarMessage,
-  setSnackbarVariant
-} from "../../actions/snackbarAction";
+  enqueueSnackbar,
+      closeSnackbar,
+} from "../../actions/notistackActions";
 
 import {
   signIn,
@@ -63,9 +61,21 @@ class SignIn extends React.Component {
     };
   }
   notify = (message, variant) => {
-    this.props.setSnackbarMessage(message);
-    this.props.setSnackbarVariant(variant);
-    this.props.onSnackbarOpen();
+    this.props.enqueueSnackbar({
+      message: message,
+      options: {
+        key: new Date().getTime() + Math.random(),
+        variant: variant,
+        action: key => (
+          <Button
+            style={{ color: "#fff" }}
+            onClick={() => closeSnackbar(key)}
+          >
+            dismiss
+          </Button>
+        )
+      }
+    });
   };
   hasWindowSizeChange = () => {
     this.setState({
@@ -230,9 +240,8 @@ export default withRouter(
       {
         signIn,
         setUserData,
-        onSnackbarOpen,
-        setSnackbarMessage,
-        setSnackbarVariant
+        enqueueSnackbar,
+      closeSnackbar
       }
     )(SignInWithSocket)
   )

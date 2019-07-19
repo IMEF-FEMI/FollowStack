@@ -12,6 +12,7 @@
     "jwt-decode": "^2.2.0",
     "markdown-to-jsx": "^6.9.3",
     "moment": "^2.24.0",
+    "notistack": "^0.8.8",
     "query-string": "^6.8.1",
     "react": "^16.8.4",
     "react-async-script-loader": "^0.3.0",
@@ -40,7 +41,7 @@
     "twitter-text": "1.13.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set HOST=127.0.0.1&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

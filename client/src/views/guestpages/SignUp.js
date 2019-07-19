@@ -13,13 +13,13 @@ import Grid from "@material-ui/core/Grid";
 import {ClapSpinner}  from "react-spinners-kit";
 import { connect } from "react-redux";
 import { TwitterLoginButton } from "react-social-login-buttons";
+import Button from "@material-ui/core/Button";
 
 import { initGA, trackPage } from "../../components/Tracking";
 import {
-  onSnackbarOpen,
-  setSnackbarMessage,
-  setSnackbarVariant
-} from "../../actions/snackbarAction";
+  enqueueSnackbar,
+      closeSnackbar,
+} from "../../actions/notistackActions";
 
 const styles = theme => ({
   main: {
@@ -62,9 +62,21 @@ class SignUp extends React.Component {
   }
 
   notify = (message, variant) => {
-    this.props.setSnackbarMessage(message);
-    this.props.setSnackbarVariant(variant);
-    this.props.onSnackbarOpen();
+    enqueueSnackbar({
+      message: message,
+      options: {
+        key: new Date().getTime() + Math.random(),
+        variant: variant,
+        action: key => (
+          <Button
+            style={{ color: "#fff" }}
+            onClick={() => closeSnackbar(key)}
+          >
+            dismiss
+          </Button>
+        )
+      }
+    });
   };
   hasWindowSizeChange = () => {
     this.setState({
@@ -212,9 +224,8 @@ export default withRouter(
     connect(
       mapStateToProps,
       {
-        onSnackbarOpen,
-        setSnackbarMessage,
-        setSnackbarVariant
+        enqueueSnackbar,
+      closeSnackbar,
       }
     )(SignUp)
   )

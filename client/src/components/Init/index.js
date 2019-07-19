@@ -1,5 +1,8 @@
 import jwt_decode from "jwt-decode";
 import setAuthToken from "../../utils/setAuthToken";
+import React from 'react'
+import Button from '@material-ui/core/Button'
+
 import {
   setCurrentUser,
   logoutUser,
@@ -9,14 +12,11 @@ import {
   setPoints
 } from "../../actions/authActions";
 import { SET_USER_DATA, SET_USER_PROFILE } from "../../actions/types";
-import {
-  onSnackbarOpen,
-  onSnackbarClose,
-  setSnackbarMessage,
-  setSnackbarVariant
-} from "../../actions/snackbarAction";
+
 import {updateUser} from "../../actions/usersAction"
+import { enqueueSnackbar, closeSnackbar } from '../../actions/notistackActions';
 import store from "../../store";
+import CustomSnackbar from '../CustomSnackbar/Notifier/Snackbar'
 
 export const initApp = socket => {
   initKeyInUse();
@@ -66,6 +66,17 @@ export const initSocket = socket => {
   const userInfo = store.getState().auth
   
   socket.on("get-user-info", (info, callback) => {
+ 
+   store.dispatch(enqueueSnackbar({
+            message: 'You are online',
+            options: {
+                key: new Date().getTime() + Math.random(),
+                variant: 'success',
+                 action: key => (
+                    <Button style={{color: "#fff"}} onClick={() => store.dispatch(closeSnackbar(key))}>dismiss</Button>
+                ),
+            },
+        })) 
     callback({
       user_id: userInfo.user.userid,
       photo: userInfo.userData.photo,
@@ -80,25 +91,28 @@ export const initSocket = socket => {
     if (res=== undefined) {
       return
     }
-    setTimeout(()=>{
-    store.dispatch(onSnackbarClose())
-    store.dispatch(setSnackbarMessage(res.user));
-    store.dispatch(setSnackbarVariant("followed"));
-    store.dispatch(onSnackbarOpen());
-  }, 3000)
-
+     store.dispatch(enqueueSnackbar({
+          options: {
+              key: new Date().getTime() + Math.random(),
+              children: key => (
+              <CustomSnackbar variant={"followed"} user={res.user} id={key} handleDismiss={() => {store.dispatch(closeSnackbar(key))}}/>
+              ),
+          },
+        }))
   });
 
   socket.on("followedback", (res) => {
     if (res=== undefined) {
       return
     }
-    setTimeout(()=>{
-    store.dispatch(onSnackbarClose())
-    store.dispatch(setSnackbarMessage(res.user));
-    store.dispatch(setSnackbarVariant("followedback"));
-    store.dispatch(onSnackbarOpen());
-  }, 7000)
+      store.dispatch(enqueueSnackbar({
+          options: {
+              key: new Date().getTime() + Math.random(),
+              children: key => (
+              <CustomSnackbar variant={"followedback"} user={res.user} id={key} handleDismiss={() => {store.dispatch(closeSnackbar(key))}}/>
+              ),
+          },
+        }))
   });
 
   
@@ -107,13 +121,14 @@ export const initSocket = socket => {
       return
     }
     store.dispatch(updateUser(res.user))
-    setTimeout(()=>{
-    store.dispatch(onSnackbarClose())
-    store.dispatch(setSnackbarMessage(res.user));
-    store.dispatch(setSnackbarVariant("followingback"));
-    store.dispatch(onSnackbarOpen());
-  }, 7000)
-    
+   store.dispatch(enqueueSnackbar({
+        options: {
+            key: new Date().getTime() + Math.random(),
+            children: key => (
+            <CustomSnackbar variant={"followingback"} user={res.user} id={key} handleDismiss={() => {store.dispatch(closeSnackbar(key))}}/>
+            ),
+        },
+        }))
   });
 };
 

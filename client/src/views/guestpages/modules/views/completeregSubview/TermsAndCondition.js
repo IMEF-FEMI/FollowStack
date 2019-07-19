@@ -13,10 +13,9 @@ import Spinner from "./Spinner";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {
-  onSnackbarOpen,
-  setSnackbarMessage,
-  setSnackbarVariant
-} from "../../../../../actions/snackbarAction";
+  enqueueSnackbar,
+      closeSnackbar,
+} from "../../../../../actions/notistackActions";
 import { initSignIn } from "../../../../../components/Init";
 import { SocketContext } from "../../../../../components/SocketContext";
 
@@ -35,9 +34,21 @@ class TermsAndCondition extends Component {
     this.finished = this.finished.bind(this);
   }
   notify = (message, variant) => {
-    this.props.setSnackbarMessage(message);
-    this.props.setSnackbarVariant(variant);
-    this.props.onSnackbarOpen();
+    this.props.enqueueSnackbar({
+      message: message,
+      options: {
+        key: new Date().getTime() + Math.random(),
+        variant: variant,
+        action: key => (
+          <Button
+            style={{ color: "#fff" }}
+            onClick={() => closeSnackbar(key)}
+          >
+            dismiss
+          </Button>
+        )
+      }
+    });
   };
   finished() {
     const userData = this.state.user;
@@ -174,9 +185,8 @@ export default withRouter(
       register,
       setUserData,
       setUserProfile,
-      onSnackbarOpen,
-      setSnackbarMessage,
-      setSnackbarVariant
+      enqueueSnackbar,
+      closeSnackbar,
     }
   )(TermsAndConditionWithSocket)
 );

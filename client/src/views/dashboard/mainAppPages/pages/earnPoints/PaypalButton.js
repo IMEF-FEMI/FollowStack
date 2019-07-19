@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import scriptLoader from "react-async-script-loader";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import axios from "axios";
 import { compose } from "redux";
@@ -10,11 +11,11 @@ import { connect } from "react-redux";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Loader from "../../../../../components/Loader/Loader";
+
 import {
-  onSnackbarOpen,
-  setSnackbarMessage,
-  setSnackbarVariant
-} from "../../../../../actions/snackbarAction";
+  enqueueSnackbar,
+  closeSnackbar
+} from "../../../../../actions/notistackActions";
 import { setPoints } from "../../../../../actions/authActions";
 
 const CLIENT = {
@@ -81,8 +82,10 @@ class PaypalButton extends React.Component {
 
     if (isLoadedButWasntLoadedBefore) {
       if (isScriptLoadSucceed) {
-
-        PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
+        PayPalButton = window.paypal.Buttons.driver("react", {
+          React,
+          ReactDOM
+        });
         this.setState({ showButton: true });
       }
     }
@@ -104,9 +107,8 @@ class PaypalButton extends React.Component {
 
   onApprove = (data, actions) => {
     const {
-      setSnackbarMessage,
-      setSnackbarVariant,
-      onSnackbarOpen,
+      enqueueSnackbar,
+      closeSnackbar,
       setPoints,
       goBack,
       points,
@@ -131,9 +133,21 @@ class PaypalButton extends React.Component {
           if (res.status === 200) {
             // notify transact success
 
-            setSnackbarMessage(res.data.success);
-            setSnackbarVariant("success");
-            onSnackbarOpen();
+            enqueueSnackbar({
+              message: res.data.success ? res.data.success : res.data.error,
+              options: {
+                key: new Date().getTime() + Math.random(),
+                variant: res.data.success ? "success" : "error",
+                action: key => (
+                  <Button
+                    style={{ color: "#fff" }}
+                    onClick={() => closeSnackbar(key)}
+                  >
+                    dismiss
+                  </Button>
+                )
+              }
+            });
             setPoints(points);
             // add points
             setPoints(res.data.points);
@@ -182,14 +196,12 @@ class PaypalButton extends React.Component {
   }
 }
 
-
 export default compose(
   connect(
     null,
     {
-      onSnackbarOpen,
-      setSnackbarMessage,
-      setSnackbarVariant,
+      enqueueSnackbar,
+      closeSnackbar,
       setPoints
     }
   ),
