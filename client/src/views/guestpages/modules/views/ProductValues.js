@@ -121,11 +121,10 @@ function ProductValues(props) {
                 You'll get even more followers
               </Typography>
               <Typography align="center" variant="h5" style={{ color: "#fff" }}>
-                {`Having a massive Instagram following will 
+                {`Having a massive following will 
                 naturally attract more users to your profile. People will become curious 
-                about you, and they will want to become a part of your 
-                following. From this, you could end becoming a celebrity 
-                and possibly have massive financial success while at it!`}
+                about you, and will want to follow you too. From this, you could end becoming a celebrity 
+                and even make some money!`}
               </Typography>
             </div>
           </Grid>

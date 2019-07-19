@@ -29,9 +29,9 @@ function Main(props) {
          Online Users
         </Typography>
         <Grid container justify="center">
-        <Grid item xs={12} sm={8} md={6}>
+        <Grid item xs={12} sm={10}>
         <Typography
-          component="h4"
+          component="h6"
           variant="h5"
           align="center"
           color="primary"

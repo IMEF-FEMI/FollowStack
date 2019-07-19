@@ -68,14 +68,20 @@ const twitterSvg = (
 );
 const sections = [
   {
-    title: "Share Links",
+    title: "Twitter Links",
     logo: <Share color="secondary" />,
     header: "Points",
     description: (
+      <div>
       <Typography component="li" variant="subtitle1" align="center">
         {" "}
-        40 for every link shared
+        50 When you Follow us
       </Typography>
+      <Typography component="li" variant="subtitle1" align="center">
+        {" "}
+        50 for every link shared
+      </Typography>
+      </div>
     ),
     buttonText: "Share Links",
     buttonVariant: "outlined",
@@ -251,7 +257,7 @@ class Main extends Component {
           ref={this.linksRef}
         >
           <Typography variant="h4" component="h6" gutterBottom align="center">
-            Share Our Link to any of the Social networks below
+            Share Our Link Your Twitter And / Or Follow us
           </Typography>
           <Typography variant="h6" component="h2" gutterBottom align="center">
             Note: You can share as many as you like and earn more points
@@ -273,8 +279,8 @@ class Main extends Component {
               <Button variant="outlined" color="primary" onClick={()=>{
                 this.push("/buy-points")
               }}>
+              <ShoppingCart /> {" "}
                 Buy Points
-                <ShoppingCart />
               </Button>
             </Grid>
           </Grid>

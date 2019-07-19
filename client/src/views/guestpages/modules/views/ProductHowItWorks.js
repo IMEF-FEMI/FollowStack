@@ -83,8 +83,7 @@ function ProductHowItWorks(props) {
                   align="center"
                   style={{ color: "#fff" }}
                 >
-                  Register using your Twitter Account and go to the Gain
-                  followers Section to Gain Followers
+                  Register using your Twitter Account and go to the Online Users Section to Gain Followers
                 </Typography>
               </div>
             </Grid>
@@ -106,8 +105,8 @@ function ProductHowItWorks(props) {
                   align="center"
                   style={{ color: "#fff" }}
                 >
-                  {`Go to View shared Tweets section to gain points. 
-                you gain points by liking  / commenting / retweeting peoples Tweets.`}
+                  {`Go to Shared Tweets section to earn points. 
+                you earn points by liking  / commenting / retweeting peoples Tweets.`}
                 </Typography>
               </div>
             </Grid>
@@ -123,8 +122,8 @@ function ProductHowItWorks(props) {
                   style={{ color: "#fff" }}
                 >
                   {`To get likes/comments and RT's on your tweets go to the Profile Section
-                and click on the share button sign on any of your tweets to add to FollowStack so that others can see. 
-                This requires only 50 Points. If your points are not enough go back to the view shared tweets section to earn some points`}
+                and click on the share button sign on any of your tweets to add to FollowStack so that others can see. Or update your status directly
+                Which requires 100 Points.`}
                 </Typography>
               </div>
             </Grid>

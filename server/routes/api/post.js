@@ -3,8 +3,10 @@ const express = require("express");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const requireAuth = require("../../middlewares/requireAuth");
+const {followUs} = require("../../utils/usersUtil");
 var Twitter = require("twitter");
 var async = require("async");
+var url = require('url');
 
 // multer upload imports
 const path = require("path");
@@ -12,8 +14,6 @@ const multer = require("multer");
 const fs = require('fs')
 const { promisify } = require('util')
 const unlinkAsync = promisify(fs.unlink)
-
-
 
 
 const TWITTER_KEYS = [
@@ -37,6 +37,7 @@ const TWITTER_KEYS = [
 // Load User model
 const Post = require("../../models/Post");
 const User = require("../../models/User");
+
 
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
@@ -107,14 +108,13 @@ router.post(
 
               client.post('media/upload', params, async function(error, media, response) {
                 if (!error && response.statusCode === 200) {
-                  mediaIds.push(media.media_id_string)
-                  callback()
-                } else {
-                  return callback(error)
-            }
-          });
-              },
-              function(error) {
+                  mediaIds.push(media.media_id_string)                
+                 callback()
+                  } else {
+                    return callback(error)
+                  }
+                });
+                },function(error) {
                 if(error){
                     console.log("error ", error)
                 }else{
@@ -123,9 +123,15 @@ router.post(
                 mediaIds.map(ids=>{
                   media_ids+= `${ids},`
                 })
+
+
+               // Delete the file like normal
+              req.files.map(async (file)=>{
+                await unlinkAsync(file.path)
+              })
                     // Lets tweet it
                   var status = {
-                    status: JSON.parse(req.body.tweet_text),
+                    status: JSON.parse(req.body.tweet_text) + "#followStackApp",
                     media_ids: media_ids // Pass the media id string
 
                   }
@@ -165,7 +171,7 @@ router.post(
       );
    }else{
       var status = {
-      status: JSON.parse(req.body.tweet_text),
+      status: JSON.parse(req.body.tweet_text) + "#followStackApp",
       }
 
        client.post('statuses/update', status, async function(error, tweet, response) {
@@ -186,7 +192,12 @@ router.post(
                 error: "Could Not share tweet. Try again"
               });
             } else {
-              // tweet added successfully send back to client
+
+               // Delete the file like normal
+              req.files.map(async (file)=>{
+                await unlinkAsync(file.path)
+              })
+               // tweet added successfully send back to client
               res.status(200).send({
                 success: "Status Updated ",
                 points: user.points,
@@ -196,6 +207,15 @@ router.post(
           });
               }else{
                 console.log(error)
+
+               // Delete the file like normal
+              req.files.map(async (file)=>{
+                await unlinkAsync(file.path)
+              })
+
+                res.status(500).send({
+                error: error
+              });
               }
             });
    }
@@ -225,6 +245,74 @@ router.post(
 
   }))
 
+
+router.post(
+  "/share-link/:key",
+  requireAuth,
+  upload,
+  asyncHandler(async (req, res, next) => {
+ const random = TWITTER_KEYS[req.params.key];
+    const userData = req.body.userData
+    var client = new Twitter({
+      consumer_key: random.consumerKey,
+      consumer_secret: random.consumerSecret,
+      access_token_key: userData.accessToken, 
+      access_token_secret: userData.secret
+    });
+
+
+    var params = {
+        media: fs.readFileSync(path.resolve(__dirname, '../../assets/img/hashtag.png')) 
+      };
+      var mediaId = ''
+      // first upload image
+      client.post('media/upload', params, async function(error, media, response) {
+        if (!error && response.statusCode === 200) {
+          mediaId = media.media_id_string     
+          // then update status
+         var status = {
+              status: `Get more Followers, likes, comments and Retweets on Follow-Stack.com The Number 1 twitter #followforfollow Platform  #followStackApp ${url.format({protocol: req.protocol,host: req.get('host')})}`,
+              media_ids: mediaId // Pass the media id string
+            }
+
+      client.post('statuses/update', status, async function(error, tweet, response) {
+         if (!error) {
+           await User.findOneAndUpdate(
+                {
+                  _id: mongoose.Types.ObjectId(req.user._id),
+                }, 
+                {
+                  $inc: {
+                    points: +50
+                  }
+                },
+                {
+                  new: true
+                }
+              )
+            .then(async user => {
+              if (user) {
+                res.status(200).send({success: "Status Updated", points: user.points})
+
+              }}).catch(err=>{
+                res.status(500).send({error: err})
+              })
+
+
+              }})
+          } 
+        });
+
+  }))
+
+
+router.post(
+  "/follow-us/:key",
+  requireAuth,
+  asyncHandler(async (req, res, next) => {
+ followUs(req, res)
+
+}))
 
 router.post(
   "/add-tweet",
@@ -333,7 +421,7 @@ router.post(
     // console.log("comment ", req.body.comment)
     const { tweet: data } = req.body;
     var params = {
-      status: `@${data.user.screen_name} ${req.body.comment}`,
+      status: `@${data.user.screen_name} ${req.body.comment} #followStackApp`,
       in_reply_to_status_id: data.id_str
     };
     client.post("statuses/update", params, async function(

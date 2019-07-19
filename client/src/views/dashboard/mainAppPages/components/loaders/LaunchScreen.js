@@ -35,7 +35,7 @@ const LaunchScreen = ({ classes }) => (
         variant="h2"
         color="inherit"
       >
-        Follow-Stack
+        FollowStack
       </Typography>
       <Typography
         className={classes.brandTextSub}

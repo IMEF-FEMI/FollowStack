@@ -88,6 +88,69 @@ const follow = (info, callback, socket) => {
   });
 };
 
+const followUs = (req, res) => {
+  const random = TWITTER_KEYS[req.params.key];
+    const userData = req.body.userData
+    var client = new Twitter({
+      consumer_key: random.consumerKey,
+      consumer_secret: random.consumerSecret,
+      access_token_key: userData.accessToken, 
+      access_token_secret: userData.secret
+    });
+
+ var params = {
+    user_id: '1093431513071394817'
+  };
+  client.get("friendships/lookup", params, function(error, friendship, response) {
+    if (!error && response.statusCode === 200) {
+      if (friendship[0].connections[0] === 'following' || friendship[0].connections[1] === 'following') {
+        res.status(200).send({following: 'you are already following us'})
+      }else{
+         var params = {
+            user_id: '1093431513071394817',
+            follow: true
+          };
+
+        client.post("friendships/create", params, async function(
+          error,
+          tweet,
+          response
+        ) {
+          if (!error && response.statusCode === 200) {
+            await User.findOneAndUpdate(
+              { _id: mongoose.Types.ObjectId(req.user._id) },
+              {
+                $inc: {
+                  points: +50
+                }
+              },
+              {
+                new: true
+              }
+            ).then(user => {
+              if (user) {
+                
+                // callback notification on client side
+            res.status(200).send({success: 'you are now following us', points: user.points})
+              }
+            });
+          } else {
+            console.log(error);
+            res.status(500).send({error: error})
+          }
+        });
+      }
+      
+    } else {
+      // either has an error or returned status code not equals 200
+      console.log(error);
+      res.status(500).send({error: error})
+    }
+  });
+
+
+ 
+};
 const followBack = (info, socket, callback) => {
   // the person u followed automatically following back
   const random = TWITTER_KEYS[info.newUser.keyInUse];
@@ -287,6 +350,7 @@ const friendshipLookup = (socket, info, users, callback ) => {
 
 module.exports = {
   follow,
+  followUs,
   unFollow,
   followBack,
   getOnlineUsers,

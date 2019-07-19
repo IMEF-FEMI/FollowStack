@@ -61,7 +61,7 @@ function ProductHow(props) {
           style={{ color: "#fff" }}
           align="center"
         >
-          How you get followers!
+          HOW TO GET FOLLOWERS!
         </Typography>
         <div>
           <Grid container spacing={4}>
@@ -72,11 +72,11 @@ function ProductHow(props) {
                   align="center"
                   style={{ color: "#fff" }}
                 >
-                  {`Getting followers on followstack is very simple. 
-                  we use a method already familiar to you - The FOLLOW FOR FOLLOW Method. 
-                  It entails following a number of accounts, waiting for them to follow Back 
-                  and unfollowing those that didnt follow back after a specified time. This is one of the most
-                  efficient ways of growing your account quickly and the followers you get are REAL and active. `}
+                  {`To get followers, go to the ONLINE USERS section, there you will
+                    see a list of users currently online, Follow as many as you can and watch them follow back.
+                    You dont have to worry about a user not following you back as this process has been automated. Meaning - as soon as 
+                    you follow someone - they follow back Instantly! and the More you follow, the more followers you get                  
+                  `}
                 </Typography>
               </div>
             </Grid>
