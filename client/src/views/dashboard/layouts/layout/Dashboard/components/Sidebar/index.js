@@ -41,7 +41,11 @@ class Sidebar extends Component {
     return (
       <nav className={rootClassName}>
         <div className={classes.logoWrapper}>
-          <Link className={classes.logoLink} to="/">
+          <Link
+            className={classes.logoLink}
+            to="/"
+            onClick={this.props.handleClose}
+          >
             <img
               alt="FollowStack logo"
               className={classes.logoImage}
@@ -51,7 +55,7 @@ class Sidebar extends Component {
         </div>
         <Divider className={classes.logoDivider} />
         <div className={classes.profile}>
-          <Link to="/profile">
+          <Link to="/profile" onClick={this.props.handleClose}>
             <Avatar
               alt={`${this.props.auth.userProfile.name}`}
               className={classes.avatar}
@@ -67,7 +71,8 @@ class Sidebar extends Component {
         </div>
         <Divider className={classes.profileDivider} />
         <List component="div" disablePadding>
-        <ListItem
+          <ListItem
+            onClick={this.props.handleClose}
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={MyLink}
@@ -89,6 +94,7 @@ class Sidebar extends Component {
           </ListItem>
 
           <ListItem
+            onClick={this.props.handleClose}
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={MyLink}
@@ -107,6 +113,7 @@ class Sidebar extends Component {
             />
           </ListItem>
           <ListItem
+            onClick={this.props.handleClose}
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={MyLink}
@@ -120,15 +127,15 @@ class Sidebar extends Component {
               primary="Gain Followers"
             />
           </ListItem>
-          
+
           <ListItem
+            onClick={this.props.handleClose}
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={MyLink}
             to="/buy-points"
           >
             <ListItemIcon className={classes.listItemIcon}>
-             
               <ShoppingCart color="primary" />
             </ListItemIcon>
             <ListItemText
@@ -150,12 +157,12 @@ class Sidebar extends Component {
           <ListItem className={classes.listItem}>
             <ListItemIcon className={classes.listItemIcon}>
               <Icon>
-              <i
-                className="fas fa-coins"
-                style={{
-                  color: "#17bf63"
-                }}
-              />{" "}
+                <i
+                  className="fas fa-coins"
+                  style={{
+                    color: "#17bf63"
+                  }}
+                />{" "}
               </Icon>
             </ListItemIcon>
 
@@ -168,7 +175,6 @@ class Sidebar extends Component {
               }}
             />
           </ListItem>
-         
         </List>
       </nav>
     );

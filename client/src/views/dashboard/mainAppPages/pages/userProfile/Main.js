@@ -143,13 +143,13 @@ render() {
         <Hidden smUp>
           <Grid container justify={'space-evenly'} style={{ marginTop: -32 }}>
             <Grid item>
-              <PeaStatistic label={'Pods'} value={2} />
+              <PeaStatistic label={'Twwets'} value={userProfile.tweets} />
             </Grid>
             <Grid item>
-              <PeaStatistic label={'Following'} value={48} />
+              <PeaStatistic label={'Following'} value={userProfile.following} />
             </Grid>
             <Grid item>
-              <PeaStatistic label={'Followers'} value={5} />
+              <PeaStatistic label={'Followers'} value={userProfile.followers} />
             </Grid>
           </Grid>
           <br />

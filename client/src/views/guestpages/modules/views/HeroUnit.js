@@ -68,7 +68,7 @@ class HeroUnit extends React.Component {
                 className={classes.heroSecText}
                 paragraph
               >
-                FollowStack is a simple Twitter app that helps you gain more
+                FollowStack is a #Follow4Follow Twitter app that helps you gain more
                 Followers, more likes (Favs){"  "}
                 <i
                   className="fas fa-heart"

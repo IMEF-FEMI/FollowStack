@@ -35,7 +35,7 @@ router.get(
     const authorizeUrl =
       parseInt(req.params.key) === 4
         ? "http://127.0.0.1:3000/auth/authorize"
-        : "https://followstack.herokuapp.com/auth/authorize";
+        : "http://followstack.com/auth/authorize";
     console.log("twitter connect");
     var consumer = new oauth.OAuth(
       "https://twitter.com/oauth/request_token",
@@ -85,7 +85,7 @@ router.get(
     const authorizeUrl =
       req.params.key === 4
         ? "http://127.0.0.1:3000/auth/authorize"
-        : "https://followstack.herokuapp.com/auth/authorize";
+        : "http://followstack.com/auth/authorize";
     var consumer = new oauth.OAuth(
       "https://twitter.com/oauth/request_token",
       "https://twitter.com/oauth/access_token",
@@ -146,7 +146,7 @@ router.get(
     const authorizeUrl =
       req.params.key === 4
         ? "http://127.0.0.1:3000/auth/authorize"
-        : "https://followstack.herokuapp.com/auth/authorize";
+        : "http://followstack.com/auth/authorize";
     var consumer = new oauth.OAuth(
       "https://twitter.com/oauth/request_token",
       "https://twitter.com/oauth/access_token",

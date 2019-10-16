@@ -34,7 +34,11 @@ import {
 import { setPoints } from "../../../../../actions/authActions";
 
 import theme from "../../components/profile/theme";
-import ThemeProvider from "@material-ui/styles/ThemeProvider"; 
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const styles = theme => ({
   card: {
@@ -121,10 +125,7 @@ class Main extends Component {
   onFileSelect = e => {
     const imgSize = 5242880; //5mb
     const vidSize = 15728640; //15mb
-    const {
-      enqueueSnackbar,
-      closeSnackbar,
-    } = this.props;
+    const { enqueueSnackbar, closeSnackbar } = this.props;
     if (this.mediaFiles.length === 4) {
       return;
     }
@@ -235,11 +236,7 @@ class Main extends Component {
   onSubmit = tweet => {
     console.log("submitting ", tweet);
     const data = new FormData();
-    const {
-      enqueueSnackbar,
-      closeSnackbar,
-      addStatus
-    } = this.props;
+    const { enqueueSnackbar, closeSnackbar, addStatus } = this.props;
     this.setState({ newTweetLoading: true }, () => {
       this.mediaFiles.map(file => {
         return data.append(file.file.name, file.file);
@@ -256,7 +253,6 @@ class Main extends Component {
         .post(`/api/post/new-tweet/${this.props.auth.keyInUse}`, data, config)
         .then(res => {
           if (res.data.success) {
-           
             enqueueSnackbar({
               message: res.data.success,
               options: {
@@ -275,7 +271,7 @@ class Main extends Component {
             setPoints(res.data.points);
             addStatus(res.data.tweet);
             this.setState({ newTweetLoading: false });
-            this.mediaFiles = []
+            this.mediaFiles = [];
             this.forceUpdate();
           } else if (res.data.error) {
             enqueueSnackbar({
@@ -294,7 +290,7 @@ class Main extends Component {
               }
             });
             this.setState({ newTweetLoading: false });
-            this.mediaFiles = []
+            this.mediaFiles = [];
           }
         });
     });
@@ -304,123 +300,174 @@ class Main extends Component {
 
     return (
       <ThemeProvider theme={theme}>
-    <Card className={'PeaFullProfile-root'}>
-      <div ref={this.topRef}>
-        <Divider
-          variant="fullWidth"
-          style={{
-            width: "100%"
-          }}
-        />
+        <Card className={"PeaFullProfile-root"}>
+          <div ref={this.topRef}>
+            <Divider
+              variant="fullWidth"
+              style={{
+                width: "100%"
+              }}
+            />
 
-        <div>
-          <div
-            style={{
-              paddingTop: "20px",
-              width: "98%"
-            }}
-          >
-            <Grid container justify="center" spacing={2}>
-              <Grid item xs={window.innerWidth >= 600 ? 8 : 12}>
-                <PeaMessageInput
-                  multiple
-                  onFileChange={this.onFileSelect}
-                  files={this.mediaFiles}
-                  loading={this.state.newTweetLoading}
-                  onSubmit={this.onSubmit}
-                />
-              </Grid>
-            </Grid>
-
-            {this.mediaFiles.length !== 0 && !this.state.newTweetLoading && (
-              <Grid
-                container
-                direction="row"
-                wrap="wrap"
-                justify={"center"}
-                spacing={1}
+            <div>
+              <div
+                style={{
+                  paddingTop: "20px",
+                  width: "100%"
+                }}
               >
-                {this.mediaFiles.map(file => {
-                  if (
-                    file.file.type.includes("video") ||
-                    file.file.type.includes("gif")
-                  ) {
-                    return (
-                      <Grid item key={file.file.name}>
-                        <Card
-                          className={classes.card}
-                          onClick={() => this.onFileRemove(file)}
-                        >
-                          <CardActionArea>
-                            <VideoPlayer videoUrl={file.src} snapshotAt={10} />
-                          </CardActionArea>
-                        </Card>
-                      </Grid>
-                    );
-                  } else {
-                    return (
-                      <Grid item key={file.file.name}>
-                        <Card
-                          className={classes.card}
-                          onClick={() => this.onFileRemove(file)}
-                        >
-                          <CardActionArea>
-                            <CardMedia
-                              className={classes.media}
-                              image={file.src}
-                              title={file.file.name}
-                            />
-                          </CardActionArea>
-                        </Card>
-                      </Grid>
-                    );
-                  }
-                })}
-                <Grid item xs={12}>
-                  <Typography
-                    align="center"
+                <Grid container justify="center" spacing={2}>
+                  <Grid item xs={window.innerWidth >= 600 ? 8 : 10}>
+                    <PeaMessageInput
+                      multiple
+                      onFileChange={this.onFileSelect}
+                      files={this.mediaFiles}
+                      loading={this.state.newTweetLoading}
+                      onSubmit={this.onSubmit}
+                    />
+                  </Grid>
+                </Grid>
+
+                {this.mediaFiles.length !== 0 && !this.state.newTweetLoading && (
+                  <Grid
+                    container
+                    direction="row"
+                    wrap="wrap"
+                    justify={"center"}
+                    spacing={1}
+                  >
+                    {this.mediaFiles.map(file => {
+                      if (
+                        file.file.type.includes("video") ||
+                        file.file.type.includes("gif")
+                      ) {
+                        return (
+                          <Grid item key={file.file.name}>
+                            <Card
+                              className={classes.card}
+                              onClick={() => this.onFileRemove(file)}
+                            >
+                              <CardActionArea>
+                                <VideoPlayer
+                                  videoUrl={file.src}
+                                  snapshotAt={10}
+                                />
+                              </CardActionArea>
+                            </Card>
+                          </Grid>
+                        );
+                      } else {
+                        return (
+                          <Grid item key={file.file.name}>
+                            <Card
+                              className={classes.card}
+                              onClick={() => this.onFileRemove(file)}
+                            >
+                              <CardActionArea>
+                                <CardMedia
+                                  className={classes.media}
+                                  image={file.src}
+                                  title={file.file.name}
+                                />
+                              </CardActionArea>
+                            </Card>
+                          </Grid>
+                        );
+                      }
+                    })}
+                    <Grid item xs={12}>
+                      <Typography
+                        align="center"
+                        style={{
+                          fontSize: "14px"
+                        }}
+                      >
+                        Click on Image to remove
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )}
+                {this.state.newTweetLoading && (
+                  <Grid container justify="center" spacing={2}>
+                    <Grid item>
+                      <ClapSpinner
+                        size={30}
+                        color="#93788a"
+                        loading={this.state.newTweetLoading}
+                      />
+                    </Grid>
+                  </Grid>
+                )}
+                {
+                  <div
                     style={{
-                      fontSize: "14px"
+                      paddingBottom: "20px",
+                      paddingTop: "20px",
+                      marginRight: "20px",
+                      marginLeft: "20px"
                     }}
                   >
-                    Click on Image to remove
-                  </Typography>
-                </Grid>
-              </Grid>
-            )}
-            {this.state.newTweetLoading && (
-              <Grid container justify="center" spacing={2}>
-                <Grid item>
-                  <ClapSpinner
-                    size={30}
-                    color="#93788a"
-                    loading={this.state.newTweetLoading}
-                  />
-                </Grid>
-              </Grid>
-            )}
-            {viewTweets.tweetInitialFetch && <MainPageLoader />}
-          </div>
+                    <ExpansionPanel>
+                      <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography
+                          align="center"
+                          color="textPrimary"
+                          gutterBottom
+                        >
+                          Read Me
+                        </Typography>
+                      </ExpansionPanelSummary>
+                      <ExpansionPanelDetails>
+                      
+                        <ul>
+                          <li>
+                            Please note that in order to get more likes, retweets and comments on your tweets
+                          </li>
+                          <li>
+                            you have to engage with tweets currently shown on this page
+                          </li>
+                          <li>
+                            by liking, retweeting and commmenting on them
+                          </li>
+                          <strong>
+                            
+                            <li>
+                            By so doing, You earn Points
+                          </li>
+                          </strong>
+                          <li>which will be required when sharing your tweet here for others to see</li>
+                         
+                        </ul>
+                      </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                  </div>
+                }
+                {viewTweets.tweetInitialFetch && <MainPageLoader />}
+              </div>
 
-          {!viewTweets.tweetInitialFetch && (
-            <div style={{ paddingTop: "20px", width: "98%" }}>
-              {viewTweets.tweetPages && (
-                <RenderTweetsMain
-                  pages={viewTweets.tweetPages}
-                  context="Main"
-                  isFetching={viewTweets.tweetIsFetching}
-                />
+              {!viewTweets.tweetInitialFetch && (
+                <div style={{ paddingTop: "20px", width: "98%" }}>
+                  {viewTweets.tweetPages && (
+                    <RenderTweetsMain
+                      pages={viewTweets.tweetPages}
+                      context="Main"
+                      isFetching={viewTweets.tweetIsFetching}
+                    />
+                  )}
+                </div>
+              )}
+
+              {this.state.showNavToTop && (
+                <NavToTopButton scrollToTop={this.scrollToTop} />
               )}
             </div>
-          )}
-
-          {this.state.showNavToTop && (
-            <NavToTopButton scrollToTop={this.scrollToTop} />
-          )}
-        </div>
-      </div>
-    </Card>
-  </ThemeProvider>
+          </div>
+        </Card>
+      </ThemeProvider>
     );
   }
 }

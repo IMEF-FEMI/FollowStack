@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
-
-// Externals 
+import { connect } from "react-redux";
+// Externals
 import classNames from "classnames";
 import compose from "recompose/compose";
 import PropTypes from "prop-types";
@@ -14,34 +14,29 @@ import Drawer from "@material-ui/core/Drawer";
 
 // Custom components
 import { Sidebar, Topbar } from "./components";
+import { openDrawer, closeDrawer } from "../../../../../actions/drawerActions";
 
 // Component styles
 import styles from "./styles";
 
 class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-
-    // const isMobile = ["xs", "sm", "md"].includes(props.width);
-
-    this.state = {
-      isOpen: true//!isMobile
-    };
-  }
-
   handleClose = () => {
-    this.setState({ isOpen: false });
+    if(window.innerWidth >= 1280) return
+    // this.setState({ isOpen: false });
+    this.props.closeDrawer();
+
   };
 
   handleToggleOpen = () => {
-    this.setState(prevState => ({
-      isOpen: !prevState.isOpen
-    }));
+    // this.setState(prevState => ({
+    //   isOpen: !prevState.isOpen
+    // }));
+    this.props.openDrawer();
   };
 
   render() {
     const { classes, width, title, children } = this.props;
-    const { isOpen } = this.state;
+    const { isOpen } = this.props.drawer;
 
     const isMobile = ["xs", "sm", "md"].includes(width);
     const shiftTopbar = isOpen && !isMobile;
@@ -64,7 +59,7 @@ class Dashboard extends Component {
           open={isOpen}
           variant={isMobile ? "temporary" : "persistent"}
         >
-          <Sidebar className={classes.sidebar} />
+          <Sidebar className={classes.sidebar} handleClose={this.handleClose}/>
         </Drawer>
         <main
           className={classNames(classes.content, {
@@ -85,8 +80,15 @@ Dashboard.propTypes = {
   title: PropTypes.string,
   width: PropTypes.string.isRequired
 };
+const mapStateToProps = state => ({
+  drawer: state.drawer
+});
 
 export default compose(
+  connect(
+    mapStateToProps,
+    { openDrawer, closeDrawer }
+  ),
   withStyles(styles),
   withWidth()
 )(Dashboard);

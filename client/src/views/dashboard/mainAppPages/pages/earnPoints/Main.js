@@ -17,7 +17,6 @@ import CardHeader from "@material-ui/core/CardHeader";
 import withStyles from "@material-ui/core/styles/withStyles";
 import SvgIcon from "@material-ui/core/SvgIcon";
 
-import PersonAdd from "@material-ui/icons/PersonAdd";
 import Share from "@material-ui/icons/Share";
 import ShoppingCart from "@material-ui/icons/ShoppingCart";
 import StarIcon from "@material-ui/icons/StarBorder";
@@ -73,18 +72,21 @@ const sections = [
     header: "Points",
     description: (
       <div>
-      <Typography component="li" variant="subtitle1" align="center">
-        {" "}
-        50 When you Follow us
-      </Typography>
-      <Typography component="li" variant="subtitle1" align="center">
-        {" "}
-        50 for every link shared
-      </Typography>
+        <Typography component="li" variant="subtitle1" align="center">
+          {"You earn"}
+        </Typography>
+        <Typography component="li" variant="subtitle1" align="center">
+          {" "}
+          50 When you Follow us
+        </Typography>
+        <Typography component="li" variant="subtitle1" align="center">
+          {" "}
+          50 for every link shared
+        </Typography>
       </div>
     ),
     buttonText: "Share Links",
-    buttonVariant: "outlined",
+    buttonVariant: "contained",
     onClick: function(contentRef) {
       contentRef.current.scrollIntoView({
         behavior: "smooth",
@@ -101,7 +103,6 @@ const sections = [
     description: (
       <div>
         <Typography component="li" variant="subtitle1" align="center">
-          
           <i
             className="fas fa-heart"
             style={{
@@ -111,7 +112,7 @@ const sections = [
           10 for every Like
         </Typography>
         <Typography component="li" variant="subtitle1" align="center">
-        <i
+          <i
             className="fas fa-comment"
             style={{
               color: "#1c88cc"
@@ -133,20 +134,6 @@ const sections = [
 
     buttonText: "View Shared Tweets",
     buttonVariant: "contained"
-  },
-  {
-    title: "Follow Users",
-    logo: <PersonAdd color="secondary" />,
-    header: "Points",
-    pathName: "/online-users",
-    description: (
-      <Typography component="li" variant="subtitle1" align="center">
-        {" "}
-        20 for every user Followed
-      </Typography>
-    ),
-    buttonText: "See Online Users",
-    buttonVariant: "outlined"
   }
 ];
 
@@ -165,7 +152,13 @@ class Main extends Component {
       <React.Fragment>
         <CssBaseline />
         <Container maxWidth="md" component="main" className={classes.content}>
-        <Typography variant="h4" component="h6" gutterBottom align="center" color="secondary">
+          <Typography
+            variant="h4"
+            component="h6"
+            gutterBottom
+            align="center"
+            color="secondary"
+          >
             Sorry You don't have enough points for that action
           </Typography>
           <Typography
@@ -190,15 +183,9 @@ class Main extends Component {
         </Container>
 
         <Container maxWidth="md" component="main">
-          <Grid container spacing={2} alignItems="flex-end">
+          <Grid container spacing={2} justify="center">
             {sections.map(section => (
-              <Grid
-                item
-                key={section.title}
-                xs={12}
-                sm={6}
-                md={4}
-              >
+              <Grid item key={section.title} xs={12} sm={6} md={4}>
                 <Card>
                   <CardHeader
                     title={
@@ -276,11 +263,14 @@ class Main extends Component {
           </Typography>
           <Grid container justify="center">
             <Grid item>
-              <Button variant="outlined" color="primary" onClick={()=>{
-                this.push("/buy-points")
-              }}>
-              <ShoppingCart /> {" "}
-                Buy Points
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => {
+                  this.push("/buy-points");
+                }}
+              >
+                <ShoppingCart /> Buy Points
               </Button>
             </Grid>
           </Grid>

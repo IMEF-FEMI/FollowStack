@@ -53,7 +53,7 @@ function Main(props) {
                     id="panel1a-header"
                   >
                     <Typography align="center" color="textPrimary" gutterBottom>
-                      Read More
+                      Read Me
                     </Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
