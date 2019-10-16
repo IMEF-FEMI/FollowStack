@@ -5,7 +5,8 @@ import {
   SET_USERS_IS_FETCHING,
   SET_USERS_HAS_MORE,
   REFRESH_ONLINE,
-  UPDATE_USER
+  UPDATE_USER,
+  UPDATE_UNFOLLOW_USER
 } from "./types";
 
 import Button from "@material-ui/core/Button";
@@ -19,17 +20,20 @@ export const updateUser = user => async dispatch => {
   });
 };
 
+export const updateUnfollowUser = user => async dispatch => {
+  dispatch({
+    type: UPDATE_UNFOLLOW_USER,
+    payload: user
+  });
+};
+
 export const refreshOnlineAction = () => async dispatch => {
   dispatch({
     type: REFRESH_ONLINE
   });
 };
-export const initialFetchAction = (
-  socket,
-  currentUsers,
-  page
-) => async dispatch => {
-  socket.emit("get-users", { currentUsers: currentUsers, page: page }, data => {
+export const initialFetchAction = socket => async dispatch => {
+  socket.emit("get-users", data => {
     if (data.users) {
       dispatch(setUsers(data.users));
       dispatch(setPage(1));
@@ -61,13 +65,9 @@ export const initialFetchAction = (
   });
 };
 
-export const fetchNextAction = (
-  socket,
-  currentUsers,
-  page
-) => async dispatch => {
+export const fetchNextAction = (socket, page) => async dispatch => {
   dispatch(setIsFetching(true));
-  socket.emit("get-users", { currentUsers: currentUsers, page: page }, data => {
+  socket.emit("get-users", data => {
     if (data.users) {
       if (!data.users.length) {
         dispatch(setHasMore(false));
@@ -99,6 +99,7 @@ export const fetchNextAction = (
     }
   });
 };
+
 export const setInitialFetch = bool => {
   return {
     type: SET_USERS_INITIAL_FETCH,

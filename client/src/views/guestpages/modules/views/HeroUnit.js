@@ -5,105 +5,132 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import {CircleSpinner}  from "react-spinners-kit";
 
-import axios from 'axios'
-export const HeroUnit = props => {
-  const { classes } = props;
+import axios from "axios";
 
-  const scrollToContent = () => {
+class HeroUnit extends React.Component {
+  state = {
+    loading: false
+  };
+  scrollToContent = () => {
     console.log("called");
-    props.contentRef.current.scrollIntoView({
+    this.props.contentRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
       inline: "nearest"
     });
   };
-  const  startTwitterAuth = () =>{
+  startTwitterAuth = () => {
+    this.setState({ loading: true });
+    axios
+      .get(`/auth/twitter/connect/${localStorage.getItem("keyInUse")}`)
+      .then(res => {
+        if (res.data.redirectUrl) {
+          localStorage.setItem(
+            "oauthRequestTokenSecret",
+            res.data.oauthRequestTokenSecret
+          );
+          localStorage.setItem("oauthRequestToken", res.data.oauthRequestToken);
+          window.location.href = res.data.redirectUrl;
+        }
+      });
+  };
 
-  axios.get(`/auth/twitter/connect/${localStorage.getItem("keyInUse")}`).then(res=>{
-    if (res.data.redirectUrl) {
-      localStorage.setItem("oauthRequestTokenSecret", res.data.oauthRequestTokenSecret)
-      localStorage.setItem("oauthRequestToken", res.data.oauthRequestToken)
-      window.location.href= res.data.redirectUrl
-    }
-  })
-}
+  render() {
+    const { classes } = this.props;
+    const { loading } = this.state;
 
-  return (
-    <React.Fragment>
-      <div className={classes.bgOverlay}>
-        <main className={classes.main}>
-          <div className={classes.heroContent}>
-            <Typography
-              variant="h2"
-              align="center"
-              color="textPrimary"
-              className={classes.heroMainTxt}
-              gutterBottom
-            >
-              Follow-Stack For Twitter{" "}
-              <i
-                className="fab fa-twitter"
-                style={{
-                  color: "#1c88cc"
-                }}
-              />
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              color="textSecondary"
-              className={classes.heroSecText}
-              paragraph
-            >
-              FollowStack is a simple Twitter app that helps you gain more
-              Followers, more likes (Favs){"  "}
-              <i
-                className="fas fa-heart"
-                style={{
-                  color: "#ff3366"
-                }}
-              />
-              {"  "}
-              and more Retweets {"  "}
-              <i
-                className="fas fa-retweet"
-                style={{
-                  color: "#17bf63"
-                }}
-              />{" "}
-              on your twitter account
-            </Typography>
-            <div>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button
-                   onClick={startTwitterAuth}
-                    variant="outlined"
-                    className={classes.heroButtons}
-                    style={{
-                      textTransform: "none"
-                    }}
+    return (
+      <React.Fragment>
+        <div className={classes.bgOverlay}>
+          <main className={classes.main}>
+            <div className={classes.heroContent}>
+              <Typography
+                variant="h2"
+                align="center"
+                color="textPrimary"
+                className={classes.heroMainTxt}
+                gutterBottom
+              >
+                Follow-Stack For Twitter{" "}
+                <i
+                  className="fab fa-twitter"
+                  style={{
+                    color: "#1c88cc"
+                  }}
+                />
+              </Typography>
+              <Typography
+                variant="h6"
+                align="center"
+                color="textSecondary"
+                className={classes.heroSecText}
+                paragraph
+              >
+                FollowStack is a simple Twitter app that helps you gain more
+                Followers, more likes (Favs){"  "}
+                <i
+                  className="fas fa-heart"
+                  style={{
+                    color: "#ff3366"
+                  }}
+                />
+                {"  "}
+                and more Retweets {"  "}
+                <i
+                  className="fas fa-retweet"
+                  style={{
+                    color: "#17bf63"
+                  }}
+                />{" "}
+                on your twitter account
+              </Typography>
+              <div>
+                {!loading && (
+                  <div>
+                  {" "}
+                  <Grid container spacing={2} justify="center">
+                    <Grid item>
+                      <Button
+                        onClick={this.startTwitterAuth}
+                        variant="outlined"
+                        className={classes.heroButtons}
+                        style={{
+                          textTransform: "none"
+                        }}
+                      >
+                        Get Started
+                      </Button>
+                    </Grid>
+                  </Grid>
+                    <Grid container spacing={2} justify="center">
+                      <Grid item>
+                        <ExpandMore
+                          onClick={this.scrollToContent}
+                          className={classes.scrollDownIcon}
+                        />
+                      </Grid>
+                    </Grid>
+                  </div>
+                )}
+                {loading && (
+                  <Grid
+                    container
+                    justify="center"
+                    style={{ marginTop: "65px", marginBottom: "65px" }}
                   >
-                    Get Started
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <ExpandMore
-                    onClick={scrollToContent}
-                    className={classes.scrollDownIcon}
-                  />
-                </Grid>
-              </Grid>
+                    <CircleSpinner size={40} color="#686769" loading={true} />
+                  </Grid>
+                )}
+              </div>
             </div>
-          </div>
-        </main>
-      </div>
-    </React.Fragment>
-  );
-};
+          </main>
+        </div>
+      </React.Fragment>
+    );
+  }
+}
 
 HeroUnit.propTypes = {
   classes: PropTypes.object.isRequired

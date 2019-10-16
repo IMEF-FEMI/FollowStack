@@ -64,7 +64,7 @@ class App extends Component {
 
     return (
       <Provider store={store}>
-        <SnackbarProvider>
+        <SnackbarProvider maxSnack={3} disableWindowBlurListener={true}>
           <SocketContext.Provider value={socket}>
             <div>
               <Notifier />

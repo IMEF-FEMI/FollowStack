@@ -177,7 +177,7 @@ class AuthPage extends Component{
 
               <React.Fragment>
                 <Typography align="center" variant="h4">
-                 Please wait While we Authenticate you
+                Authenticating...
                 </Typography>
               </React.Fragment>
             </Paper>

@@ -3,18 +3,17 @@ const express = require("express");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const requireAuth = require("../../middlewares/requireAuth");
-const {followUs} = require("../../utils/usersUtil");
+const { followUs } = require("../../utils/usersUtil");
 var Twitter = require("twitter");
 var async = require("async");
-var url = require('url');
+var url = require("url");
 
 // multer upload imports
 const path = require("path");
 const multer = require("multer");
-const fs = require('fs')
-const { promisify } = require('util')
-const unlinkAsync = promisify(fs.unlink)
-
+const fs = require("fs");
+const { promisify } = require("util");
+const unlinkAsync = promisify(fs.unlink);
 
 const TWITTER_KEYS = [
   {
@@ -32,17 +31,19 @@ const TWITTER_KEYS = [
   {
     consumerKey: process.env.TWITTER_APP_TWO_KEY,
     consumerSecret: process.env.TWITTER_APP_TWO_SECRET
+  },
+  {
+    consumerKey: process.env.TWITTER_APP_DEV_KEY,
+    consumerSecret: process.env.TWITTER_APP_DEV_SECRET
   }
 ];
 // Load User model
 const Post = require("../../models/Post");
 const User = require("../../models/User");
 
-
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
-
 
 // @route   GET api/Post/test
 // @desc    Tests Post route
@@ -55,38 +56,35 @@ router.get(
   })
 );
 
-
-
-const storage = multer.diskStorage({   
+const storage = multer.diskStorage({
   destination: "./public/uploads/",
-   filename: function(req, file, cb){
-      cb(
-        null,"IMAGE-" + Date.now() + path.extname(file.originalname));
-   }
+  filename: function(req, file, cb) {
+    cb(null, "IMAGE-" + Date.now() + path.extname(file.originalname));
+  }
 });
-const upload = multer({storage: storage}).any()
+const upload = multer({ storage: storage }).any();
 
 router.post(
   "/new-tweet/:key",
   requireAuth,
   upload,
   asyncHandler(async (req, res, next) => {
- const random = TWITTER_KEYS[req.params.key];
-    const userData = JSON.parse(req.body.userData)
+    const random = TWITTER_KEYS[req.params.key];
+    const userData = JSON.parse(req.body.userData);
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,
-      access_token_key: userData.accessToken, 
+      access_token_key: userData.accessToken,
       access_token_secret: userData.secret
     });
-   
-     // rremove points
-     // add post to db and return tweet obj
-      await User.findOneAndUpdate(
+
+    // rremove points
+    // add post to db and return tweet obj
+    await User.findOneAndUpdate(
       {
         _id: mongoose.Types.ObjectId(req.user._id),
         points: { $gte: 100 }
-      }, 
+      },
       {
         $inc: {
           points: -100
@@ -98,137 +96,146 @@ router.post(
     )
       .then(async user => {
         if (user) {
-// update status (twitter)
-    var mediaIds = []
-      if (req.files) { 
-           async.each(req.files, function(file, callback) {
-            var params = {
-                media: fs.readFileSync(file.path) 
-              };
+          // update status (twitter)
+          var mediaIds = [];
+          if (req.files) {
+            async.each(
+              req.files,
+              function(file, callback) {
+                var params = {
+                  media: fs.readFileSync(file.path)
+                };
 
-              client.post('media/upload', params, async function(error, media, response) {
-                if (!error && response.statusCode === 200) {
-                  mediaIds.push(media.media_id_string)                
-                 callback()
+                client.post("media/upload", params, async function(
+                  error,
+                  media,
+                  response
+                ) {
+                  if (!error && response.statusCode === 200) {
+                    mediaIds.push(media.media_id_string);
+                    callback();
                   } else {
-                    return callback(error)
+                    return callback(error);
                   }
                 });
-                },function(error) {
-                if(error){
-                    console.log("error ", error)
-                }else{
-                console.log("finished uploads");
-                var media_ids = ""
-                mediaIds.map(ids=>{
-                  media_ids+= `${ids},`
-                })
+              },
+              function(error) {
+                if (error) {
+                  console.log("error ", error);
+                } else {
+                  console.log("finished uploads");
+                  var media_ids = "";
+                  mediaIds.map(ids => {
+                    media_ids += `${ids},`;
+                  });
 
-
-               // Delete the file like normal
-              req.files.map(async (file)=>{
-                await unlinkAsync(file.path)
-              })
-                    // Lets tweet it
+                  // Delete the file like normal
+                  req.files.map(async file => {
+                    await unlinkAsync(file.path);
+                  });
+                  // Lets tweet it
                   var status = {
                     status: JSON.parse(req.body.tweet_text) + "#followStackApp",
                     media_ids: media_ids // Pass the media id string
+                  };
 
-                  }
+                  client.post("statuses/update", status, async function(
+                    error,
+                    tweet,
+                    response
+                  ) {
+                    if (!error) {
+                      console.log("status updated");
+                      const post = await new Post({
+                        _owner: mongoose.Types.ObjectId(req.user._id),
+                        text: tweet.text,
+                        post_id: tweet.id_str,
+                        name: tweet.user.name,
+                        screen_name: tweet.user.screen_name,
+                        photo: tweet.user.profile_image_url_https
+                      });
+                      post.save(function(err) {
+                        if (err) {
+                          console.log(err);
+                          res.status(200).send({
+                            error: "Could Not share tweet. Try again"
+                          });
+                        } else {
+                          // tweet added successfully send back to client
+                          res.status(200).send({
+                            success: "Status Updated! ",
+                            points: user.points,
+                            tweet: tweet
+                          });
+                        }
+                      });
+                    } else {
+                      console.log(error[0].message);
+                      res.status(200).send({ error: error[0].message });
+                    }
+                  });
+                }
+              }
+            );
+          } else {
+            var status = {
+              status: JSON.parse(req.body.tweet_text) + "#followStackApp"
+            };
 
-                client.post('statuses/update', status, async function(error, tweet, response) {
+            client.post("statuses/update", status, async function(
+              error,
+              tweet,
+              response
+            ) {
               if (!error) {
                 console.log("status updated");
-          const post = await new Post({
-            _owner: mongoose.Types.ObjectId(req.user._id),
-            text: tweet.text,
-            post_id: tweet.id_str,
-            name: tweet.user.name,
-            screen_name: tweet.user.screen_name,
-            photo: tweet.user.profile_image_url_https
-          });
-          post.save(function(err) {
-            if (err) {
-              console.log(err);
-              res.status(200).send({
-                error: "Could Not share tweet. Try again"
-              });
-            } else {
-              // tweet added successfully send back to client
-              res.status(200).send({
-                success: "Status Updated! ",
-                points: user.points,
-                tweet: tweet
-              });
-            }
-          });
-              }else{
-                 console.log(error[0].message);
-                 res.status(200).send({error: error[0].message})
+                const post = await new Post({
+                  _owner: mongoose.Types.ObjectId(req.user._id),
+                  text: tweet.text,
+                  post_id: tweet.id_str,
+                  name: tweet.user.name,
+                  screen_name: tweet.user.screen_name,
+                  photo: tweet.user.profile_image_url_https
+                });
+                post.save(function(err) {
+                  if (err) {
+                    console.log(err);
+                    res.status(200).send({
+                      error: "Could Not share tweet. Try again"
+                    });
+                  } else {
+                    // Delete the file like normal
+                    req.files.map(async file => {
+                      await unlinkAsync(file.path);
+                    });
+                    // tweet added successfully send back to client
+                    res.status(200).send({
+                      success: "Status Updated ",
+                      points: user.points,
+                      tweet: tweet
+                    });
+                  }
+                });
+              } else {
+                // Delete the file like normal
+                req.files.map(async file => {
+                  await unlinkAsync(file.path);
+                });
+
+                console.log(error[0].message);
+                res.status(200).send({ error: error[0].message });
               }
             });
           }
-        }
-      );
-   }else{
-      var status = {
-      status: JSON.parse(req.body.tweet_text) + "#followStackApp",
-      }
 
-       client.post('statuses/update', status, async function(error, tweet, response) {
-              if (!error) {
-                console.log("status updated");
-          const post = await new Post({
-            _owner: mongoose.Types.ObjectId(req.user._id),
-            text: tweet.text,
-            post_id: tweet.id_str,
-            name: tweet.user.name,
-            screen_name: tweet.user.screen_name,
-            photo: tweet.user.profile_image_url_https
+          // Delete the file like normal
+          req.files.map(async file => {
+            await unlinkAsync(file.path);
           });
-          post.save(function(err) {
-            if (err) {
-              console.log(err);
-              res.status(200).send({
-                error: "Could Not share tweet. Try again"
-              });
-            } else {
-
-               // Delete the file like normal
-              req.files.map(async (file)=>{
-                await unlinkAsync(file.path)
-              })
-               // tweet added successfully send back to client
-              res.status(200).send({
-                success: "Status Updated ",
-                points: user.points,
-                tweet: tweet
-              });
-            }
-          });
-              }else{
-               // Delete the file like normal
-              req.files.map(async (file)=>{
-                await unlinkAsync(file.path)
-              })
-
-               console.log(error[0].message);
-                 res.status(200).send({error: error[0].message})
-              }
-            });
-   }
-
-
-   // Delete the file like normal
-  req.files.map(async (file)=>{
-    await unlinkAsync(file.path)
-  })
-
-
         } else {
           // user did not meet search criteria i.e not enough points
           res.status(200).send({
-            error: "Not enough Points! Go blow up some tweets"
+            error: "Not enough Points! Go like some tweets"
           });
         }
       })
@@ -239,83 +246,87 @@ router.post(
           // postData: post
         });
       });
-
-
-  }))
-
+  })
+);
 
 router.post(
   "/share-link/:key",
   requireAuth,
   upload,
   asyncHandler(async (req, res, next) => {
- const random = TWITTER_KEYS[req.params.key];
-    const userData = req.body.userData
+    const random = TWITTER_KEYS[req.params.key];
+    const userData = req.body.userData;
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,
-      access_token_key: userData.accessToken, 
+      access_token_key: userData.accessToken,
       access_token_secret: userData.secret
     });
 
-
     var params = {
-        media: fs.readFileSync(path.resolve(__dirname, '../../assets/img/hashtag.png')) 
-      };
-      var mediaId = ''
-      // first upload image
-      client.post('media/upload', params, async function(error, media, response) {
-        if (!error && response.statusCode === 200) {
-          mediaId = media.media_id_string     
-          // then update status
-         var status = {
-              status: `Get more Followers, likes, comments and Retweets on Follow-Stack.com The Number 1 twitter #followforfollow Platform  #followStackApp ${url.format({protocol: req.protocol,host: req.get('host')})}`,
-              media_ids: mediaId // Pass the media id string
-            }
+      media: fs.readFileSync(
+        path.resolve(__dirname, "../../assets/img/hashtag.png")
+      )
+    };
+    var mediaId = "";
+    // first upload image
+    client.post("media/upload", params, async function(error, media, response) {
+      if (!error && response.statusCode === 200) {
+        mediaId = media.media_id_string;
+        // then update status
+        var status = {
+          status: `Get more Followers, likes, comments and Retweets on Follow-Stack.com The Number 1 twitter #followforfollow Platform  #followStackApp ${url.format(
+            { protocol: req.protocol, host: req.get("host") }
+          )}`,
+          media_ids: mediaId // Pass the media id string
+        };
 
-      client.post('statuses/update', status, async function(error, tweet, response) {
-         if (!error) {
-           await User.findOneAndUpdate(
-                {
-                  _id: mongoose.Types.ObjectId(req.user._id),
-                }, 
-                {
-                  $inc: {
-                    points: +50
-                  }
-                },
-                {
-                  new: true
+        client.post("statuses/update", status, async function(
+          error,
+          tweet,
+          response
+        ) {
+          if (!error) {
+            await User.findOneAndUpdate(
+              {
+                _id: mongoose.Types.ObjectId(req.user._id)
+              },
+              {
+                $inc: {
+                  points: +50
                 }
-              )
-            .then(async user => {
-              if (user) {
-                res.status(200).send({success: "Status Updated", points: user.points})
-
-              }}).catch(err=>{
-                res.status(500).send({error: err})
-              })
-
-
-              }else{
-                console.log(error[0].message);
-                 res.status(200).send({error: error[0].message})
+              },
+              {
+                new: true
               }
-
-            })
-          } 
+            )
+              .then(async user => {
+                if (user) {
+                  res
+                    .status(200)
+                    .send({ success: "Status Updated", points: user.points });
+                }
+              })
+              .catch(err => {
+                res.status(500).send({ error: err });
+              });
+          } else {
+            console.log(error[0].message);
+            res.status(200).send({ error: error[0].message });
+          }
         });
-
-  }))
-
+      }
+    });
+  })
+);
 
 router.post(
   "/follow-us/:key",
   requireAuth,
   asyncHandler(async (req, res, next) => {
- followUs(req, res)
-
-}))
+    followUs(req, res);
+  })
+);
 
 router.post(
   "/add-tweet",
@@ -330,7 +341,7 @@ router.post(
       {
         _id: mongoose.Types.ObjectId(req.body.user_id),
         points: { $gte: 100 }
-      }, 
+      },
       {
         $inc: {
           points: -100
@@ -367,7 +378,7 @@ router.post(
         } else {
           // user did not meet search criteria i.e not enough points
           res.status(200).send({
-            error: "Not enough Points! Go blow up some tweets"
+            error: "Not enough Points! Go like some tweets"
           });
         }
       })
@@ -391,7 +402,6 @@ router.delete(
         post_id: req.params.post_id
       })
         .then(post => {
-
           res.json({ success: "Tweet removed" });
         })
         .catch(e => {
@@ -445,7 +455,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-
             res.status(200).send({
               success: "👍 +20 Points Earned ",
               points: user.points
@@ -454,7 +463,7 @@ router.post(
         });
       } else {
         console.log(error[0].message);
-        res.status(200).send({error: error[0].message})
+        res.status(200).send({ error: error[0].message });
       }
     });
   })
@@ -494,7 +503,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-
             res.status(200).send({
               success: "👍 +10 Points Earned ",
               points: user.points
@@ -503,7 +511,7 @@ router.post(
         });
       } else {
         console.log(error[0].message);
-        res.status(200).send({error: error[0].message})
+        res.status(200).send({ error: error[0].message });
       }
     });
   })
@@ -544,7 +552,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-
             res.status(200).send({
               success: "👎 10 Points Deducted",
               points: user.points
@@ -554,7 +561,7 @@ router.post(
       } else {
         // comment reply error
         console.log(error[0].message);
-        res.status(200).send({error: error[0].message})
+        res.status(200).send({ error: error[0].message });
       }
     });
   })
@@ -595,7 +602,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-
             res.status(200).send({
               success: "👍 +30 Points Earned",
               points: user.points
@@ -604,8 +610,8 @@ router.post(
         });
       } else {
         // comment reply error
-       console.log(error[0].message);
-       res.status(200).send({error: error[0].message})
+        console.log(error[0].message);
+        res.status(200).send({ error: error[0].message });
       }
     });
   })
@@ -646,7 +652,6 @@ router.post(
           }
         ).then(user => {
           if (user) {
-
             res.status(200).send({
               success: "👎 30 Points Deducted",
               points: user.points
@@ -655,8 +660,8 @@ router.post(
         });
       } else {
         // comment reply error
-                console.log(error[0].message);
-                 res.status(200).send({error: error[0].message})
+        console.log(error[0].message);
+        res.status(200).send({ error: error[0].message });
       }
     });
   })
@@ -683,7 +688,7 @@ router.post(
       user_id: req.body.userid,
       count: 20 * page
     };
-    
+
     console.log("tweets to retrieve ", params.count);
     client.get("statuses/user_timeline", params, async function(
       error,
@@ -709,9 +714,9 @@ router.post(
                 }
               });
             });
-            return res.send({tweets: tweetForPage, shared: posts.length});
+            return res.send({ tweets: tweetForPage, shared: posts.length });
           }
-          return res.send({tweets: tweetForPage, shared: posts.length});
+          return res.send({ tweets: tweetForPage, shared: posts.length });
         } else if (parseInt(page) === 1) {
           if (posts.length !== 0) {
             posts.map(post => {
@@ -721,15 +726,15 @@ router.post(
                 }
               });
             });
-            return res.send({tweets: allTweet, shared: posts.length});
+            return res.send({ tweets: allTweet, shared: posts.length });
           }
-            return res.send({tweets: allTweet, shared: posts.length});
+          return res.send({ tweets: allTweet, shared: posts.length });
         } else if (tweetForPage.length === 0) {
           res.send();
-        } 
+        }
       } else {
         console.log(error[0].message);
-        res.status(200).send({error: error[0].message})
+        res.status(200).send({ error: error[0].message });
       }
     });
   })
@@ -754,7 +759,7 @@ router.post(
         .sort({ createdAt: -1 })
         .limit(12)
         .skip(12 * page)
-        
+
         .exec();
       let post_ids = "";
 
@@ -768,26 +773,25 @@ router.post(
       var params = {
         id: post_ids
       };
-      
+
       client.get("statuses/lookup", params, async function(
         error,
         tweet,
         response
       ) {
         if (!error && response.statusCode === 200) {
-         
           // return in createdAt order
-           for(var i = 0; i<posts.length; i++){
-            for(var j = 0; j<tweet.length; j++){
-              if(posts[i].post_id === tweet[j].id_str){
-                posts[i] = tweet[j] 
+          for (var i = 0; i < posts.length; i++) {
+            for (var j = 0; j < tweet.length; j++) {
+              if (posts[i].post_id === tweet[j].id_str) {
+                posts[i] = tweet[j];
               }
             }
           }
           res.send(posts);
         } else {
           console.log(error[0].message);
-          res.status(200).send({error: error[0].message})
+          res.status(200).send({ error: error[0].message });
         }
       });
     } catch (e) {

@@ -9,7 +9,7 @@ import BuyPoints from "./views/dashboard/mainAppPages/pages/earnPoints/BuyPoints
 
 export default [
   {
-    path: "/online-users",
+    path: "/gain-followers",
     layout: DefaultLayout,
     component: UsersOnline
   },

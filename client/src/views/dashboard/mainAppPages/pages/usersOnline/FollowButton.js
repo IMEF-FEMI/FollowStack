@@ -14,60 +14,9 @@ class FollowButton extends Component {
     disabled: false
   };
 
-  // checkFollowPopup() {
-  //   const check = setInterval(async () => {
-  //     const { followPopup } = this;
-  //     if (
-  //       !followPopup ||
-  //       followPopup.closed ||
-  //       followPopup.closed === undefined
-  //     ) {
-  //       clearInterval(check);
-  //       this.setState({ disabled: false });
-  //       const { user } = this.props;
-  //       user.following = true;
-  //       this.forceUpdate();
-  //       await follow(this.props.user, this.props.auth.userData);
-  //     }
-  //   }, 1000);
-  // }
-  // checkUnfollowPopup() {
-  //   const check = setInterval(async () => {
-  //     const { unFollowPopup } = this;
-  //     if (
-  //       !unFollowPopup ||
-  //       unFollowPopup.closed ||
-  //       unFollowPopup.closed === undefined
-  //     ) {
-  //       clearInterval(check);
-  //       this.setState({ disabled: false });
-  //       const { user } = this.props;
-  //       user.following = false;
-  //       this.forceUpdate();
-  //       await unFollow(this.props.user, this.props.auth.userData);
-  //     }
-  //   }, 1000);
-  // }
-  // openPopup() {
-  //   const width = 300,
-  //     height = 300;
-  //   const left = window.innerWidth / 2 - width / 2;
-  //   const top = window.innerHeight / 2 - height / 2;
-  //   const url = `https://twitter.com/${this.props.user.screen_name}`;
-
-  //   return window.open(
-  //     url,
-  //     "",
-  //     `toolbar=no, location=no, directories=no, status=no, menubar=no,
-  //         scrollbars=no, resizable=no, copyhistory=no, width=${width},
-  //         height=${height}, top=${top}, left=${left}`
-  //   );
-  // }
 
   followUser = async () => {
     if (!this.state.disabled && this.props.user.following === false) {
-      // this.followPopup = this.openPopup();
-      // this.checkFollowPopup();
       const {
         socket,
         enqueueSnackbar,
@@ -78,11 +27,11 @@ class FollowButton extends Component {
       this.setState({ disabled: true });
       // follow using sockets and notify user
       socket.emit("follow", { newUser: user }, data => {
-        if (data.points) {
+        if (data.success) {
           // callback to show notification when follow is successful
 
           enqueueSnackbar({
-            message: "👍 Follow successful +20 points earned",
+            message: "👍 Follow successful",
             options: {
               key: new Date().getTime() + Math.random(),
               variant: "success",
@@ -135,7 +84,7 @@ class FollowButton extends Component {
           message: "👎 User Unfollowed",
           options: {
             key: new Date().getTime() + Math.random(),
-            variant: "warning",
+            variant: "error",
             action: key => (
               <Button
                 style={{ color: "#fff" }}

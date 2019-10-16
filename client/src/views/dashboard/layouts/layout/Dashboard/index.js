@@ -22,10 +22,10 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    const isMobile = ["xs", "sm", "md"].includes(props.width);
+    // const isMobile = ["xs", "sm", "md"].includes(props.width);
 
     this.state = {
-      isOpen: !isMobile
+      isOpen: true//!isMobile
     };
   }
 

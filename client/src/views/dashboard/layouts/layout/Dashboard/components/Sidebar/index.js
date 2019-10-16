@@ -110,14 +110,14 @@ class Sidebar extends Component {
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={MyLink}
-            to="/online-users"
+            to="/gain-followers"
           >
             <ListItemIcon className={classes.listItemIcon}>
               <PeopleIcon style={{ color: "rgb(144, 138, 22)" }} />
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
-              primary="Online Users"
+              primary="Gain Followers"
             />
           </ListItem>
           

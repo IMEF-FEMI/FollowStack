@@ -39,6 +39,10 @@ const TWITTER_KEYS = [
   {
     consumerKey: process.env.TWITTER_APP_TWO_KEY,
     consumerSecret: process.env.TWITTER_APP_TWO_SECRET
+  },
+  {
+    consumerKey: process.env.TWITTER_APP_DEV_KEY,
+    consumerSecret: process.env.TWITTER_APP_DEV_SECRET
   }
 ];
 
@@ -68,16 +72,20 @@ router.post(
         const newUser = new User({
           username: req.body.username,
           userid: req.body.userid,
-          location: req.body.location
+          screen_name: req.body.username,
+          location: req.body.location,
         });
-
         newUser
           .save()
           .then(user => {
+        console.log("register user data: " + JSON.stringify(user));
+
             Promise.all([
-              // new UsersOnline({
-              //   username: req.body.username,
-              //   user_id: req.body.userid
+              // new UserKeys({
+              //   user_id: req.body.userid,
+              //   key: req.body.keyInUse,
+              //   accessToken: req.body.accessToken,
+              //   secret: req.body.secret
               // }).save(),
               new Transaction({
                 user_id: req.body.userid
@@ -120,6 +128,12 @@ router.post(
     await User.findOne({ userid: req.body.userid })
       .then(user => {
         if (user) {
+          // UserKeys.findOneAndUpdate({ userid: req.user.userid }, {
+          //   key: req.user.keyInUse,
+          //   secret: req.user.secret,
+          //   accessToken: req.user.accessToken
+          // })
+          // User.findOneAndUpdate({ userid: req.body.userid },  {token_expired: false})
           const payload = {
             userid: user.userid,
             _id: user._id
@@ -165,12 +179,9 @@ router.delete(
         function(err) {
           console.log(err);
         }
-      ),
-      User.deleteOne(
-        {
-          userid: req.user.userid
-        },
-        function(err) {
+      ), 
+      
+      User.deleteOne({userid: req.user.userid},function(err) {
           console.log(err);
         }
       )
@@ -208,7 +219,6 @@ router.post(
     }
 
     // 6. Save the transaction in your database
-    // await database.saveTransaction(orderID);
     console.log("user ", req.user);
     await addTransaction(req.user.userid, {
       orderID: orderID,

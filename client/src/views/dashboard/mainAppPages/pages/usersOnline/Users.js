@@ -26,12 +26,11 @@ class Users extends React.Component {
           }}
         >
           {users.map(element => {
-            if (element.user_id !== currentUser.userid) {
+            if (element.userid !== currentUser.userid) {
               return (
                 <Grid
                   key={
-                    element.user_id +
-                    `${Math.random() * 5} ${Math.random() * 20}`
+                    new Date().getTime() + Math.random()
                   }
                   item
                   xs={window.innerWidth <= 500 ? 12 : 8}

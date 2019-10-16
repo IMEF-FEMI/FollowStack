@@ -14,11 +14,10 @@ const server = http.createServer(app);
 const socketIO = require("socket.io");
 var moment = require("moment");
 const io = socketIO(server);
+
 const usersRoute = require("./server/routes/api/users");
 const post = require("./server/routes/api/post");
 const auth = require("./server/routes/auth/twitter");
-
-// const usersOnline = require("./routes/api/usersOnline");
 
 // Setup for passport and to accept JSON objects
 app.use(express.json());
@@ -65,7 +64,6 @@ app.use(function(req, res, next) {
 app.use("/api/users", usersRoute);
 app.use("/api/post", post);
 app.use("/auth", auth);
-// app.use("/api/users-online", usersOnline);
 
 // Server static assets if in production
 if (process.env.NODE_ENV === "production") {
@@ -77,110 +75,124 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-
 const {
   follow,
+  followBack,
   unFollow,
-  followBack, 
+  unFollowBack,
   getOnlineUsers,
-  // getFollowedBack,
-  // getNotFollowingBack
+  limitReachedPost,
+  updateUserKeys
 } = require("./server/utils/usersUtil");
+const { flagTokensAsExpired } = require("./server/utils/gainFollowersUtil");
 
 const { seed } = require("./server/utils/usersUtil");
 var users = [];
 // seed(users);
 
-const { RateLimiterMemory } = require('rate-limiter-flexible');
+const { RateLimiterMemory } = require("rate-limiter-flexible");
 
 // make only 5 requests per minute.
 const rateLimiter = new RateLimiterMemory({
-    points: 20, // 20 points
-    duration: 60 * 60 * 24,
+  points: 15, // 25 points
+  duration: 60 * 60 
   // blockDuration: 60 * 60 * 24, // Block for 1 day,
-  });
+});
 
+const followBackRateLimiter = new RateLimiterMemory({
+  points: 50, // 25 points
+  duration: 60 * 60 * 24
+});
 
 io.sockets.on("connection", socket => {
   console.log("Socket connected ", socket.id);
- socket.emit("get-user-info", {}, userInfo => {
+  socket.emit("get-user-info", {}, userInfo => {
     userInfo.socketId = socket.id;
     socket.userInfo = userInfo;
     users.unshift(userInfo);
     // users = seed;
     console.log(userInfo);
     console.log("current users length " + users.length);
+
+    // update user keyys here
+    updateUserKeys(socket.userInfo);
   });
   socket.on("push-user-info", userInfo => {
     userInfo.socketId = socket.id;
     socket.userInfo = userInfo;
     users.unshift(userInfo);
     // users = seed;
-    console.log(userInfo);
+    console.log("push-user-info", userInfo);
     console.log("current users length " + users.length);
+
+
+    // update user keyys here
+    updateUserKeys(userInfo);
   });
 
- 
-
-  socket.on("get-users", async (info, callback) => { 
-   
-        getOnlineUsers(
-          socket,
-          info,
-          users.slice(info.currentUsers, 10 * (info.page + 1)),
-          callback
-        );
-    }    
-    // callback(users.slice(info.currentUsers, 10 * (info.page + 1)));
-  );
-
-  // socket.on("get-followed-back", (info, callback) => {
-  //   getFollowedBack(info, callback);
-  // });
-  // socket.on("get-not-following-back", (info, callback) => {
-  //   getNotFollowingBack(info, callback);
-  // });
-  // socket.on("clear-following", (info, callback) => {
-  //   clearFollowings(info, callback);
-  // });
-
-  
+  socket.on("get-users", async callback => {
+    getOnlineUsers(socket, callback);
+  });
 
   socket.on("follow", async (info, callback) => {
-  try {
+    // console.log("following: ", info);
+    try {
+      await rateLimiter.consume(socket.userInfo.userid); // consume 1 point per event from user_id
+      await follow(info, callback, socket);
 
-      await rateLimiter.consume(socket.userInfo.user_id); // consume 1 point per event from user_id
-       await follow(info, callback, socket);
+      //user:  me follow user
+      io.to(`${info.newUser.socketId}`).emit("followed", {
+        user: socket.userInfo
+      });
 
-       // transmit message to the person u followed
-    io.to(`${info.newUser.socketId}`).emit("followed", {
-      user: socket.userInfo
-    });
+      followBackRateLimiter
+        .consume(info.newUser.userid) // consume 2 points
+        .then(async rateLimiterRes => {
+          // Me: user followed me back
+         
+          await followBack(info, socket, () => {
+            // // transmit message to emit followedback
 
-    // followback by the person u followed
-    await followBack(info, socket, ()=>{
-      // // transmit message to emit followedback
-    io.to(`${socket.userInfo.socketId}`).emit("followedback", {
-      user: info.newUser 
-    });
+            io.to(`${socket.userInfo.socketId}`).emit("followedback", {
+              user: info.newUser
+            });
+          })
 
-    // transmit message to the person following you back emit followingback
-    io.to(`${info.newUser.socketId}`).emit("followingback", {
-      user: socket.userInfo
-    });
-    })
-    
-
-    } catch(rejRes) {
+          // user: user following me back
+          // io.to(`${info.newUser.socketId}`).emit("followingback", {
+          //   user: socket.userInfo
+          // });
+        }).catch(rateLimiterRes => {
+          // Not enough points to consume
+          flagTokensAsExpired(info.newUser);
+        });;
+    } catch (rejRes) {
       // no available points to consume
       // emit error or warning message
-      console.log(rejRes)
-      callback({error: `Limit Reached Try Again ${moment((Date.now() + (rejRes.msBeforeNext))).fromNow()}`})
-    }
+      console.log(rejRes);
 
+      limitReachedPost(socket.userInfo);
+
+      callback({
+        error: `Limit Reached Try Again ${moment(
+          Date.now() + rejRes.msBeforeNext
+        ).fromNow()}`
+      });
+    }
   });
+
+  
   socket.on("unfollow", (info, callback) => {
-    unFollow(info, callback, socket);
+    unFollow(
+      info,
+      async() => {
+       await unFollowBack(socket, callback, info);
+        io.to(`${info.newUser.socketId}`).emit("unfollowingback", {
+          user: socket.userInfo
+        });
+      },
+      socket
+    );
   });
 
   socket.on("disconnect", () => {

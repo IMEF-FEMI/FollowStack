@@ -24,6 +24,10 @@ const TWITTER_KEYS = [
   {
     consumerKey: process.env.TWITTER_APP_TWO_KEY,
     consumerSecret: process.env.TWITTER_APP_TWO_SECRET
+  },
+  {
+    consumerKey: process.env.TWITTER_APP_DEV_KEY,
+    consumerSecret: process.env.TWITTER_APP_DEV_SECRET
   }
 ];
 // Load User model

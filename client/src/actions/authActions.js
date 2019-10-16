@@ -21,7 +21,6 @@ export const register = userData => async dispatch => {
   let decoded;
   try {
     const res = await registerUser(userData);
-
     // Save to localStorage
     const { token } = res.data;
     // Set token to ls
@@ -151,7 +150,10 @@ export const logoutUser = () => dispatch => {
   // localStorage.removeItem("userProfile");
   // localStorage.removeItem("points")
   localStorage.clear();
-  const randomNumber = Math.floor(Math.random() * 4);
+  const randomNumber =
+      process.env.NODE_ENV === "development"
+        ? 4
+        : Math.floor(Math.random() * 4);
   localStorage.setItem("keyInUse", randomNumber);
   dispatch(setKeyInUse(randomNumber));
   

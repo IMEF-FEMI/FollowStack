@@ -383,7 +383,7 @@ class Main extends Component {
                       fontSize: "14px"
                     }}
                   >
-                    Click on file to remove
+                    Click on Image to remove
                   </Typography>
                 </Grid>
               </Grid>

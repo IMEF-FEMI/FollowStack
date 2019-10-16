@@ -41,11 +41,7 @@ class Online extends Component {
     if (users.initialFetch || users.isFetching || !users.hasMore) {
       return;
     }
-    await fetchNextAction(
-      socket,
-      users.users.length,
-      users.page,
-    );
+    await fetchNextAction(socket, users.page);
   };
 
   async componentDidMount() {
@@ -53,11 +49,7 @@ class Online extends Component {
 
     const { socket, users, initialFetchAction } = this.props;
     if (users.initialFetch === true) {
-      await initialFetchAction(
-        socket,
-        users.users.length,
-        users.page
-      );
+      await initialFetchAction(socket);
     }
   }
   componentWillUnmount() {
@@ -73,11 +65,7 @@ class Online extends Component {
       refreshOnlineAction
     } = this.props;
     await refreshOnlineAction();
-    initialFetchAction(
-      socket,
-      users.users.length,
-      users.page,
-    );
+    initialFetchAction(socket, users.users.length, users.page);
   };
   render() {
     const { users, initialFetch, isFetching } = this.props.users;
@@ -87,7 +75,7 @@ class Online extends Component {
       <React.Fragment>
         <Grid container justify="center">
           <Grid item>
-            <Button variant="outlined" onClick={this.refresh}>
+            <Button variant="outlined" onClick={this.refresh} >
               Refresh
               <Refresh />
             </Button>
@@ -106,7 +94,7 @@ class Online extends Component {
         {!initialFetch &&
           (users.length === 0 ||
             (users.length === 1 &&
-              users[0].user_id === this.props.auth.user.userid)) && (
+              users[0].userid === this.props.auth.user.userid)) && (
             <div style={container}>
               <Typography
                 variant="h2"
@@ -120,7 +108,11 @@ class Online extends Component {
           )}
         {!initialFetch && users.length >= 1 && (
           <Grid container justify="center">
-            <Users users={users} currentUser={this.props.auth.user} context={context}/>
+            <Users
+              users={users}
+              currentUser={this.props.auth.user}
+              context={context}
+            />
           </Grid>
         )}
         {users.length !== 0 && isFetching && (

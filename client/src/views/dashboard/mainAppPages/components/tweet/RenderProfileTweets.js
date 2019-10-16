@@ -120,7 +120,7 @@ class RenderProfileTweets extends Component {
                     action={
                       <div>
                         {(!item.added || item.added === false) && (
-                          <Tooltip title="Blow up this twe" aria-label="Share">
+                          <Tooltip title="Share Tweet" aria-label="Share">
                             <Button
                               size="small"
                               variant="outlined"
