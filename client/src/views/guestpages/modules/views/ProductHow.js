@@ -72,7 +72,7 @@ function ProductHow(props) {
                   align="center"
                   style={{ color: "#fff" }}
                 >
-                  {`To get followers, go to the ONLINE USERS section, there you will
+                  {`To get followers, go to the Gain Followers section, there you will
                     see a list of users currently online, Follow as many as you can and watch them follow back.
                     You dont have to worry about a user not following you back as this process has been automated. Meaning - as soon as 
                     you follow someone - they follow back Instantly! and the More you follow, the more followers you get                  

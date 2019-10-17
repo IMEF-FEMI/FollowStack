@@ -1,4 +1,4 @@
 export const SOCKET_URL =
   process.env.NODE_ENV === "production"
-    ? "http://followstack.com"
+    ? "https://followstack.herokuapp.com"
     : "http://localhost:8080";

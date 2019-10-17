@@ -7,3 +7,10 @@ export const initGA = ()=> {
 export const trackPage = (page) => {  
     ReactGA.pageview(page); 
 }
+
+export const trackEvent =(event) =>{
+    ReactGA.event({
+        category: event,
+        action: event
+    })
+}

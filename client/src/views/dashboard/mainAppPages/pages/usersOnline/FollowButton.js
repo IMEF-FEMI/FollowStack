@@ -8,6 +8,7 @@ import {
   closeSnackbar
 } from "../../../../../actions/notistackActions";
 import { setPoints } from "../../../../../actions/authActions";
+import { trackEvent } from "../../../../../components/Tracking";
 
 class FollowButton extends Component {
   state = {
@@ -25,6 +26,7 @@ class FollowButton extends Component {
         user
       } = this.props;
       this.setState({ disabled: true });
+      trackEvent("Following User")
       // follow using sockets and notify user
       socket.emit("follow", { newUser: user }, data => {
         if (data.success) {
@@ -74,6 +76,7 @@ class FollowButton extends Component {
     if (!this.state.disabled && this.props.user.following === true) {
       // this.followPopup = this.openPopup();
       // this.checkFollowPopup();
+      trackEvent("UnFollowing User")
 
       const { socket, enqueueSnackbar, closeSnackbar, user } = this.props;
       this.setState({ disabled: true });

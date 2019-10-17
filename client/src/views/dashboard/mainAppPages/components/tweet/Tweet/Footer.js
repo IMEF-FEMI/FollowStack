@@ -20,6 +20,8 @@ import {
   unPostRetweet
 } from "../../../../../../async/post";
 import { setPoints } from "../../../../../../actions/authActions";
+import { trackEvent } from "../../../../../../components/Tracking";
+
 
 import {
   enqueueSnackbar,
@@ -56,6 +58,7 @@ class Footer extends React.Component {
       tweet,
       this.props.auth.keyInUse
     );
+    trackEvent("Added Comment")
     if (res.data.success || res.data.error) {
       this.notify(res);
     }
@@ -68,6 +71,7 @@ class Footer extends React.Component {
     const tweet = this.props.data;
     let res = null;
     if (!tweet.favorited) {
+      trackEvent("Liked tweet")
       tweet.favorited = true;
       tweet.favorite_count += 1;
       this.setState({ favoriteColor: "#ff3366" });
@@ -94,6 +98,7 @@ class Footer extends React.Component {
     const tweet = this.props.data;
     let res = null;
     if (!tweet.retweeted) {
+      trackEvent("Retweeted tweet")
       tweet.retweeted = true;
       tweet.retweet_count += 1;
       this.setState({ RtColor: "#17bf63" });

@@ -38,6 +38,7 @@ import MyTweets from "./MyTweets"
 
 import {deleteUser} from "../../../../../async/auth";
 import { logoutUser} from "../../../../../actions/authActions";
+import { trackEvent } from "../../../../../components/Tracking";
 
 
 
@@ -78,6 +79,8 @@ class Main extends React.Component{
   }
   handleConfirmDelete = async()=>{
     this.setState({confirmed:true})
+    trackEvent("Deleting Account")
+
     const res = await deleteUser()
     if (res.data.success) {
       this.props.logoutUser()

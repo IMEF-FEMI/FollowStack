@@ -6,6 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import {CircleSpinner}  from "react-spinners-kit";
+import { trackEvent } from "../../../../components/Tracking";
+
 
 import axios from "axios";
 
@@ -23,6 +25,7 @@ class HeroUnit extends React.Component {
   };
   startTwitterAuth = () => {
     this.setState({ loading: true });
+    trackEvent("User Registering")
     axios
       .get(`/auth/twitter/connect/${localStorage.getItem("keyInUse")}`)
       .then(res => {
