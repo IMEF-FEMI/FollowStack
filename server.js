@@ -12,6 +12,7 @@ const app = express();
 
 const server = http.createServer(app);
 const socketIO = require("socket.io");
+const compression = require('compression');
 var moment = require("moment");
 const io = socketIO(server);
 
@@ -21,6 +22,8 @@ const auth = require("./server/routes/auth/twitter");
 
 // Setup for passport and to accept JSON objects
 app.use(express.json());
+// compression
+app.use(compression());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
