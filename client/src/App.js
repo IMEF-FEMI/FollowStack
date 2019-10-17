@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import { Provider } from "react-redux";
-import axios from "axios";
 import store from "./store";
 import LandingPage from "./views/guestpages/LandingPage";
 import SignUp from "./views/guestpages/SignUp";
@@ -12,7 +11,6 @@ import NotFound from "./views/guestpages/404/NotFound";
 import CompleteRegistration from "./views/guestpages/CompleteRegistration";
 import Privacy from "./views/guestpages/Privacy";
 import Terms from "./views/guestpages/Terms";
-import LaunchScreen from "./views/dashboard/mainAppPages/components/loaders/LaunchScreen";
 
 import theme from "./theme";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
@@ -42,21 +40,23 @@ class App extends Component {
   state = {
     serverWoke: false
   };
+ // fake authentication Promise
+ authenticate(){
+  return new Promise(resolve => setTimeout(resolve, 2000)) // 2 seconds
+}
 
   async componentDidMount() {
-    try {
-      const auth = axios.create();
-      auth.defaults.timeout = 5000;
-      await auth.get("/wake-up");
-      this.setState({
-        serverWoke: true
-      });
-    } catch (e) {
-      this.setState({
-        serverWoke: true
-      });
-      console.log(e);
-    }
+    this.authenticate().then(() => {
+      const ele = document.getElementById('ipl-progress-indicator')
+      if(ele){
+        // fade out
+        ele.classList.add('available')
+        // setTimeout(() => {
+          // remove from DOM
+          ele.outerHTML = ''
+        // }, 2000)
+      }
+    })
   }
 
   render() {
@@ -72,21 +72,17 @@ class App extends Component {
             <ThemeProvider theme={theme}>
               <Router>
                 <Switch>
-                  {this.state.serverWoke === false ? (
-                    <LaunchScreen />
-                  ) : (
-                    <Route
-                      exact
-                      path="/"
-                      render={() =>
-                        loggedIn === true ? (
-                          <Redirect to="/shared-tweets" />
-                        ) : (
-                          <LandingPage />
-                        )
-                      }
-                    />
-                  )}
+                  <Route
+                    exact
+                    path="/"
+                    render={() =>
+                      loggedIn === true ? (
+                        <Redirect to="/shared-tweets" />
+                      ) : (
+                        <LandingPage />
+                      )
+                    }
+                  />
                   <PrivateGuestRoute exact path="/sign-up" component={SignUp} />
                   <PrivateGuestRoute
                     exact
