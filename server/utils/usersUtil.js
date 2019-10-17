@@ -137,18 +137,26 @@ const followUs = (req, res) => {
 const followBack = (info, socket, callback) => {
   // the person u followed automatically following back
 
-  getKeyFromSocket(socket, random=>{
+  const random = TWITTER_KEYS[parseInt(info.newUser.keyInUse)]
+
+  getSocketFromSocket(socket, userInfo=>{
     var client = new Twitter({
       consumer_key: random.consumerKey,
       consumer_secret: random.consumerSecret,
       access_token_key: info.newUser.accessToken,
       access_token_secret: info.newUser.secret
     });
+  
     var params = {
-      user_id: socket.userInfo.user_id,
+      user_id: socket.userInfo.user_id
     };
-    client.post("friendships/create", params, function(error, tweet, response) {
+    client.post("friendships/create", params, async function(
+      error,
+      tweet,
+      response
+    ) {
       if (!error && response.statusCode === 200) {
+        client = null
         callback();
       } else {
         console.log(error);
@@ -215,37 +223,7 @@ const unFollowBack = (socket, callback, info) => {
     });
   })
   
-
-
-
-
-
-
-
-
-// const random = TWITTER_KEYS[parseInt(info.newUser.keyInUse)]
-//   var client = new Twitter({
-//       consumer_key: random.consumerKey,
-//       consumer_secret: random.consumerSecret,
-//       access_token_key: info.newUser.accessToken,
-//       access_token_secret: info.newUser.secret
-//     });
-//     var params = {
-//       user_id: socket.userInfo.userid
-//     };
-   
-//     client.post("friendships/destroy", params, async function(
-//       error,
-//       tweet,
-//       response
-//     ) {
-//       if (!error && response.statusCode === 200) {
-//         callback();
-//       } else {
-//         console.log(error);
-//       }
-//     });
-  
+ 
 };
 
 const getOnlineUsers = async (socket, callback) => {
@@ -398,6 +376,10 @@ const getSocketFromSocket =  (socket, callback) =>{
       callback(userInfo)
     });
 }
+
+const getInfoFromDB = () =>{
+
+}
 module.exports = {
   follow,
   followBack,
@@ -408,5 +390,6 @@ module.exports = {
   limitReachedPost,
   updateUserKeys,
   getKeyFromSocket,
-  getSocketFromSocket
+  getSocketFromSocket,
+  getInfoFromDB
 };

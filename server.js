@@ -146,13 +146,12 @@ io.sockets.on("connection", socket => {
       });
 
       followBackRateLimiter
-        .consume(info.newUser.userid) // consume 2 points
+        .consume(info.newUser.userid) 
         .then(async rateLimiterRes => {
           // Me: user followed me back
          
           await followBack(info, socket, () => {
             // // transmit message to emit followedback
-
             io.to(`${socket.userInfo.socketId}`).emit("followedback", {
               user: info.newUser
             });
