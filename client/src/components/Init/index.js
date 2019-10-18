@@ -158,7 +158,7 @@ export const initSignIn = socket => {
   // go-online using socketIO
   initSocket(socket);
   const userInfo = store.getState().auth;
-  const screen_name = userInfo.userProfile.screen_name
+  var screen_name = userInfo.userProfile.screen_name
     ? userInfo.userProfile.screen_name
     : userInfo.userData.username ? userInfo.userData.username: userInfo.userData.name;
 if (screen_name === undefined) {
