@@ -38,7 +38,8 @@ export const initialFetchAction = socket => async dispatch => {
       dispatch(setUsers(data.users));
       dispatch(setPage(1));
       dispatch(setInitialFetch(false));
-      if (data.users.length === 0 || data.users.length === 1) {
+      // if (data.users.length === 0 || data.users.length === 1) {
+      if (data.users.length <= 10) {
         dispatch(setHasMore(false));
       }
     } else {

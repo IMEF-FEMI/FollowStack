@@ -51,10 +51,10 @@ class App extends Component {
       if(ele){
         // fade out
         ele.classList.add('available')
-        // setTimeout(() => {
+        setTimeout(() => {
           // remove from DOM
           ele.outerHTML = ''
-        // }, 2000)
+        }, 2000)
       }
     })
   }

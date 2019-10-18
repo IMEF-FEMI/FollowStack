@@ -160,8 +160,10 @@ export const initSignIn = socket => {
   const userInfo = store.getState().auth;
   const screen_name = userInfo.userProfile.screen_name
     ? userInfo.userProfile.screen_name
-    : userInfo.userData.username;
-
+    : userInfo.userData.username ? userInfo.userData.username: userInfo.userData.name;
+if (screen_name === undefined) {
+  screen_name = ""
+}
   socket.emit("push-user-info", {
     user_id: userInfo.user.userid,
     photo: userInfo.userData.photo,

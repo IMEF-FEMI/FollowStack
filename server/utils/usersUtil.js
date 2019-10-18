@@ -315,7 +315,7 @@ const limitReachedPost = user => {
       mediaId = media.media_id_string;
       // then update status
       var status = {
-        status: `I Just Gained 15 new followers on #FollowStack  http://followstack.com  ` ,
+        status: `I Just Gained 15 new followers on #FollowStack  http://www.followstack.com  ` ,
         media_ids: mediaId // Pass the media id string
       };
 
