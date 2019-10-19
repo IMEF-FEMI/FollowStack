@@ -27,7 +27,7 @@ function Main(props) {
               paddingTop: "30px"
             }}
           >
-            Online Users
+            Who to follow
           </Typography>
           <Typography
             component="h5"
