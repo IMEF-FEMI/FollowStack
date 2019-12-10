@@ -45,11 +45,12 @@ class Online extends Component {
   };
 
   async componentDidMount() {
+    window.scrollTo(0, 0);
     window.addEventListener("scroll", this.onScroll, false);
 
     const { socket, users, initialFetchAction } = this.props;
     if (users.initialFetch === true) {
-      await initialFetchAction(socket);
+      await initialFetchAction(users.page, socket);
     }
   }
   componentWillUnmount() {
@@ -65,7 +66,7 @@ class Online extends Component {
       refreshOnlineAction
     } = this.props;
     await refreshOnlineAction();
-    initialFetchAction(socket, users.users.length, users.page);
+    await initialFetchAction( 0, socket);
   };
   render() {
     const { users, initialFetch, isFetching } = this.props.users;

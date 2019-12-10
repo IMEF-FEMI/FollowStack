@@ -12,7 +12,7 @@ const app = express();
 
 const server = http.createServer(app);
 const socketIO = require("socket.io");
-const compression = require('compression');
+const compression = require("compression");
 var moment = require("moment");
 const io = socketIO(server);
 
@@ -98,7 +98,7 @@ const { RateLimiterMemory } = require("rate-limiter-flexible");
 // make only 5 requests per minute.
 const rateLimiter = new RateLimiterMemory({
   points: 15, // 25 points
-  duration: 60 * 60 
+  duration: 60 * 60
   // blockDuration: 60 * 60 * 24, // Block for 1 day,
 });
 
@@ -128,13 +128,12 @@ io.sockets.on("connection", socket => {
     console.log("push-user-info", userInfo);
     console.log("current users length " + users.length);
 
-
     // update user keyys here
     updateUserKeys(userInfo);
   });
 
-  socket.on("get-users", async callback => {
-    getOnlineUsers(socket, callback);
+  socket.on("get-users", async (page, callback) => {
+    getOnlineUsers(socket, callback, page);
   });
 
   socket.on("follow", async (info, callback) => {
@@ -149,25 +148,26 @@ io.sockets.on("connection", socket => {
       });
 
       followBackRateLimiter
-        .consume(info.newUser.userid) 
+        .consume(info.newUser.userid)
         .then(async rateLimiterRes => {
           // Me: user followed me back
-         
+
           await followBack(info, socket, () => {
             // // transmit message to emit followedback
             io.to(`${socket.userInfo.socketId}`).emit("followedback", {
               user: info.newUser
             });
-          })
+          });
 
           // user: user following me back
           // io.to(`${info.newUser.socketId}`).emit("followingback", {
           //   user: socket.userInfo
           // });
-        }).catch(rateLimiterRes => {
+        })
+        .catch(rateLimiterRes => {
           // Not enough points to consume
           flagTokensAsExpired(info.newUser);
-        });;
+        });
     } catch (rejRes) {
       // no available points to consume
       // emit error or warning message
@@ -183,12 +183,11 @@ io.sockets.on("connection", socket => {
     }
   });
 
-  
   socket.on("unfollow", (info, callback) => {
     unFollow(
       info,
-      async() => {
-       await unFollowBack(socket, callback, info);
+      async () => {
+        await unFollowBack(socket, callback, info);
         io.to(`${info.newUser.socketId}`).emit("unfollowingback", {
           user: socket.userInfo
         });

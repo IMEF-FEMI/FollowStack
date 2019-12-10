@@ -226,13 +226,20 @@ const unFollowBack = (socket, callback, info) => {
  
 };
 
-const getOnlineUsers = async (socket, callback) => {
+const getOnlineUsers = async (socket, callback, page) => {
 
     // get 15 active(token_expired = false) users at random and get friendship status
+    // const users = await User.aggregate([
+    //   { $match: { token_expired: false } },
+    //   { $sample: {size: 15} },
+    // ]).exec();"
+    
     const users = await User.aggregate([
-      { $match: { token_expired: false } },
-      { $sample: {size: 15} },
+      { $sort: { joined: -1 } },
+      { $skip: 15 * page },
+      { $limit: 15 },
     ]).exec();
+    
   friendshipLookup(socket, users, arr => {
     // identify those already followed
     
@@ -251,6 +258,7 @@ const getOnlineUsers = async (socket, callback) => {
       });
     });
     callback({ users: users });
+
   });
 };
 
@@ -308,7 +316,7 @@ const limitReachedPost = user => {
       path.resolve(__dirname, "../assets/img/hashtag.png")
     )
   };
-  var mediaId = "";
+  var mediaId = "";  
   // first upload image
   client.post("media/upload", params, async function(error, media, response) {
     if (!error && response.statusCode === 200) {

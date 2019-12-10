@@ -32,8 +32,9 @@ export const refreshOnlineAction = () => async dispatch => {
     type: REFRESH_ONLINE
   });
 };
-export const initialFetchAction = socket => async dispatch => {
-  socket.emit("get-users", data => {
+export const initialFetchAction = (page, socket) => async dispatch => {
+
+  socket.emit("get-users",page, data => {
     if (data.users) {
       dispatch(setUsers(data.users));
       dispatch(setPage(1));
@@ -68,7 +69,7 @@ export const initialFetchAction = socket => async dispatch => {
 
 export const fetchNextAction = (socket, page) => async dispatch => {
   dispatch(setIsFetching(true));
-  socket.emit("get-users", data => {
+  socket.emit("get-users", page, data => {
     if (data.users) {
       if (!data.users.length) {
         dispatch(setHasMore(false));
